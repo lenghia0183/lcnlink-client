@@ -1,0 +1,16 @@
+{
+  "Index": {
+    "title": "Chào mừng đến với Next.js!",
+    "description": "Bắt đầu bằng cách chỉnh sửa app/page.tsx"
+  },
+  "Navigation": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ"
+  },
+  "Common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công"
+  }
+}

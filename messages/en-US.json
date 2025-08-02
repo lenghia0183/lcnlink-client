@@ -1,0 +1,16 @@
+{
+  "Index": {
+    "title": "Welcome to Next.js!",
+    "description": "Get started by editing app/page.tsx"
+  },
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}

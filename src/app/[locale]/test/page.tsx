@@ -7,17 +7,20 @@ import { Mail, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/TextField";
-import { TEXTFIELD_ALLOW, TEXTFIELD_PREVENT } from "@/constants/regexes";
+import { TEXTFIELD_PREVENT } from "@/constants/regexes";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { RadioGroupField } from "@/components/ui/RadioGroupField";
+import { CheckboxGroupField } from "@/components/ui/CheckboxGroupField";
 
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
   note: z.email(),
-  type: z.enum(["all", "mentions", "none"], {
-    required_error: "You need to select a notification type.",
-  }),
+  type: z.enum(["all", "mentions", "none"]),
+  hobbies: z
+    .array(z.string())
+    .min(1, "Bạn phải chọn ít nhất 1 sở thích")
+    .optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -31,6 +34,7 @@ export default function TestSiteForm() {
       password: "nghialc@gmail.com",
       note: "hehehe",
       type: "mentions",
+      hobbies: ["coding"],
     },
   });
 
@@ -86,14 +90,26 @@ export default function TestSiteForm() {
             name="type"
             label="Notify me about..."
             required
-            direction="row"
             options={[
               {
-                label: <p className="text-green-500">All new messages</p>,
+                label: "All new messages",
                 value: "all",
               },
               { label: "Direct messages and mentions", value: "mentions" },
               { label: "Nothing", value: "none" },
+            ]}
+          />
+
+          <CheckboxGroupField
+            name="hobbies"
+            label="Chọn sở thích"
+            required
+            description="Bạn có thể chọn nhiều mục"
+            options={[
+              { id: "reading", label: "Đọc sách" },
+              { id: "music", label: "Nghe nhạc" },
+              { id: "travel", label: "Du lịch" },
+              { id: "coding", label: "Lập trình" },
             ]}
           />
 

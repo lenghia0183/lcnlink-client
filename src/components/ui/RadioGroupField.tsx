@@ -47,8 +47,8 @@ export function RadioGroupField({
       render={({ field }) => (
         <FormItem className="space-y-3">
           {label && (
-            <FormLabel>
-              {required && <span className="text-destructive mr-1">*</span>}
+            <FormLabel className="gap-1">
+              {required && <span className="text-destructive">*</span>}
               {label}
             </FormLabel>
           )}

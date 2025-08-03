@@ -8,10 +8,12 @@ import { Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/TextField";
 import { TEXTFIELD_PREVENT } from "@/constants/regexes";
+import { TextAreaField } from "@/components/ui/TextAreaField";
 
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
+  note: z.email(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -68,6 +70,16 @@ export default function TestSiteForm() {
             placeholder="Nhập mật khẩu"
             vertical={false}
             leftIcon={<Lock />}
+          />
+
+          <TextAreaField
+            name="note"
+            label="Ghi chú"
+            placeholder="Nhập ghi chú..."
+            required
+            description="Bạn có thể để trống nếu không có gì thêm."
+            allow={/[^a-zA-Z0-9\s]/g}
+            prevent={/[^a-zA-Z0-9\s]/}
           />
 
           <Button type="submit" className="w-full">

@@ -3,10 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import "./globals.css";
-import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { LanguageProvider } from "@/context/LanguageProvider";
 import { ThemeProvider } from "@/context/ThemeProvider";
-import { ModeToggle } from "@/components/ui/ModeToggle";
+import { ModeToggle } from "@/components/ModeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "./calendar";
+import { Calendar } from "../ui/calendar";
 import { DayPickerProps } from "react-day-picker";
 
 type DatePickerFieldProps = {

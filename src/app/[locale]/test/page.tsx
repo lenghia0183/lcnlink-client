@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { TextField } from "@/components/ui/TextField";
+import { TextField } from "@/components/FormFields/TextField";
 import { TEXTFIELD_PREVENT } from "@/constants/regexes";
-import { TextAreaField } from "@/components/ui/TextAreaField";
-import { RadioGroupField } from "@/components/ui/RadioGroupField";
-import { CheckboxGroupField } from "@/components/ui/CheckboxGroupField";
-import { DatePickerField } from "@/components/ui/DatePickerField";
+
+import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
+import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
+import { DatePickerField } from "@/components/FormFields/DatePickerField";
+import { TextAreaField } from "@/components/FormFields/TextAreaField";
 
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),

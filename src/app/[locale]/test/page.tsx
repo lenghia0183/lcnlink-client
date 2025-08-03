@@ -7,13 +7,17 @@ import { Mail, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/TextField";
-import { TEXTFIELD_PREVENT } from "@/constants/regexes";
+import { TEXTFIELD_ALLOW, TEXTFIELD_PREVENT } from "@/constants/regexes";
 import { TextAreaField } from "@/components/ui/TextAreaField";
+import { RadioGroupField } from "@/components/ui/RadioGroupField";
 
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
   note: z.email(),
+  type: z.enum(["all", "mentions", "none"], {
+    required_error: "You need to select a notification type.",
+  }),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -23,8 +27,10 @@ export default function TestSiteForm() {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      email: "",
-      password: "",
+      email: "lenghia@gmail.com",
+      password: "nghialc@gmail.com",
+      note: "hehehe",
+      type: "mentions",
     },
   });
 
@@ -53,9 +59,6 @@ export default function TestSiteForm() {
             iconOnClick={() => {
               console.log("iconOnClick");
             }}
-            inputProps={{
-              maxLength: 10,
-            }}
             onChange={() => {
               console.log("onChange heheh");
             }}
@@ -68,8 +71,7 @@ export default function TestSiteForm() {
             required
             type="password"
             placeholder="Nhập mật khẩu"
-            vertical={false}
-            leftIcon={<Lock />}
+            rightIcon={<Lock />}
           />
 
           <TextAreaField
@@ -78,8 +80,21 @@ export default function TestSiteForm() {
             placeholder="Nhập ghi chú..."
             required
             description="Bạn có thể để trống nếu không có gì thêm."
-            allow={/[^a-zA-Z0-9\s]/g}
-            prevent={/[^a-zA-Z0-9\s]/}
+          />
+
+          <RadioGroupField
+            name="type"
+            label="Notify me about..."
+            required
+            direction="row"
+            options={[
+              {
+                label: <p className="text-green-500">All new messages</p>,
+                value: "all",
+              },
+              { label: "Direct messages and mentions", value: "mentions" },
+              { label: "Nothing", value: "none" },
+            ]}
           />
 
           <Button type="submit" className="w-full">

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-'use client';
+"use client";
 
-import { useCallback, useMemo, useRef } from 'react';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useCallback, useMemo, useRef } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 interface UseQueryStateOptions {
   prefix?: string;
@@ -16,37 +16,45 @@ export interface QueryState<TFilters, TQuickFilters> {
   filters?: TFilters;
   quickFilters?: TQuickFilters;
   keyword?: string;
-  tab?: string | undefined;
+  tab?: string;
 }
 
-type UpdateQueryPayload<TFilters, TQuickFilters> = Partial<QueryState<TFilters, TQuickFilters>>;
+type UpdateQueryPayload<TFilters, TQuickFilters> = Partial<
+  QueryState<TFilters, TQuickFilters>
+>;
 
-export const useQueryState = <TFilters, TQuickFilters = Record<string, unknown>>(
-  initialQuery: Partial<QueryState<TFilters, TQuickFilters>> = { order: 'asc', pageSize: 8 },
-  { prefix = '' }: UseQueryStateOptions = {},
+// Helper type to make string-keyed object
+type StringKeyRecord = Record<string, string | undefined>;
+
+export const useQueryState = <
+  TFilters,
+  TQuickFilters = Record<string, unknown>
+>(
+  initialQuery: Partial<QueryState<TFilters, TQuickFilters>> = {
+    order: "asc",
+    pageSize: 8,
+  },
+  { prefix = "" }: UseQueryStateOptions = {}
 ) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const queryObjRef = useRef<Partial<QueryState<TFilters, TQuickFilters>>>({});
+  // queryObjRef is a string-keyed object because all values are parsed from URLSearchParams
+  const queryObjRef = useRef<StringKeyRecord>({});
 
-  // console.log('queryObjRef', queryObjRef);
+  const pf = prefix.trim();
 
-  const initialQueryPrefix = useMemo(() => {
-    return Object.fromEntries(
-      Object.entries(initialQuery).map(([key, value]) => {
-        if (typeof value === 'object') {
-          value = JSON.stringify(value);
-        }
-        return [`${prefix}${key}`, value];
-      }),
-    );
-  }, [initialQuery, prefix]);
-
-  const pf = useMemo(() => prefix.trim(), [prefix]);
-
-  const [$page, $pageSize, $orderBy, $order, $filters, $quickFilters, $keyword, $tab] = useMemo(
+  const [
+    $page,
+    $pageSize,
+    $orderBy,
+    $order,
+    $filters,
+    $quickFilters,
+    $keyword,
+    $tab,
+  ] = useMemo(
     () => [
       `${pf}page`,
       `${pf}limit`,
@@ -57,164 +65,190 @@ export const useQueryState = <TFilters, TQuickFilters = Record<string, unknown>>
       `${pf}keyword`,
       `${pf}tab`,
     ],
-    [pf],
+    [pf]
   );
 
-  const jsonParse = <T>(str: string | null, fallback: T): T => {
-    try {
-      return str ? JSON.parse(str) : fallback;
-    } catch {
-      return fallback;
-    }
-  };
+  const initialQueryPrefix = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(initialQuery).map(([key, value]) => {
+        const strVal =
+          typeof value === "object" ? JSON.stringify(value) : String(value);
+        return [`${prefix}${key}`, strVal];
+      })
+    );
+  }, [initialQuery, prefix]);
 
-  const queryObj = useMemo(() => {
+  useMemo(() => {
     const params = Object.fromEntries(searchParams.entries());
+    queryObjRef.current = {
+      ...initialQueryPrefix,
+      ...params,
+    };
+  }, [searchParams, initialQueryPrefix]);
 
-    const result = { ...initialQueryPrefix, ...params };
-
-    if (!queryObjRef.current || JSON.stringify(result) !== JSON.stringify(queryObjRef.current)) {
-      queryObjRef.current = result as Partial<QueryState<TFilters, TQuickFilters>>;
-    }
-
-    return queryObjRef.current || {};
-  }, [searchParams, initialQueryPrefix, pathname]) as Record<string, unknown>;
+  const getQueryValue = useCallback(
+    <T = string>(key: string, fallback?: T): T => {
+      const raw = queryObjRef.current?.[key];
+      if (!raw) return fallback as T;
+      try {
+        return JSON.parse(raw) as T;
+      } catch {
+        return raw as T;
+      }
+    },
+    []
+  );
 
   const page = useMemo(() => {
-    const pageNumber = Number(queryObj[$page]);
-    return isNaN(pageNumber) ? 1 : pageNumber;
-  }, [queryObj, $page]);
+    const pageNum = Number(queryObjRef.current?.[$page]);
+    return isNaN(pageNum) ? 1 : pageNum;
+  }, [searchParams]);
 
   const pageSize = useMemo(() => {
-    const pageSizeNumber = Number(queryObj[$pageSize]);
-    return isNaN(pageSizeNumber) ? 8 : pageSizeNumber;
-  }, [queryObj, $pageSize]);
+    const size = Number(queryObjRef.current?.[$pageSize]);
+    return isNaN(size) ? 8 : size;
+  }, [searchParams]);
 
-  const filters = useMemo(() => {
-    return jsonParse<TFilters>(queryObj[$filters] as string | null, {} as TFilters);
-  }, [queryObj, $filters]);
-
-  const quickFilters = useMemo(
-    () => jsonParse<Record<string, unknown>>(queryObj[$quickFilters] as string | null, {}),
-    [queryObj, $quickFilters],
+  const filters = useMemo(
+    () => getQueryValue<TFilters>($filters, {} as TFilters),
+    [searchParams]
   );
-
-  const keyword = useMemo(() => String(queryObj[$keyword] || ''), [queryObj, $keyword]);
-
-  const order = useMemo(() => String(queryObj[$order] || ''), [queryObj, $keyword]);
-
-  const orderBy = useMemo(() => String(queryObj[$orderBy] || ''), [queryObj, $keyword]);
-
-  const tab = useMemo(() => String(queryObj[$tab] || initialQueryPrefix?.tab), [queryObj, $tab, initialQueryPrefix]);
-
-  const updateUrl = useCallback(
-    (obj: UpdateQueryPayload<TFilters, TQuickFilters> = {}) => {
-      const updatedQuery = {
-        ...initialQueryPrefix,
-        ...queryObj,
-        ...obj,
-      };
-
-      const searchParams = new URLSearchParams();
-
-      Object.entries(updatedQuery).forEach(([key, value]) => {
-        const cleanedValue = deepClean(value);
-
-        if (cleanedValue !== undefined) {
-          const valueToSet = typeof cleanedValue === 'object' ? JSON.stringify(cleanedValue) : String(cleanedValue);
-          searchParams.set(key, valueToSet);
-        } else {
-          searchParams.delete(key);
-        }
-      });
-      router.replace(`${pathname}?${searchParams.toString()}`);
-    },
-    [pathname, queryObj, initialQueryPrefix],
+  const quickFilters = useMemo(
+    () => getQueryValue<TQuickFilters>($quickFilters, {} as TQuickFilters),
+    [searchParams]
+  );
+  const keyword = useMemo(
+    () => getQueryValue<string>($keyword, ""),
+    [searchParams]
+  );
+  const order = useMemo(
+    () => getQueryValue<string>($order, ""),
+    [searchParams]
+  );
+  const orderBy = useMemo(
+    () => getQueryValue<string>($orderBy, ""),
+    [searchParams]
+  );
+  const tab = useMemo(
+    () => getQueryValue<string>($tab, initialQueryPrefix[$tab] as string),
+    [searchParams]
   );
 
   const deepClean = (data: unknown): unknown => {
     if (Array.isArray(data)) {
-      // Lọc bỏ các phần tử rỗng và gọi đệ quy để xử lý phần tử lồng nhau
-      const cleanedArray = data.map(deepClean).filter((v) => v !== undefined && v !== null && v !== '');
-      return cleanedArray.length > 0 ? cleanedArray : undefined;
+      const cleaned = data.map(deepClean).filter(Boolean);
+      return cleaned.length > 0 ? cleaned : undefined;
     }
-
-    if (typeof data === 'object' && data !== null) {
-      // Lọc object để loại bỏ các key có giá trị undefined, null, '', object/mảng rỗng
-      const cleanedObject = Object.fromEntries(
+    if (typeof data === "object" && data !== null) {
+      const obj = Object.fromEntries(
         Object.entries(data)
-          .map(([key, value]) => [key, deepClean(value)]) // Gọi đệ quy
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .filter(([_, v]) => v !== undefined), // Chỉ giữ lại các giá trị hợp lệ
+          .map(([k, v]) => [k, deepClean(v)])
+          .filter(([_, v]) => v !== undefined)
       );
-      return Object.keys(cleanedObject).length > 0 ? cleanedObject : undefined;
+      return Object.keys(obj).length > 0 ? obj : undefined;
     }
-
-    if (data === undefined || data === null || data === '') {
-      return undefined;
-    }
-
+    if (data === undefined || data === null || data === "") return undefined;
     return data;
   };
 
-  const setMultiple = useCallback(
-    (payload: UpdateQueryPayload<TFilters, TQuickFilters>) => {
-      const updatedQuery = {
-        ...queryObj,
-        ...payload,
+  const updateUrl = useCallback(
+    (
+      obj: UpdateQueryPayload<Partial<TFilters>, Partial<TQuickFilters>> = {}
+    ) => {
+      const merged: StringKeyRecord = {
+        ...initialQueryPrefix,
+        ...queryObjRef.current,
       };
 
-      const searchParams = new URLSearchParams();
-
-      Object.entries(updatedQuery).forEach(([key, value]) => {
-        const cleanedValue = deepClean(value);
-
-        if (cleanedValue !== undefined) {
-          const valueToSet = typeof cleanedValue === 'object' ? JSON.stringify(cleanedValue) : String(cleanedValue);
-          searchParams.set(key, valueToSet);
+      Object.entries(obj).forEach(([key, value]) => {
+        const fullKey = `${prefix}${key}`;
+        const cleaned = deepClean(value);
+        if (cleaned !== undefined) {
+          merged[fullKey] =
+            typeof cleaned === "object"
+              ? JSON.stringify(cleaned)
+              : String(cleaned);
         } else {
-          searchParams.delete(key);
+          delete merged[fullKey];
         }
       });
-      searchParams.set($page, '1');
 
+      const searchParams = new URLSearchParams();
+      Object.entries(merged).forEach(([key, value]) => {
+        if (value !== undefined) {
+          searchParams.set(key, value);
+        }
+      });
+
+      queryObjRef.current = merged;
       router.replace(`${pathname}?${searchParams.toString()}`);
     },
-    [queryObj, pathname, router],
+    [pathname, prefix, initialQueryPrefix]
   );
 
-  const setPage = useCallback((payload: number) => updateUrl({ [$page]: payload }), [updateUrl, $page]);
+  // Các setter
+  const setPage = useCallback(
+    (val: number) => {
+      updateUrl({ page: val });
+    },
+    [updateUrl]
+  );
 
   const setPageSize = useCallback(
-    (payload: number) => updateUrl({ [$pageSize]: payload, [$page]: 1 }),
-    [updateUrl, $pageSize],
+    (val: number) => {
+      updateUrl({ pageSize: val, page: 1 });
+    },
+    [updateUrl]
   );
 
-  const setOrder = useCallback((payload: string) => updateUrl({ [$order]: payload, [$page]: 1 }), [updateUrl, $order]);
+  const setOrder = useCallback(
+    (val: string) => {
+      updateUrl({ order: val, page: 1 });
+    },
+    [updateUrl]
+  );
 
   const setOrderBy = useCallback(
-    (payload: string) => updateUrl({ [$orderBy]: payload, [$page]: 1 }),
-    [updateUrl, $orderBy],
+    (val: string) => {
+      updateUrl({ orderBy: val, page: 1 });
+    },
+    [updateUrl]
   );
 
   const setFilters = useCallback(
-    (payload: Partial<TFilters>) => updateUrl({ [$filters]: payload, [$page]: 1 }),
-    [updateUrl, $filters],
+    (val: Partial<TFilters>) => {
+      updateUrl({ filters: val, page: 1 });
+    },
+    [updateUrl]
   );
 
   const setQuickFilters = useCallback(
-    (payload: Partial<TQuickFilters>) => updateUrl({ [$quickFilters]: payload, [$page]: 1 }),
-    [updateUrl, $quickFilters],
+    (val: Partial<TQuickFilters>) => {
+      updateUrl({ quickFilters: val, page: 1 });
+    },
+    [updateUrl]
   );
 
   const setKeyword = useCallback(
-    (payload: string) => {
-      updateUrl({ [$keyword]: payload, [$page]: 1 });
+    (val: string) => {
+      updateUrl({ keyword: val, page: 1 });
     },
-    [updateUrl, $keyword],
+    [updateUrl]
   );
 
-  const setTab = useCallback((payload: string) => updateUrl({ [$tab]: payload, [$page]: 1 }), [updateUrl, $tab]);
+  const setTab = useCallback(
+    (val: string) => {
+      updateUrl({ tab: val, page: 1 });
+    },
+    [updateUrl]
+  );
+
+  const setMultiple = useCallback(
+    (vals: UpdateQueryPayload<TFilters, TQuickFilters>) => {
+      updateUrl({ ...vals, page: 1 });
+    },
+    [updateUrl]
+  );
 
   return {
     page,

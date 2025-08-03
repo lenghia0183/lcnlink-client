@@ -1,209 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail, Lock } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useQueryState } from "@/hooks/useQueryState";
+import { TextField } from "@/components/ui/TextField";
+import { TEXTFIELD_PREVENT } from "@/constants/regexes";
 
-interface Filters {
-  name?: string;
-  category?: string;
-}
+const schema = z.object({
+  email: z.string().email("Email không hợp lệ"),
+  password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
+});
 
-interface QuickFilters {
-  status?: "active" | "inactive";
-}
+type FormValues = z.infer<typeof schema>;
 
-export default function TestPage() {
-  // ===== Form A Input State =====
-  const [inputNameA, setInputNameA] = useState("");
-  const [inputCategoryA, setInputCategoryA] = useState("");
-  const [inputKeywordA, setInputKeywordA] = useState("");
-  const [inputOrderA, setInputOrderA] = useState<"asc" | "desc">("asc");
-
-  const {
-    page: pageA,
-    pageSize: pageSizeA,
-    filters: filtersA,
-    keyword: keywordA,
-    order: orderA,
-    setPage: setPageA,
-    setPageSize: setPageSizeA,
-    setFilters: setFiltersA,
-    setKeyword: setKeywordA,
-    setOrder: setOrderA,
-  } = useQueryState<Filters, QuickFilters>(
-    {
-      pageSize: 5,
-      order: "asc",
+export default function TestSiteForm() {
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
     },
-    { prefix: "a_" }
-  );
+  });
 
-  // ===== Form B Input State =====
-  const [inputNameB, setInputNameB] = useState("");
-  const [inputCategoryB, setInputCategoryB] = useState("");
-  const [inputKeywordB, setInputKeywordB] = useState("");
-  const [inputOrderB, setInputOrderB] = useState<"asc" | "desc">("asc");
-
-  const {
-    page: pageB,
-    pageSize: pageSizeB,
-    filters: filtersB,
-    keyword: keywordB,
-    order: orderB,
-    setPage: setPageB,
-    setPageSize: setPageSizeB,
-    setFilters: setFiltersB,
-    setKeyword: setKeywordB,
-    setOrder: setOrderB,
-  } = useQueryState<Filters, QuickFilters>(
-    {
-      pageSize: 3,
-      order: "desc",
-    },
-    { prefix: "b_" }
-  );
-
-  // ===== Handlers for A =====
-  const handleApplyA = () => {
-    setFiltersA({ name: inputNameA, category: inputCategoryA });
-    setKeywordA(inputKeywordA);
-    setOrderA(inputOrderA);
-    setPageA(1);
-  };
-
-  const handleResetA = () => {
-    setFiltersA({});
-    setKeywordA("");
-    setOrderA("asc");
-    setPageA(1);
-    setInputNameA("");
-    setInputCategoryA("");
-    setInputKeywordA("");
-    setInputOrderA("asc");
-  };
-
-  // ===== Handlers for B =====
-  const handleApplyB = () => {
-    setFiltersB({ name: inputNameB, category: inputCategoryB });
-    setKeywordB(inputKeywordB);
-    setOrderB(inputOrderB);
-    setPageB(1);
-  };
-
-  const handleResetB = () => {
-    setFiltersB({});
-    setKeywordB("");
-    setOrderB("desc");
-    setPageB(1);
-    setInputNameB("");
-    setInputCategoryB("");
-    setInputKeywordB("");
-    setInputOrderB("desc");
+  const onSubmit = (data: FormValues) => {
+    console.log("✅ Submitted:", data);
   };
 
   return (
-    <div className="p-8 space-y-12">
-      <h1 className="text-2xl font-bold">Test Page with Two Query States</h1>
+    <div className="max-w-md mx-auto py-10">
+      <h1 className="text-2xl font-bold mb-6">Test Form</h1>
 
-      {/* ----------- Form A ------------ */}
-      <div className="space-y-4 border p-6 rounded-md bg-gray-50">
-        <h2 className="text-xl font-semibold">Form A (prefix: a_)</h2>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="space-y-6"
+          noValidate
+        >
+          <TextField
+            name="email"
+            label="Email"
+            required
+            placeholder="your@email.com"
+            description="Chúng tôi sẽ không chia sẻ email của bạn."
+            // allow={TEXTFIELD_ALLOW.ALPHA}
+            rightIcon={<Mail color="currentColor" />}
+            iconOnClick={() => {
+              console.log("iconOnClick");
+            }}
+            inputProps={{
+              maxLength: 10,
+            }}
+            onChange={() => {
+              console.log("onChange heheh");
+            }}
+            prevent={TEXTFIELD_PREVENT.NUMERIC}
+          />
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Filter by Name"
-            value={inputNameA}
-            onChange={(e) => setInputNameA(e.target.value)}
+          <TextField
+            name="password"
+            label="Mật khẩu"
+            required
+            type="password"
+            placeholder="Nhập mật khẩu"
+            vertical={false}
+            leftIcon={<Lock />}
           />
-          <Input
-            placeholder="Filter by Category"
-            value={inputCategoryA}
-            onChange={(e) => setInputCategoryA(e.target.value)}
-          />
-          <Input
-            placeholder="Keyword"
-            value={inputKeywordA}
-            onChange={(e) => setInputKeywordA(e.target.value)}
-          />
-          <select
-            className="border rounded px-3 py-2"
-            value={inputOrderA}
-            onChange={(e) => setInputOrderA(e.target.value as "asc" | "desc")}
-          >
-            <option value="asc">Sort Asc</option>
-            <option value="desc">Sort Desc</option>
-          </select>
-        </div>
 
-        <div className="flex gap-4">
-          <Button onClick={handleApplyA}>Apply A</Button>
-          <Button variant="outline" onClick={handleResetA}>
-            Reset A
+          <Button type="submit" className="w-full">
+            Gửi
           </Button>
-        </div>
-
-        <div className="text-sm bg-white p-4 rounded border">
-          <strong>Query A:</strong>
-          <pre>
-            {JSON.stringify(
-              { pageA, pageSizeA, filtersA, keywordA, orderA },
-              null,
-              2
-            )}
-          </pre>
-        </div>
-      </div>
-
-      {/* ----------- Form B ------------ */}
-      <div className="space-y-4 border p-6 rounded-md bg-gray-50">
-        <h2 className="text-xl font-semibold">Form B (prefix: b_)</h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Filter by Name"
-            value={inputNameB}
-            onChange={(e) => setInputNameB(e.target.value)}
-          />
-          <Input
-            placeholder="Filter by Category"
-            value={inputCategoryB}
-            onChange={(e) => setInputCategoryB(e.target.value)}
-          />
-          <Input
-            placeholder="Keyword"
-            value={inputKeywordB}
-            onChange={(e) => setInputKeywordB(e.target.value)}
-          />
-          <select
-            className="border rounded px-3 py-2"
-            value={inputOrderB}
-            onChange={(e) => setInputOrderB(e.target.value as "asc" | "desc")}
-          >
-            <option value="asc">Sort Asc</option>
-            <option value="desc">Sort Desc</option>
-          </select>
-        </div>
-
-        <div className="flex gap-4">
-          <Button onClick={handleApplyB}>Apply B</Button>
-          <Button variant="outline" onClick={handleResetB}>
-            Reset B
-          </Button>
-        </div>
-
-        <div className="text-sm bg-white p-4 rounded border">
-          <strong>Query B:</strong>
-          <pre>
-            {JSON.stringify(
-              { pageB, pageSizeB, filtersB, keywordB, orderB },
-              null,
-              2
-            )}
-          </pre>
-        </div>
-      </div>
+        </form>
+      </FormProvider>
     </div>
   );
 }

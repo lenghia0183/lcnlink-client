@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageProvider";
-import { Locales } from "@/config/locales";
+import { Locale, Locales } from "@/config/locales";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, Check } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
-const langFromPathname = (path: string): Locales => {
+const langFromPathname = (path: string): Locale => {
   const langSegment = path.split("/")[1];
   switch (langSegment) {
     case "vi-VN":

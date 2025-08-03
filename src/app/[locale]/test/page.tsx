@@ -11,12 +11,18 @@ import { TEXTFIELD_PREVENT } from "@/constants/regexes";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { RadioGroupField } from "@/components/ui/RadioGroupField";
 import { CheckboxGroupField } from "@/components/ui/CheckboxGroupField";
+import { DatePickerField } from "@/components/ui/DatePickerField";
 
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
   note: z.email(),
   type: z.enum(["all", "mentions", "none"]),
+  birthday: z.date(),
+  eventDuration: z.object({
+    from: z.date().optional(),
+    to: z.date().optional(),
+  }),
   hobbies: z
     .array(z.string())
     .min(1, "Bạn phải chọn ít nhất 1 sở thích")
@@ -84,6 +90,22 @@ export default function TestSiteForm() {
             placeholder="Nhập ghi chú..."
             required
             description="Bạn có thể để trống nếu không có gì thêm."
+          />
+
+          <DatePickerField
+            name="birthday"
+            label="Ngày sinh"
+            required
+            mode="single"
+            placeholder="Chọn ngày sinh"
+            disabled={{ dayOfWeek: [0, 1, 2, 3, 6] }}
+          />
+
+          <DatePickerField
+            name="eventDuration"
+            label="Khoảng thời gian sự kiện"
+            mode="range"
+            placeholder="Chọn khoảng ngày"
           />
 
           <RadioGroupField

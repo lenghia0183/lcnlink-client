@@ -13,11 +13,13 @@ import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
+import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
 
+// ✅ SCHEMA with `user` validated
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
-  note: z.email(),
+  note: z.string().optional(),
   type: z.enum(["all", "mentions", "none"]),
   birthday: z.date(),
   eventDuration: z.object({
@@ -28,9 +30,28 @@ const schema = z.object({
     .array(z.string())
     .min(1, "Bạn phải chọn ít nhất 1 sở thích")
     .optional(),
+  country: z
+    .object({
+      code: z.string(),
+      label: z.string(),
+    })
+    .optional(),
+  user: z
+    .object({
+      id: z.number(),
+      title: z.string(),
+    })
+    .nullable(),
 });
 
 type FormValues = z.infer<typeof schema>;
+
+type Post = {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+};
 
 export default function TestSiteForm() {
   const methods = useForm<FormValues>({
@@ -42,12 +63,24 @@ export default function TestSiteForm() {
       note: "hehehe",
       type: "mentions",
       hobbies: ["coding"],
+      user: null,
     },
   });
 
   const onSubmit = (data: FormValues) => {
     console.log("✅ Submitted:", data);
   };
+
+  async function fetchPosts(query: string): Promise<Post[]> {
+    const url = `/api/posts`;
+    const res = await fetch(url, {
+      method: "GET",
+    });
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  }
 
   return (
     <div className="max-w-md mx-auto py-10">
@@ -59,20 +92,31 @@ export default function TestSiteForm() {
           className="space-y-6"
           noValidate
         >
+          <AutoCompleteField
+            name="user"
+            label="Select User"
+            placeholder="Type a name..."
+            required
+            asyncRequest={fetchPosts}
+            asyncRequestHelper={(data) => {
+              return data.map((option) => ({
+                id: option.id,
+                title: option.title,
+              }));
+            }}
+            getOptionLabel={(option) => option.title}
+            isOptionEqualToValue={(option, val) => option?.id === val?.id}
+            filterOptionsLocally={false}
+            autoFetch={true}
+          />
+
           <TextField
             name="email"
             label="Email"
             required
             placeholder="your@email.com"
             description="Chúng tôi sẽ không chia sẻ email của bạn."
-            // allow={TEXTFIELD_ALLOW.ALPHA}
             rightIcon={<Mail color="currentColor" />}
-            iconOnClick={() => {
-              console.log("iconOnClick");
-            }}
-            onChange={() => {
-              console.log("onChange heheh");
-            }}
             prevent={TEXTFIELD_PREVENT.NUMERIC}
           />
 
@@ -89,7 +133,6 @@ export default function TestSiteForm() {
             name="note"
             label="Ghi chú"
             placeholder="Nhập ghi chú..."
-            required
             description="Bạn có thể để trống nếu không có gì thêm."
           />
 

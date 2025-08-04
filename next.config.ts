@@ -7,8 +7,18 @@ const nextConfig: NextConfig = {
     // ignoreBuildErrors: true,
   },
   images: {
-    domains: [],
+    domains: ["jsonplaceholder.org"],
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://jsonplaceholder.org/:path*",
+      },
+    ];
+  },
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

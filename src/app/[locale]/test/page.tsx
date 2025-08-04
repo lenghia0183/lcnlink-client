@@ -37,11 +37,14 @@ const schema = z.object({
     })
     .optional(),
   user: z
-    .object({
-      id: z.number(),
-      title: z.string(),
-    })
-    .nullable(),
+    .array(
+      z.object({
+        id: z.number(),
+        title: z.string(),
+      })
+    )
+    .min(1, "Bạn phải chọn ít nhất 1 người dùng")
+    .optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -63,7 +66,17 @@ export default function TestSiteForm() {
       note: "hehehe",
       type: "mentions",
       hobbies: ["coding"],
-      user: null,
+      user: [
+        {
+          id: 2,
+          title:
+            "Quisque non ligula laoreet, volutpat velit cursus, condimentum arcu.",
+        },
+        {
+          id: 5,
+          title: "Integer molestie metus eu felis facilisis venenatis.",
+        },
+      ],
     },
   });
 

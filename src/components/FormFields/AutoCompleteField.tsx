@@ -35,7 +35,7 @@ interface AutoCompleteFieldProps<T, R = T[]> {
   options?: T[];
   getOptionLabel?: (option: T) => string;
   isOptionEqualToValue?: (option: T, value: T) => boolean;
-  onChange?: (value: T) => void;
+  onChange?: (value: T | T[]) => void;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -46,6 +46,7 @@ interface AutoCompleteFieldProps<T, R = T[]> {
   asyncRequestHelper?: (data: R) => T[];
   autoFetch?: boolean;
   filterOptionsLocally?: boolean;
+  multiple?: boolean;
 }
 
 export function AutoCompleteField<T, R = T[]>({
@@ -67,6 +68,7 @@ export function AutoCompleteField<T, R = T[]>({
   asyncRequestHelper = (data) => data as unknown as T[],
   autoFetch = true,
   filterOptionsLocally = true,
+  multiple = false,
 }: AutoCompleteFieldProps<T, R>) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
@@ -74,11 +76,11 @@ export function AutoCompleteField<T, R = T[]>({
   const [filteredOptions, setFilteredOptions] = useState<T[]>(initialOptions);
   const [inputValue, setInputValue] = useState("");
   const debounced = useDebounce(inputValue, 500);
-
+  const [hasFirstCall, setHasFirstCall] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [triggerWidth, setTriggerWidth] = useState<number>();
-  const [hasFirstCall, setHasFirstCall] = useState(false);
-  async function fetchOptions() {
+
+  const fetchOptions = async () => {
     if (!asyncRequest) return;
     setHasFirstCall(true);
     try {
@@ -91,7 +93,8 @@ export function AutoCompleteField<T, R = T[]>({
     } catch {
       setOptions([]);
     }
-  }
+  };
+
   useEffect(() => {
     if (!asyncRequest) return;
     if (filterOptionsLocally) return;
@@ -112,6 +115,7 @@ export function AutoCompleteField<T, R = T[]>({
     if (!open) return;
     if (!asyncRequest) return;
     if (!filterOptionsLocally) return;
+
     if (autoFetch && !hasFirstCall) {
       fetchOptions();
     } else if (!autoFetch) {
@@ -146,27 +150,95 @@ export function AutoCompleteField<T, R = T[]>({
     </Button>
   );
 
-  const optionForRender = filterOptionsLocally ? filteredOptions : options;
-
   const handleInputChange = (val: string) => {
     setInputValue(val);
     if (filterOptionsLocally) {
-      const filteredOptions = options.filter((opt) =>
+      const filtered = options.filter((opt) =>
         getOptionLabel(opt).toLowerCase().includes(val.toLowerCase())
       );
-      setFilteredOptions(filteredOptions);
+      setFilteredOptions(filtered);
     }
   };
+
+  const optionForRender = filterOptionsLocally ? filteredOptions : options;
 
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => {
-        const selected = options.find((option) =>
-          isOptionEqualToValue(option, field.value)
+        const selected = multiple
+          ? options.filter(
+              (opt) =>
+                Array.isArray(field.value) &&
+                field.value.some((v: T) => isOptionEqualToValue(opt, v))
+            )
+          : options.find((opt) => isOptionEqualToValue(opt, field.value));
+
+        const labelSelected = multiple
+          ? (selected as T[]).map(getOptionLabel).join(", ")
+          : selected
+          ? getOptionLabel(selected as T)
+          : null;
+
+        const handleSelect = (option: T) => {
+          if (multiple) {
+            const currentValues = Array.isArray(field.value) ? field.value : [];
+            const exists = currentValues.some((v: T) =>
+              isOptionEqualToValue(v, option)
+            );
+            const updated = exists
+              ? currentValues.filter((v: T) => !isOptionEqualToValue(v, option))
+              : [...currentValues, option];
+            field.onChange(updated);
+            onChange?.(updated);
+          } else {
+            field.onChange(option);
+            onChange?.(option);
+            setOpen(false);
+          }
+        };
+
+        const isSelected = (option: T) => {
+          if (multiple) {
+            return (
+              Array.isArray(field.value) &&
+              field.value.some((v: T) => isOptionEqualToValue(v, option))
+            );
+          }
+          return isOptionEqualToValue(option, field.value);
+        };
+
+        const content = (
+          <Command>
+            <CommandInput
+              placeholder={placeholder}
+              value={inputValue}
+              onValueChange={handleInputChange}
+            />
+            <CommandEmpty>No options found.</CommandEmpty>
+            <CommandGroup className="h-[350px] overflow-y-scroll">
+              {optionForRender.map((option, idx) => {
+                const optLabel = getOptionLabel(option);
+                return (
+                  <CommandItem
+                    key={idx}
+                    value={optLabel}
+                    onSelect={() => handleSelect(option)}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2",
+                        isSelected(option) ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {optLabel}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </Command>
         );
-        const labelSelected = selected ? getOptionLabel(selected) : null;
 
         return (
           <FormItem className={cn("w-full", className)}>
@@ -187,41 +259,7 @@ export function AutoCompleteField<T, R = T[]>({
                       className="p-0"
                       style={triggerWidth ? { width: triggerWidth } : undefined}
                     >
-                      <Command>
-                        <CommandInput
-                          placeholder={placeholder}
-                          value={inputValue}
-                          onValueChange={handleInputChange}
-                        />
-
-                        <CommandEmpty>No options found.</CommandEmpty>
-                        <CommandGroup className="h-[350px] overflow-y-scroll">
-                          {optionForRender.map((option, idx) => {
-                            const optLabel = getOptionLabel(option);
-                            return (
-                              <CommandItem
-                                key={idx}
-                                value={optLabel}
-                                onSelect={() => {
-                                  field.onChange(option);
-                                  onChange?.(option);
-                                  setOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2",
-                                    isOptionEqualToValue(option, field.value)
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {optLabel}
-                              </CommandItem>
-                            );
-                          })}
-                        </CommandGroup>
-                      </Command>
+                      {content}
                     </PopoverContent>
                   </Popover>
                 </FormControl>
@@ -249,40 +287,7 @@ export function AutoCompleteField<T, R = T[]>({
                     className="p-0"
                     style={triggerWidth ? { width: triggerWidth } : undefined}
                   >
-                    <Command>
-                      <CommandInput
-                        placeholder={placeholder}
-                        value={inputValue}
-                        onValueChange={handleInputChange}
-                      />
-                      <CommandEmpty>No options found.</CommandEmpty>
-                      <CommandGroup className="h-[350px] overflow-y-scroll">
-                        {options.map((option, idx) => {
-                          const optLabel = getOptionLabel(option);
-                          return (
-                            <CommandItem
-                              key={idx}
-                              value={optLabel}
-                              onSelect={() => {
-                                field.onChange(option);
-                                onChange?.(option);
-                                setOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2",
-                                  isOptionEqualToValue(option, field.value)
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {optLabel}
-                            </CommandItem>
-                          );
-                        })}
-                      </CommandGroup>
-                    </Command>
+                    {content}
                   </PopoverContent>
                 </Popover>
               </div>

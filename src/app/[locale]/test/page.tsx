@@ -108,6 +108,7 @@ export default function TestSiteForm() {
             isOptionEqualToValue={(option, val) => option?.id === val?.id}
             filterOptionsLocally={false}
             autoFetch={true}
+            multiple={true}
           />
 
           <TextField

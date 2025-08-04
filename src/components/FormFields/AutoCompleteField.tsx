@@ -21,7 +21,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Check, ChevronDown, X } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,7 @@ interface AutoCompleteFieldProps<T, R = T[]> {
   autoFetch?: boolean;
   filterOptionsLocally?: boolean;
   multiple?: boolean;
+  maxBadges?: number;
 }
 
 export function AutoCompleteField<T, R = T[]>({
@@ -69,6 +71,7 @@ export function AutoCompleteField<T, R = T[]>({
   autoFetch = true,
   filterOptionsLocally = true,
   multiple = false,
+  maxBadges = 2,
 }: AutoCompleteFieldProps<T, R>) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
@@ -130,26 +133,6 @@ export function AutoCompleteField<T, R = T[]>({
     }
   }, [open]);
 
-  const renderTriggerButton = (selectedLabel: string | null) => (
-    <Button
-      ref={triggerRef}
-      variant="outline"
-      role="combobox"
-      aria-expanded={open}
-      className="w-full justify-between min-w-0"
-      disabled={disabled}
-    >
-      <span className="flex-1 text-left truncate">
-        {selectedLabel ? (
-          selectedLabel
-        ) : (
-          <span className="text-muted-foreground">{placeholder}</span>
-        )}
-      </span>
-      <ChevronDown className="opacity-50 ml-2" />
-    </Button>
-  );
-
   const handleInputChange = (val: string) => {
     setInputValue(val);
     if (filterOptionsLocally) {
@@ -175,11 +158,11 @@ export function AutoCompleteField<T, R = T[]>({
             )
           : options.find((opt) => isOptionEqualToValue(opt, field.value));
 
-        const labelSelected = multiple
-          ? (selected as T[]).map(getOptionLabel).join(", ")
+        const selectedLabels = multiple
+          ? (selected as T[]).map(getOptionLabel)
           : selected
-          ? getOptionLabel(selected as T)
-          : null;
+          ? [getOptionLabel(selected as T)]
+          : [];
 
         const handleSelect = (option: T) => {
           if (multiple) {
@@ -199,6 +182,15 @@ export function AutoCompleteField<T, R = T[]>({
           }
         };
 
+        const removeItem = (index: number) => {
+          if (!multiple || !Array.isArray(field.value)) return;
+
+          const updated = [...field.value];
+          updated.splice(index, 1);
+          field.onChange(updated);
+          onChange?.(updated);
+        };
+
         const isSelected = (option: T) => {
           if (multiple) {
             return (
@@ -209,6 +201,66 @@ export function AutoCompleteField<T, R = T[]>({
           return isOptionEqualToValue(option, field.value);
         };
 
+        // Tách hàm render badge
+        const renderSelectedBadges = () => {
+          if (!multiple || selectedLabels.length === 0) return null;
+
+          return (
+            <div className="flex flex-wrap gap-1">
+              {selectedLabels.slice(0, maxBadges).map((label, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center gap-1 py-1 px-2"
+                >
+                  <span className="max-w-[120px] truncate">{label}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeItem(index);
+                    }}
+                    className="rounded-full hover:bg-accent"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+
+              {selectedLabels.length > maxBadges && (
+                <Badge variant="outline" className="py-1 px-2">
+                  +{selectedLabels.length - maxBadges}
+                </Badge>
+              )}
+            </div>
+          );
+        };
+
+        // Tách hàm render trigger button
+        const renderTriggerButton = () => (
+          <Button
+            ref={triggerRef}
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between min-w-0"
+            disabled={disabled}
+          >
+            <div className="flex-1 flex flex-wrap items-center gap-1 min-w-0">
+              {selectedLabels.length === 0 ? (
+                <span className="text-muted-foreground truncate">
+                  {placeholder}
+                </span>
+              ) : multiple ? (
+                renderSelectedBadges()
+              ) : (
+                <span className="truncate">{selectedLabels[0]}</span>
+              )}
+            </div>
+            <ChevronDown className="opacity-50 ml-2" />
+          </Button>
+        );
+
         const content = (
           <Command>
             <CommandInput
@@ -217,7 +269,7 @@ export function AutoCompleteField<T, R = T[]>({
               onValueChange={handleInputChange}
             />
             <CommandEmpty>No options found.</CommandEmpty>
-            <CommandGroup className="h-[350px] overflow-y-scroll">
+            <CommandGroup className="h-[350px] overflow-y-auto">
               {optionForRender.map((option, idx) => {
                 const optLabel = getOptionLabel(option);
                 return (
@@ -253,7 +305,7 @@ export function AutoCompleteField<T, R = T[]>({
                 <FormControl>
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
-                      {renderTriggerButton(labelSelected)}
+                      {renderTriggerButton()}
                     </PopoverTrigger>
                     <PopoverContent
                       className="p-0"
@@ -281,7 +333,7 @@ export function AutoCompleteField<T, R = T[]>({
                 )}
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
-                    {renderTriggerButton(labelSelected)}
+                    {renderTriggerButton()}
                   </PopoverTrigger>
                   <PopoverContent
                     className="p-0"

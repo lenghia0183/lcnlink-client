@@ -27,6 +27,11 @@ import { useFormContext } from "react-hook-form";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
 import useDebounce from "@/hooks/useDebounce";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface AutoCompleteFieldProps<T, R = T[]> {
   name: string;
@@ -49,6 +54,7 @@ interface AutoCompleteFieldProps<T, R = T[]> {
   filterOptionsLocally?: boolean;
   multiple?: boolean;
   maxBadges?: number;
+  badgeMaxWidth?: string;
 }
 
 export function AutoCompleteField<T, R = T[]>({
@@ -72,6 +78,7 @@ export function AutoCompleteField<T, R = T[]>({
   filterOptionsLocally = true,
   multiple = false,
   maxBadges = 2,
+  badgeMaxWidth = "120px",
 }: AutoCompleteFieldProps<T, R>) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
@@ -158,11 +165,13 @@ export function AutoCompleteField<T, R = T[]>({
             )
           : options.find((opt) => isOptionEqualToValue(opt, field.value));
 
-        const selectedLabels = multiple
-          ? (selected as T[]).map(getOptionLabel)
+        const selectedValues = multiple
+          ? (selected as T[])
           : selected
-          ? [getOptionLabel(selected as T)]
+          ? [selected as T]
           : [];
+
+        const selectedLabels = selectedValues.map(getOptionLabel);
 
         const handleSelect = (option: T) => {
           if (multiple) {
@@ -201,42 +210,81 @@ export function AutoCompleteField<T, R = T[]>({
           return isOptionEqualToValue(option, field.value);
         };
 
-        // Tách hàm render badge
+        // Hàm render badge cho từng item
+        const renderBadge = (value: T, index: number) => {
+          const label = getOptionLabel(value);
+          return (
+            <Badge
+              key={index}
+              variant="secondary"
+              className="flex items-center gap-1 py-1 px-2"
+            >
+              <span className="truncate" style={{ maxWidth: badgeMaxWidth }}>
+                {label}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeItem(index);
+                }}
+                className="rounded-full hover:bg-accent"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          );
+        };
+
+        // Hàm render badge indicator (+X)
+        const renderBadgeIndicator = () => {
+          const hiddenCount = selectedLabels.length - maxBadges;
+          const hiddenValues = selectedValues.slice(maxBadges);
+          const hiddenLabels = hiddenValues.map(getOptionLabel);
+
+          return (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className="py-1 px-2 cursor-pointer hover:bg-accent"
+                >
+                  +{hiddenCount}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent
+                side="bottom"
+                align="start"
+                className="max-w-md max-h-60 overflow-auto"
+              >
+                <div className="flex flex-col gap-1 p-1">
+                  {hiddenLabels.map((label, index) => (
+                    <div key={index} className="py-1">
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          );
+        };
+
+        // Hàm render các badge đã chọn
         const renderSelectedBadges = () => {
           if (!multiple || selectedLabels.length === 0) return null;
 
           return (
             <div className="flex flex-wrap gap-1">
-              {selectedLabels.slice(0, maxBadges).map((label, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="flex items-center gap-1 py-1 px-2"
-                >
-                  <span className="max-w-[120px] truncate">{label}</span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeItem(index);
-                    }}
-                    className="rounded-full hover:bg-accent"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              ))}
+              {selectedValues
+                .slice(0, maxBadges)
+                .map((value, index) => renderBadge(value, index))}
 
-              {selectedLabels.length > maxBadges && (
-                <Badge variant="outline" className="py-1 px-2">
-                  +{selectedLabels.length - maxBadges}
-                </Badge>
-              )}
+              {selectedLabels.length > maxBadges && renderBadgeIndicator()}
             </div>
           );
         };
 
-        // Tách hàm render trigger button
+        // Hàm render nút trigger
         const renderTriggerButton = () => (
           <Button
             ref={triggerRef}
@@ -254,7 +302,9 @@ export function AutoCompleteField<T, R = T[]>({
               ) : multiple ? (
                 renderSelectedBadges()
               ) : (
-                <span className="truncate">{selectedLabels[0]}</span>
+                <span className="truncate" style={{ maxWidth: badgeMaxWidth }}>
+                  {selectedLabels[0]}
+                </span>
               )}
             </div>
             <ChevronDown className="opacity-50 ml-2" />
@@ -269,7 +319,7 @@ export function AutoCompleteField<T, R = T[]>({
               onValueChange={handleInputChange}
             />
             <CommandEmpty>No options found.</CommandEmpty>
-            <CommandGroup className="h-[350px] overflow-y-auto">
+            <CommandGroup className="max-h-[350px] overflow-y-auto">
               {optionForRender.map((option, idx) => {
                 const optLabel = getOptionLabel(option);
                 return (
@@ -284,7 +334,7 @@ export function AutoCompleteField<T, R = T[]>({
                         isSelected(option) ? "opacity-100" : "opacity-0"
                       )}
                     />
-                    {optLabel}
+                    <span className="truncate">{optLabel}</span>
                   </CommandItem>
                 );
               })}

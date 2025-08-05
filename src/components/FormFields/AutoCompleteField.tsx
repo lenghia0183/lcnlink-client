@@ -88,7 +88,7 @@ export function AutoCompleteField<T, R = T[]>({
   const debounced = useDebounce(inputValue, 500);
   const [hasFirstCall, setHasFirstCall] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const [triggerWidth, setTriggerWidth] = useState<number>();
+  const [triggerWidth, setTriggerWidth] = useState<number>(0);
 
   const fetchOptions = async () => {
     if (!asyncRequest) return;
@@ -138,7 +138,7 @@ export function AutoCompleteField<T, R = T[]>({
     if (triggerRef.current) {
       setTriggerWidth(triggerRef.current.offsetWidth);
     }
-  }, [open]);
+  }, [open, disabled]);
 
   const handleInputChange = (val: string) => {
     setInputValue(val);
@@ -211,6 +211,30 @@ export function AutoCompleteField<T, R = T[]>({
           return isOptionEqualToValue(option, field.value);
         };
 
+        const calculateBadgeWidth = () => {
+          if (!triggerWidth) return badgeMaxWidth;
+
+          const visibleBadges = Math.min(selectedValues.length, maxBadges);
+          const indicatorWidth = selectedValues.length > maxBadges ? 40 : 0;
+          const chevronWidth = 60;
+          const padding = 60;
+
+          const availableWidth =
+            triggerWidth - chevronWidth - padding - indicatorWidth;
+
+          const widthPerBadge = availableWidth / Math.max(1, visibleBadges);
+
+          const minWidth = 30;
+          const maxWidth = 200;
+
+          return `${Math.min(
+            maxWidth,
+            Math.max(minWidth, widthPerBadge - 8)
+          )}px`;
+        };
+
+        const dynamicBadgeMaxWidth = calculateBadgeWidth();
+
         const renderBadge = (value: T) => {
           const label = getOptionLabel(value);
           return (
@@ -219,7 +243,10 @@ export function AutoCompleteField<T, R = T[]>({
               variant="secondary"
               className="flex items-center gap-1 py-1 px-2"
             >
-              <span className="truncate" style={{ maxWidth: badgeMaxWidth }}>
+              <span
+                className="truncate"
+                style={{ maxWidth: dynamicBadgeMaxWidth }}
+              >
                 {label}
               </span>
               <span
@@ -267,12 +294,11 @@ export function AutoCompleteField<T, R = T[]>({
           );
         };
 
-        // Hàm render các badge đã chọn
         const renderSelectedBadges = () => {
           if (!multiple || selectedLabels.length === 0) return null;
 
           return (
-            <div className="flex flex-wrap gap-1">
+            <div className="flex gap-1">
               {selectedValues
                 .slice(0, maxBadges)
                 .map((value) => renderBadge(value))}
@@ -282,7 +308,6 @@ export function AutoCompleteField<T, R = T[]>({
           );
         };
 
-        // Hàm render nút trigger
         const renderTriggerButton = () => (
           <Button
             ref={triggerRef}
@@ -300,7 +325,10 @@ export function AutoCompleteField<T, R = T[]>({
               ) : multiple ? (
                 renderSelectedBadges()
               ) : (
-                <span className="truncate" style={{ maxWidth: badgeMaxWidth }}>
+                <span
+                  className="truncate"
+                  style={{ maxWidth: dynamicBadgeMaxWidth }}
+                >
                   {selectedLabels[0]}
                 </span>
               )}

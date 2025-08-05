@@ -191,11 +191,12 @@ export function AutoCompleteField<T, R = T[]>({
           }
         };
 
-        const removeItem = (index: number) => {
+        const removeItem = (value: T) => {
           if (!multiple || !Array.isArray(field.value)) return;
 
-          const updated = [...field.value];
-          updated.splice(index, 1);
+          const updated = field.value.filter(
+            (v: T) => !isOptionEqualToValue(v, value)
+          );
           field.onChange(updated);
           onChange?.(updated);
         };
@@ -210,33 +211,30 @@ export function AutoCompleteField<T, R = T[]>({
           return isOptionEqualToValue(option, field.value);
         };
 
-        // Hàm render badge cho từng item
-        const renderBadge = (value: T, index: number) => {
+        const renderBadge = (value: T) => {
           const label = getOptionLabel(value);
           return (
             <Badge
-              key={index}
+              key={label}
               variant="secondary"
               className="flex items-center gap-1 py-1 px-2"
             >
               <span className="truncate" style={{ maxWidth: badgeMaxWidth }}>
                 {label}
               </span>
-              <button
-                type="button"
+              <span
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeItem(index);
+                  removeItem(value);
                 }}
-                className="rounded-full hover:bg-accent"
+                className="rounded-full hover:bg-accent cursor-pointer"
               >
                 <X className="h-3 w-3" />
-              </button>
+              </span>
             </Badge>
           );
         };
 
-        // Hàm render badge indicator (+X)
         const renderBadgeIndicator = () => {
           const hiddenCount = selectedLabels.length - maxBadges;
           const hiddenValues = selectedValues.slice(maxBadges);
@@ -277,7 +275,7 @@ export function AutoCompleteField<T, R = T[]>({
             <div className="flex flex-wrap gap-1">
               {selectedValues
                 .slice(0, maxBadges)
-                .map((value, index) => renderBadge(value, index))}
+                .map((value) => renderBadge(value))}
 
               {selectedLabels.length > maxBadges && renderBadgeIndicator()}
             </div>

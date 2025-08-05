@@ -84,7 +84,7 @@ export default function TestSiteForm() {
     console.log("✅ Submitted:", data);
   };
 
-  async function fetchPosts(query: string): Promise<Post[]> {
+  async function fetchPosts(): Promise<Post[]> {
     const url = `/api/posts`;
     const res = await fetch(url, {
       method: "GET",

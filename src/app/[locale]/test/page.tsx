@@ -16,6 +16,7 @@ import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
 import { AppDialog } from "@/components/AppDialog";
 import { toast } from "@/components/AppToast";
+import { AppTabs } from "@/components/AppTabs";
 
 // Schema validation
 const schema = z.object({
@@ -266,6 +267,23 @@ export default function TestSiteForm() {
           </Button>
         </form>
       </FormProvider>
+
+      <AppTabs
+        tabs={[
+          {
+            value: "account",
+            label: "Account",
+            icon: <Mail className="w-4 h-4" />,
+            content: <div>Your account settings go here.</div>,
+          },
+          {
+            value: "security",
+            label: "Security",
+            icon: <Lock className="w-4 h-4" />,
+            content: <div>Security-related settings.</div>,
+          },
+        ]}
+      />
 
       <AppDialog
         open={isDialogOpen}

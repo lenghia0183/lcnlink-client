@@ -18,6 +18,7 @@ import { AppDialog } from "@/components/AppDialog";
 import { toast } from "@/components/AppToast";
 import { AppTabs } from "@/components/AppTabs";
 import { AppCard } from "@/components/AppCard";
+import { Backdrop } from "@/components/BackDrop";
 
 // Schema validation
 const schema = z.object({
@@ -128,7 +129,7 @@ export default function TestSiteForm() {
 
     try {
       // Giả lập API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       console.log("Data confirmed:", dialogData);
       toast.dismiss(loadingToastId);
       const idToastDetail = toast.success(
@@ -400,6 +401,7 @@ export default function TestSiteForm() {
           </div>
         )}
       </AppDialog>
+      <Backdrop isOpen={isSubmitting} />
     </div>
   );
 }

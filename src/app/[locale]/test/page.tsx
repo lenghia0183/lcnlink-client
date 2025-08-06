@@ -17,6 +17,7 @@ import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
 import { AppDialog } from "@/components/AppDialog";
 import { toast } from "@/components/AppToast";
 import { AppTabs } from "@/components/AppTabs";
+import { AppCard } from "@/components/AppCard";
 
 // Schema validation
 const schema = z.object({
@@ -269,18 +270,54 @@ export default function TestSiteForm() {
       </FormProvider>
 
       <AppTabs
+        className="mt-5"
         tabs={[
           {
             value: "account",
             label: "Account",
             icon: <Mail className="w-4 h-4" />,
-            content: <div>Your account settings go here.</div>,
+            content: (
+              <AppCard
+                title="User Profile"
+                description="This is your user profile card."
+                footer={<Button>Update</Button>}
+                hoverAble
+                padded
+                variant="muted"
+              >
+                <p className="text-sm text-gray-600">
+                  Name: John Doe <br />
+                  Email: john@example.com
+                </p>
+              </AppCard>
+            ),
           },
           {
             value: "security",
             label: "Security",
             icon: <Lock className="w-4 h-4" />,
-            content: <div>Security-related settings.</div>,
+            content: (
+              <AppCard
+                title="Security"
+                description="This is your Security card."
+                footer={
+                  <Button
+                    onClick={() => {
+                      console.log("hehehehehehe");
+                    }}
+                  >
+                    Update
+                  </Button>
+                }
+                padded
+                variant="elevated"
+              >
+                <p className="text-sm text-gray-600">
+                  Name: Security <br />
+                  Email: Security@example.com
+                </p>
+              </AppCard>
+            ),
           },
         ]}
       />

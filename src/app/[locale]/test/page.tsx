@@ -4,18 +4,19 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/FormFields/TextField";
 import { TEXTFIELD_PREVENT } from "@/constants/regexes";
-
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
+import { AppDialog } from "@/components/AppDialog";
 
-// ✅ SCHEMA with `user` validated
+// Schema validation
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
@@ -57,6 +58,10 @@ type Post = {
 };
 
 export default function TestSiteForm() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogData, setDialogData] = useState<FormValues | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -80,8 +85,17 @@ export default function TestSiteForm() {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log("✅ Submitted:", data);
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      console.log("✅ Submitted:", data);
+      setDialogData(data);
+      setIsDialogOpen(true);
+    } catch (error) {
+      console.error("Submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   async function fetchPosts(): Promise<Post[]> {
@@ -94,6 +108,23 @@ export default function TestSiteForm() {
     }
     return res.json();
   }
+
+  const handleConfirm = async () => {
+    if (!dialogData) return;
+
+    setIsSubmitting(true);
+    try {
+      // Giả lập API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Data confirmed:", dialogData);
+      alert("Dữ liệu đã được xác nhận thành công!");
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Confirmation error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto py-10">
@@ -193,11 +224,84 @@ export default function TestSiteForm() {
             ]}
           />
 
-          <Button type="submit" className="w-full">
-            Gửi
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Đang xử lý..." : "Gửi và Xem Kết Quả"}
           </Button>
         </form>
       </FormProvider>
+
+      <AppDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        title="Xác Nhận Thông Tin"
+        description="Vui lòng kiểm tra kỹ thông tin trước khi xác nhận"
+        footerActions={[
+          {
+            label: "Quay Lại",
+            onClick: () => setIsDialogOpen(false),
+            variant: "outline",
+            disabled: isSubmitting,
+          },
+          {
+            label: isSubmitting ? "Đang xử lý..." : "Xác Nhận",
+            onClick: handleConfirm,
+            variant: "default",
+            disabled: isSubmitting,
+          },
+        ]}
+      >
+        {dialogData && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h3 className="font-medium text-sm text-gray-500">Email</h3>
+                <p className="mt-1">{dialogData.email}</p>
+              </div>
+              <div>
+                <h3 className="font-medium text-sm text-gray-500">
+                  Loại thông báo
+                </h3>
+                <p className="mt-1 capitalize">{dialogData.type}</p>
+              </div>
+              <div>
+                <h3 className="font-medium text-sm text-gray-500">Ngày sinh</h3>
+                <p className="mt-1">
+                  {dialogData.birthday.toLocaleDateString()}
+                </p>
+              </div>
+              <div>
+                <h3 className="font-medium text-sm text-gray-500">Sở thích</h3>
+                <p className="mt-1">{dialogData.hobbies?.join(", ")}</p>
+              </div>
+            </div>
+
+            {dialogData.user && dialogData.user.length > 0 && (
+              <div className="mt-4">
+                <h3 className="font-medium text-sm text-gray-500">
+                  Người dùng đã chọn
+                </h3>
+                <ul className="mt-2 space-y-2 max-h-60 overflow-y-auto">
+                  {dialogData.user.map((user) => (
+                    <li key={user.id} className="p-3 border rounded-lg">
+                      <p className="font-medium">ID: {user.id}</p>
+                      <p className="text-sm line-clamp-2">{user.title}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {dialogData.note && (
+              <div className="mt-4">
+                <h3 className="font-medium text-sm text-gray-500">Ghi chú</h3>
+                <p className="mt-1 p-3 bg-gray-50 rounded-lg">
+                  {dialogData.note}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </AppDialog>
     </div>
   );
 }

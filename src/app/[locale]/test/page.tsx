@@ -15,6 +15,7 @@ import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
 import { AppDialog } from "@/components/AppDialog";
+import { toast } from "@/components/AppToast";
 
 // Schema validation
 const schema = z.object({
@@ -87,6 +88,9 @@ export default function TestSiteForm() {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
+    // toast.event("Test toast date", "This is to test toast date", {
+    //   date: new Date(),
+    // });
     try {
       console.log("✅ Submitted:", data);
       setDialogData(data);
@@ -104,6 +108,8 @@ export default function TestSiteForm() {
       method: "GET",
     });
     if (!res.ok) {
+      // Hiển thị toast khi fetch lỗi
+      toast.error("Lỗi tải dữ liệu", "Không thể tải danh sách người dùng");
       throw new Error(`API error: ${res.status} ${res.statusText}`);
     }
     return res.json();
@@ -113,14 +119,45 @@ export default function TestSiteForm() {
     if (!dialogData) return;
 
     setIsSubmitting(true);
+    setIsDialogOpen(false);
+    const loadingToastId = toast.loading("Đang xử lý...", "Vui lòng chờ", {
+      duration: 100000,
+    });
+
     try {
       // Giả lập API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("Data confirmed:", dialogData);
-      alert("Dữ liệu đã được xác nhận thành công!");
+      toast.dismiss(loadingToastId);
+      const idToastDetail = toast.success(
+        "Xác nhận thành công!",
+        "Dữ liệu đã được lưu trữ",
+        {
+          action: {
+            label: "Xem chi tiết",
+            onClick: () => {
+              setIsDialogOpen(true);
+              toast.dismiss(idToastDetail);
+            },
+          },
+        }
+      );
+
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Confirmation error:", error);
+      // Ẩn toast loading và hiển thị toast lỗi
+      toast.dismiss(loadingToastId);
+      toast.error(
+        "Lỗi xác nhận",
+        "Không thể lưu dữ liệu. Vui lòng thử lại sau.",
+        {
+          action: {
+            label: "Thử lại",
+            onClick: handleConfirm,
+          },
+        }
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -238,7 +275,13 @@ export default function TestSiteForm() {
         footerActions={[
           {
             label: "Quay Lại",
-            onClick: () => setIsDialogOpen(false),
+            onClick: () => {
+              setIsDialogOpen(false);
+              toast.info(
+                "Đã hủy xác nhận",
+                "Bạn có thể chỉnh sửa lại thông tin"
+              );
+            },
             variant: "outline",
             disabled: isSubmitting,
           },

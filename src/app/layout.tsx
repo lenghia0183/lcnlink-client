@@ -7,6 +7,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { LanguageProvider } from "@/context/LanguageProvider";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { ModeToggle } from "@/components/ModeToggle";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,12 @@ export default async function RootLayout({
                 <ModeToggle />
               </div>
               {children}
+              <Toaster
+                visibleToasts={5}
+                swipeDirections={["left", "right"]}
+                position="top-center"
+                closeButton={true}
+              />
             </ThemeProvider>
           </LanguageProvider>
         </NextIntlClientProvider>

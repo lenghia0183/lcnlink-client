@@ -156,7 +156,7 @@ export function AutoCompleteField<T, R = T[]>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         const selected = multiple
           ? options.filter(
               (opt) =>
@@ -314,7 +314,11 @@ export function AutoCompleteField<T, R = T[]>({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between min-w-0"
+            className={cn(
+              "w-full justify-between min-w-0",
+              fieldState.invalid &&
+                "!ring-destructive/20 dark:!ring-destructive/40 !border-destructive"
+            )}
             disabled={disabled}
           >
             <div className="flex-1 flex flex-wrap items-center gap-1 min-w-0">

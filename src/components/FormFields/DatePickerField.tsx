@@ -91,32 +91,37 @@ export const DatePickerField = ({
               <Controller
                 name={name}
                 control={control}
-                render={({ field }) => (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-1" />
-                        {formatted || placeholder}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode={mode}
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                        required
-                        {...props}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                )}
+                render={({ field, fieldState }) => {
+                  console.log("fieldState", fieldState);
+                  return (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            fieldState.invalid &&
+                              "!ring-destructive/20 dark:!ring-destructive/40 !border-destructive",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-1" />
+                          {formatted || placeholder}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode={mode}
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                          required
+                          {...props}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  );
+                }}
               />
             </FormControl>
             <FormMessage />

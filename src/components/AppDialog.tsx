@@ -47,7 +47,11 @@ export const AppDialog = ({
       <DialogContent
         className={cn(classNameContent)}
         onInteractOutside={(e) => {
-          if (!closeOnOverlayClick) e.preventDefault();
+          if (!closeOnOverlayClick) {
+            e.preventDefault();
+          } else {
+            onOpenChange?.(false);
+          }
         }}
       >
         <DialogHeader>

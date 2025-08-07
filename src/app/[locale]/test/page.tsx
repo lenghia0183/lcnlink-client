@@ -22,6 +22,7 @@ import { Backdrop } from "@/components/BackDrop";
 import { AppPagination } from "@/components/AppPagination";
 import { useQueryState } from "@/hooks/useQueryState";
 import { AppDrawer } from "@/components/AppDrawer";
+import { AppAlertDialog } from "@/components/AppAlertDialog";
 
 // Schema validation
 const schema = z.object({
@@ -69,6 +70,7 @@ export default function TestSiteForm() {
   const [dialogData, setDialogData] = useState<FormValues | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const { page, setPage, tab, setTab } = useQueryState({
     page: 1,
   });
@@ -280,6 +282,14 @@ export default function TestSiteForm() {
           >
             Mở Drawer
           </Button>
+
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => setOpenAlertDialog(true)}
+          >
+            Mở Alert Dialog
+          </Button>
         </form>
       </FormProvider>
 
@@ -376,6 +386,18 @@ export default function TestSiteForm() {
           velit reprehenderit commodi!
         </p>
       </AppDrawer>
+
+      <AppAlertDialog
+        open={openAlertDialog}
+        title="Xác nhận xoá"
+        description="Bạn có chắc chắn muốn xoá không?"
+        onConfirm={() => {
+          setOpenAlertDialog(false);
+        }}
+        onCancel={() => setOpenAlertDialog(false)}
+        confirmText="Xoá"
+        cancelText="Huỷ"
+      />
 
       <AppDialog
         open={isDialogOpen}

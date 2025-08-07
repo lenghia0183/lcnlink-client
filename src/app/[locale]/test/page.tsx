@@ -3,7 +3,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Send, Save } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import { AppPagination } from "@/components/AppPagination";
 import { useQueryState } from "@/hooks/useQueryState";
 import { AppDrawer } from "@/components/AppDrawer";
 import { AppAlertDialog } from "@/components/AppAlertDialog";
+import { AppButton } from "@/components/AppButton";
 
 // Schema validation
 const schema = z.object({
@@ -271,25 +272,52 @@ export default function TestSiteForm() {
             ]}
           />
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <AppButton
+            iconLeft={<Send />}
+            type="submit"
+            fullWidth
+            tooltip="Click to Submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Đang xử lý..." : "Gửi và Xem Kết Quả"}
-          </Button>
+          </AppButton>
 
-          <Button
+          <AppButton
+            iconRight={<Save />}
+            loading
             type="button"
-            className="w-full"
+            tooltip="Click to Open Drawer"
+            fullWidth
             onClick={() => setOpen(true)}
           >
             Mở Drawer
-          </Button>
+          </AppButton>
 
-          <Button
+          <AppButton
             type="button"
-            className="w-full"
+            fullWidth
+            variant="outline"
             onClick={() => setOpenAlertDialog(true)}
           >
             Mở Alert Dialog
-          </Button>
+          </AppButton>
+
+          <AppButton
+            iconLeft={<Send />}
+            type="button"
+            variant="link"
+            tooltip="Click to redirect"
+            href="hehehehe"
+          >
+            Go to hehehehe
+          </AppButton>
+
+          <AppButton
+            iconRight={<Save />}
+            size="icon"
+            type="button"
+            tooltip="Click to Open Drawer"
+          ></AppButton>
         </form>
       </FormProvider>
 

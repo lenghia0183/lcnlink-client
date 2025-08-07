@@ -92,7 +92,6 @@ export const DatePickerField = ({
                 name={name}
                 control={control}
                 render={({ field, fieldState }) => {
-                  console.log("fieldState", fieldState);
                   return (
                     <Popover>
                       <PopoverTrigger asChild>

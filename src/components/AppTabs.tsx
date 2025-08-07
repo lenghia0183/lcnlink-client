@@ -15,11 +15,18 @@ interface AppTabsProps {
   tabs: TabItem[];
   defaultValue?: string;
   className?: string;
+  onValueChange?: (value: string) => void;
 }
 
-export const AppTabs = ({ tabs, defaultValue, className }: AppTabsProps) => {
+export const AppTabs = ({
+  tabs,
+  defaultValue,
+  className,
+  onValueChange,
+}: AppTabsProps) => {
   return (
     <Tabs
+      onValueChange={onValueChange}
       defaultValue={defaultValue || tabs[0]?.value}
       className={cn(className)}
     >

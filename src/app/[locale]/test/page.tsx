@@ -19,6 +19,8 @@ import { toast } from "@/components/AppToast";
 import { AppTabs } from "@/components/AppTabs";
 import { AppCard } from "@/components/AppCard";
 import { Backdrop } from "@/components/BackDrop";
+import { AppPagination } from "@/components/AppPagination";
+import { useQueryState } from "@/hooks/useQueryState";
 
 // Schema validation
 const schema = z.object({
@@ -65,6 +67,10 @@ export default function TestSiteForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState<FormValues | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { page, setPage, tab, setTab } = useQueryState({
+    page: 1,
+  });
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -271,6 +277,10 @@ export default function TestSiteForm() {
       </FormProvider>
 
       <AppTabs
+        defaultValue={tab}
+        onValueChange={(value) => {
+          setTab(value);
+        }}
         className="mt-5"
         tabs={[
           {
@@ -321,6 +331,13 @@ export default function TestSiteForm() {
             ),
           },
         ]}
+      />
+
+      <AppPagination
+        className="mt-10"
+        currentPage={page}
+        totalPages={10}
+        onPageChange={(p) => setPage(p)}
       />
 
       <AppDialog

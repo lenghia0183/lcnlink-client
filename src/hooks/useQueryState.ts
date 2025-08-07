@@ -143,6 +143,7 @@ export const useQueryState = <
       const obj = Object.fromEntries(
         Object.entries(data)
           .map(([k, v]) => [k, deepClean(v)])
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .filter(([_, v]) => v !== undefined)
       );
       return Object.keys(obj).length > 0 ? obj : undefined;
@@ -153,7 +154,8 @@ export const useQueryState = <
 
   const updateUrl = useCallback(
     (
-      obj: UpdateQueryPayload<Partial<TFilters>, Partial<TQuickFilters>> = {}
+      obj: UpdateQueryPayload<Partial<TFilters>, Partial<TQuickFilters>> = {},
+      scroll: boolean = false
     ) => {
       const merged: StringKeyRecord = {
         ...initialQueryPrefix,
@@ -181,7 +183,9 @@ export const useQueryState = <
       });
 
       queryObjRef.current = merged;
-      router.replace(`${pathname}?${searchParams.toString()}`);
+      router.replace(`${pathname}?${searchParams.toString()}`, {
+        scroll: scroll,
+      });
     },
     [pathname, prefix, initialQueryPrefix]
   );
@@ -189,14 +193,14 @@ export const useQueryState = <
   // Các setter
   const setPage = useCallback(
     (val: number) => {
-      updateUrl({ page: val });
+      updateUrl({ page: val }, true);
     },
     [updateUrl]
   );
 
   const setPageSize = useCallback(
     (val: number) => {
-      updateUrl({ pageSize: val, page: 1 });
+      updateUrl({ pageSize: val, page: 1 }, true);
     },
     [updateUrl]
   );

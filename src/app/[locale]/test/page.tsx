@@ -3,7 +3,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Lock, Send, Save } from "lucide-react";
+import { Mail, Lock, Send, Save, ChevronDown, FileText } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import { useQueryState } from "@/hooks/useQueryState";
 import { AppDrawer } from "@/components/AppDrawer";
 import { AppAlertDialog } from "@/components/AppAlertDialog";
 import { AppButton } from "@/components/AppButton";
+import { AppAccordion } from "@/components/AppAccordion";
 
 // Schema validation
 const schema = z.object({
@@ -174,6 +175,21 @@ export default function TestSiteForm() {
     }
   };
 
+  const items = [
+    {
+      value: "item-1",
+      title: "Thông tin tài khoản",
+      content: <p>Chi tiết tài khoản của bạn...</p>,
+      iconLeft: <FileText size={16} />,
+    },
+    {
+      value: "item-2",
+      title: "Cài đặt",
+      content: <p>Thiết lập bảo mật, thông báo...</p>,
+      iconLeft: <ChevronDown size={16} />,
+    },
+  ];
+
   return (
     <div className="max-w-md mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Test Form</h1>
@@ -321,6 +337,7 @@ export default function TestSiteForm() {
         </form>
       </FormProvider>
 
+      <AppAccordion items={items} defaultValue={"item-1"} type="single" />
       <AppTabs
         defaultValue={tab}
         onValueChange={(value) => {

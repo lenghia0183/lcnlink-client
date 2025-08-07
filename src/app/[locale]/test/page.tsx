@@ -21,6 +21,7 @@ import { AppCard } from "@/components/AppCard";
 import { Backdrop } from "@/components/BackDrop";
 import { AppPagination } from "@/components/AppPagination";
 import { useQueryState } from "@/hooks/useQueryState";
+import { AppDrawer } from "@/components/AppDrawer";
 
 // Schema validation
 const schema = z.object({
@@ -67,7 +68,7 @@ export default function TestSiteForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState<FormValues | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const { page, setPage, tab, setTab } = useQueryState({
     page: 1,
   });
@@ -271,6 +272,14 @@ export default function TestSiteForm() {
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Đang xử lý..." : "Gửi và Xem Kết Quả"}
           </Button>
+
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => setOpen(true)}
+          >
+            Mở Drawer
+          </Button>
         </form>
       </FormProvider>
 
@@ -337,6 +346,36 @@ export default function TestSiteForm() {
         totalPages={10}
         onPageChange={(p) => setPage(p)}
       />
+
+      <AppDrawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Cài đặt người dùng"
+        description="Tùy chọn cho tài khoản của bạn"
+        footer={
+          <div className="w-1/4 m-auto">
+            <Button className="w-full" onClick={() => setOpen(false)}>
+              Lưu
+            </Button>
+          </div>
+        }
+      >
+        <p className="w-1/4 m-auto">
+          Đây là nội dung drawer. Bạn có thể đặt form, danh sách, v.v. Lorem
+          ipsum dolor sit amet consectetur, adipisicing elit. Dolorum, delectus
+          quibusdam. Reprehenderit eum, cumque ipsum quo nobis at quaerat,
+          illum, tenetur repellat doloremque dolore placeat adipisci!
+          Reprehenderit, aperiam distinctio. Maiores corporis vero reprehenderit
+          soluta veritatis tempora optio quis obcaecati. Culpa, magnam maiores
+          facilis doloremque at iusto eum! Vel harum optio ipsum obcaecati fuga
+          officia, qui accusantium at corrupti, inventore maxime minus nemo,
+          iure ducimus soluta impedit dolores quos aliquam voluptatum esse
+          cupiditate modi. Totam illum itaque recusandae incidunt nobis possimus
+          blanditiis cupiditate, fugiat cumque officia sit laboriosam eligendi
+          ad impedit iure placeat harum quasi! Reiciendis officiis molestiae
+          velit reprehenderit commodi!
+        </p>
+      </AppDrawer>
 
       <AppDialog
         open={isDialogOpen}

@@ -97,9 +97,7 @@ export default function TestSiteForm() {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    // toast.event("Test toast date", "This is to test toast date", {
-    //   date: new Date(),
-    // });
+
     try {
       console.log("✅ Submitted:", data);
       setDialogData(data);

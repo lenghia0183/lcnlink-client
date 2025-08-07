@@ -3,7 +3,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Lock, Send, Save, ChevronDown, FileText } from "lucide-react";
+import { Mail, Lock, Send, Save, FileText } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -186,7 +186,6 @@ export default function TestSiteForm() {
       value: "item-2",
       title: "Cài đặt",
       content: <p>Thiết lập bảo mật, thông báo...</p>,
-      iconLeft: <ChevronDown size={16} />,
     },
   ];
 

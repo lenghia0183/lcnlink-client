@@ -25,6 +25,7 @@ import { AppDrawer } from "@/components/AppDrawer";
 import { AppAlertDialog } from "@/components/AppAlertDialog";
 import { AppButton } from "@/components/AppButton";
 import { AppAccordion } from "@/components/AppAccordion";
+import Logo from "@/components/Logo";
 
 // Schema validation
 const schema = z.object({
@@ -192,7 +193,7 @@ export default function TestSiteForm() {
   return (
     <div className="max-w-md mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Test Form</h1>
-
+      <Logo />
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}

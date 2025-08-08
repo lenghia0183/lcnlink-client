@@ -47,7 +47,7 @@ export default function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button variant="ghost" className="flex items-center gap-2">
           <Globe className="w-4 h-4" />
           <span className="capitalize">
             {languages.find((l) => l.value === currentLang)?.label}
@@ -65,9 +65,7 @@ export default function LanguageSwitcher() {
             <span className="flex items-center gap-2">
               {lang.flag} {lang.label}
             </span>
-            {currentLang === lang.value && (
-              <Check className="w-4 h-4 text-green-500" />
-            )}
+            {currentLang === lang.value && <Check className="" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

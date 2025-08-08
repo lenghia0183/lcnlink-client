@@ -6,8 +6,9 @@ import "./globals.css";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { LanguageProvider } from "@/context/LanguageProvider";
 import { ThemeProvider } from "@/context/ThemeProvider";
-import { ModeToggle } from "@/components/ModeToggle";
+
 import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,9 +48,8 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="fixed top-4 right-4 flex items-center gap-3">
-                <LanguageSwitcher />
-                <ModeToggle />
+              <div>
+                <Header />
               </div>
               {children}
               <Toaster

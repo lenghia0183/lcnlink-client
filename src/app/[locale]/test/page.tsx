@@ -193,7 +193,7 @@ export default function TestSiteForm() {
   return (
     <div className="max-w-md mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Test Form</h1>
-      <Logo />
+
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}

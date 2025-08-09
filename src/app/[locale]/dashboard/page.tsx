@@ -149,10 +149,10 @@ export default function DashboardPage() {
 
   const getStatusBadge = (link: LinkData) => {
     const statusConfig = {
-      active: { variant: "default" as const, label: "Hoạt động", icon: <CheckCircle className="h-3 w-3" /> },
-      expired: { variant: "destructive" as const, label: "Hết hạn", icon: <Clock className="h-3 w-3" /> },
-      disabled: { variant: "secondary" as const, label: "Tắt", icon: <AlertCircle className="h-3 w-3" /> },
-      limit_reached: { variant: "outline" as const, label: "Đạt giới hạn", icon: <MousePointer className="h-3 w-3" /> }
+      active: { variant: "default" as const, label: t("active"), icon: <CheckCircle className="h-3 w-3" /> },
+      expired: { variant: "destructive" as const, label: t("expired"), icon: <Clock className="h-3 w-3" /> },
+      disabled: { variant: "secondary" as const, label: t("disabled"), icon: <AlertCircle className="h-3 w-3" /> },
+      limit_reached: { variant: "outline" as const, label: t("limitReached"), icon: <MousePointer className="h-3 w-3" /> }
     };
     
     const config = statusConfig[link.status];
@@ -188,7 +188,6 @@ export default function DashboardPage() {
   };
 
   const handleCreateLink = () => {
-    // Logic tạo link mới
     setIsCreateDialogOpen(false);
     setFormData({
       url: "",
@@ -216,7 +215,6 @@ export default function DashboardPage() {
   const handleUpdateLink = () => {
     if (!editingLink) return;
     
-    // Logic cập nhật link
     setLinks(prev => prev.map(link => 
       link.id === editingLink.id 
         ? { 
@@ -238,89 +236,89 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-3">
-              Link Dashboard
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {t("title")}
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
-              Quản lý và theo dõi tất cả các liên kết rút gọn của bạn
+            <p className="text-gray-600 dark:text-gray-300">
+              {t("subtitle")}
             </p>
           </div>
           
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="mt-4 lg:mt-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:via-purple-600 hover:to-cyan-600 shadow-lg">
+              <Button className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
-                Tạo Link Mới
+                {t("createNewLink")}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Tạo Link Rút Gọn Mới</DialogTitle>
+                <DialogTitle>{t("createDialogTitle")}</DialogTitle>
                 <DialogDescription>
-                  Nhập thông tin để tạo link rút gọn với các tính năng nâng cao
+                  {t("createDialogDescription")}
                 </DialogDescription>
               </DialogHeader>
               
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="url">URL gốc *</Label>
+                  <Label htmlFor="url">{t("originalUrl")} *</Label>
                   <Input
                     id="url"
-                    placeholder="https://example.com/very-long-url"
+                    placeholder={t("urlPlaceholder")}
                     value={formData.url}
                     onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="alias">Alias tùy chỉnh</Label>
+                  <Label htmlFor="alias">{t("customAlias")}</Label>
                   <Input
                     id="alias"
-                    placeholder="my-custom-link"
+                    placeholder={t("aliasPlaceholder")}
                     value={formData.customAlias}
                     onChange={(e) => setFormData(prev => ({ ...prev, customAlias: e.target.value }))}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="description">Mô tả</Label>
+                  <Label htmlFor="description">{t("description")}</Label>
                   <Textarea
                     id="description"
-                    placeholder="Mô tả ngắn về link này..."
+                    placeholder={t("descriptionPlaceholder")}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="password">Mật khẩu bảo vệ</Label>
+                  <Label htmlFor="password">{t("password")}</Label>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Để trống nếu không cần"
+                    placeholder={t("passwordPlaceholder")}
                     value={formData.password}
                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="maxClicks">Giới hạn số lượng click</Label>
+                  <Label htmlFor="maxClicks">{t("maxClicks")}</Label>
                   <Input
                     id="maxClicks"
                     type="number"
-                    placeholder="Để trống nếu không giới hạn"
+                    placeholder={t("maxClicksPlaceholder")}
                     value={formData.maxClicks}
                     onChange={(e) => setFormData(prev => ({ ...prev, maxClicks: e.target.value }))}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="expiresAt">Ngày hết hạn</Label>
+                  <Label htmlFor="expiresAt">{t("expirationDate")}</Label>
                   <Input
                     id="expiresAt"
                     type="date"
@@ -332,73 +330,73 @@ export default function DashboardPage() {
               
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                  Hủy
+                  {t("cancel")}
                 </Button>
                 <Button onClick={handleCreateLink}>
-                  Tạo Link
+                  {t("create")}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
 
-        {/* Enhanced Stats Cards */}
+        {/* Stats Cards with softer colors */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl">
+          <Card className="border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm font-medium">Tổng Links</p>
-                  <p className="text-3xl font-bold">{links.length}</p>
-                  <p className="text-blue-200 text-xs mt-1">{activeLinks} đang hoạt động</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("totalLinks")}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{links.length}</p>
+                  <p className="text-xs text-gray-500 mt-1">{activeLinks} {t("active")}</p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-lg">
-                  <Link2 className="h-8 w-8" />
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                  <Link2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl">
+          <Card className="border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-100 text-sm font-medium">Tổng Clicks</p>
-                  <p className="text-3xl font-bold">{totalClicks.toLocaleString()}</p>
-                  <p className="text-green-200 text-xs mt-1">+12.5% so với tháng trước</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("totalClicks")}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalClicks.toLocaleString()}</p>
+                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">+12.5% {t("comparedToLastMonth")}</p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-lg">
-                  <MousePointer className="h-8 w-8" />
+                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                  <MousePointer className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl">
+          <Card className="border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-100 text-sm font-medium">Links Bảo Vệ</p>
-                  <p className="text-3xl font-bold">{protectedLinks}</p>
-                  <p className="text-purple-200 text-xs mt-1">{((protectedLinks/links.length)*100).toFixed(1)}% tổng links</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("protectedLinks")}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{protectedLinks}</p>
+                  <p className="text-xs text-gray-500 mt-1">{((protectedLinks/links.length)*100).toFixed(1)}% {t("ofTotalLinks")}</p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-lg">
-                  <Shield className="h-8 w-8" />
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+                  <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl">
+          <Card className="border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-orange-100 text-sm font-medium">Links Giới Hạn</p>
-                  <p className="text-3xl font-bold">{limitedLinks}</p>
-                  <p className="text-orange-200 text-xs mt-1">Theo dõi usage</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("limitedLinks")}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{limitedLinks}</p>
+                  <p className="text-xs text-gray-500 mt-1">{t("trackUsage")}</p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-lg">
-                  <Zap className="h-8 w-8" />
+                <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
+                  <Zap className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
               </div>
             </CardContent>
@@ -406,13 +404,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-8 border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg">
+        <Card className="mb-8 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Tìm kiếm theo URL, alias hoặc mô tả..."
+                  placeholder={t("searchPlaceholder")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -421,46 +419,46 @@ export default function DashboardPage() {
               <div className="flex gap-2">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Filter className="h-4 w-4" />
-                  Lọc
+                  {t("filter")}
                 </Button>
                 <Button variant="outline" className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
-                  Xuất
+                  {t("export")}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Links Management */}
-        <Card className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg">
+        {/* Links Management */}
+        <Card className="border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Link2 className="h-6 w-6" />
-              Quản Lý Links
+            <CardTitle className="flex items-center gap-2">
+              <Link2 className="h-5 w-5" />
+              {t("linkManagement")}
             </CardTitle>
-            <CardDescription>Theo dõi và quản lý tất cả các liên kết rút gọn của bạn</CardDescription>
+            <CardDescription>{t("subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="all">Tất cả ({links.length})</TabsTrigger>
-                <TabsTrigger value="active">Hoạt động ({activeLinks})</TabsTrigger>
-                <TabsTrigger value="expired">Hết hạn ({links.filter(l => l.status === "expired").length})</TabsTrigger>
-                <TabsTrigger value="limit_reached">Đạt giới hạn ({links.filter(l => l.status === "limit_reached").length})</TabsTrigger>
-                <TabsTrigger value="disabled">Tắt ({links.filter(l => l.status === "disabled").length})</TabsTrigger>
+                <TabsTrigger value="all">{t("allLinks")} ({links.length})</TabsTrigger>
+                <TabsTrigger value="active">{t("activeLinks")} ({activeLinks})</TabsTrigger>
+                <TabsTrigger value="expired">{t("expiredLinks")} ({links.filter(l => l.status === "expired").length})</TabsTrigger>
+                <TabsTrigger value="limit_reached">{t("limitReachedLinks")} ({links.filter(l => l.status === "limit_reached").length})</TabsTrigger>
+                <TabsTrigger value="disabled">{t("disabledLinks")} ({links.filter(l => l.status === "disabled").length})</TabsTrigger>
               </TabsList>
               
               <TabsContent value={activeTab} className="mt-6">
                 <div className="space-y-4">
                   {filterLinks(activeTab).map((link) => (
-                    <Card key={link.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200">
+                    <Card key={link.id} className="border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             {/* Header with Short URL and Status */}
                             <div className="flex items-center gap-3 mb-3">
-                              <code className="bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 text-green-700 dark:text-green-300 px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                              <code className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
                                 <Globe className="h-4 w-4" />
                                 {link.shortUrl}
                               </code>
@@ -480,7 +478,7 @@ export default function DashboardPage() {
                               {link.isPasswordProtected && (
                                 <Badge variant="outline" className="flex items-center gap-1">
                                   <Shield className="h-3 w-3" />
-                                  Bảo vệ
+                                  {t("protected")}
                                 </Badge>
                               )}
                             </div>
@@ -504,15 +502,15 @@ export default function DashboardPage() {
                             {link.maxClicks && (
                               <div className="mb-3">
                                 <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                  <span>Clicks: {link.clicks}/{link.maxClicks}</span>
+                                  <span>{t("clicks")}: {link.clicks}/{link.maxClicks}</span>
                                   <span>{getProgressPercentage(link.clicks, link.maxClicks).toFixed(1)}%</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                   <div 
                                     className={`h-2 rounded-full transition-all duration-300 ${
                                       link.status === "limit_reached" 
                                         ? "bg-red-500" 
-                                        : "bg-gradient-to-r from-blue-500 to-purple-500"
+                                        : "bg-blue-500"
                                     }`}
                                     style={{ width: `${getProgressPercentage(link.clicks, link.maxClicks)}%` }}
                                   ></div>
@@ -524,7 +522,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-6 text-xs text-gray-500">
                               <span className="flex items-center gap-1">
                                 <MousePointer className="h-3 w-3" />
-                                {link.clicks} clicks
+                                {link.clicks} {t("clicks")}
                               </span>
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
@@ -533,7 +531,7 @@ export default function DashboardPage() {
                               {link.expiresAt && (
                                 <span className="flex items-center gap-1">
                                   <Clock className="h-3 w-3" />
-                                  Hết hạn {format(link.expiresAt, "dd/MM/yyyy")}
+                                  {t("expires")} {format(link.expiresAt, "dd/MM/yyyy")}
                                 </span>
                               )}
                             </div>
@@ -567,18 +565,18 @@ export default function DashboardPage() {
                               <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => handleEditLink(link)}>
                                   <Edit className="h-4 w-4 mr-2" />
-                                  Chỉnh sửa
+                                  {t("edit")}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                   <Share2 className="h-4 w-4 mr-2" />
-                                  Chia sẻ
+                                  {t("share")}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
                                   className="text-red-600"
                                   onClick={() => handleDeleteLink(link.id)}
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
-                                  Xóa
+                                  {t("delete")}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -597,40 +595,40 @@ export default function DashboardPage() {
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Chỉnh Sửa Link</DialogTitle>
+              <DialogTitle>{t("editDialogTitle")}</DialogTitle>
               <DialogDescription>
-                Cập nhật thông tin và cài đặt cho link của bạn
+                {t("editDialogDescription")}
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-4">
               <div>
-                <Label htmlFor="edit-description">Mô tả</Label>
+                <Label htmlFor="edit-description">{t("description")}</Label>
                 <Textarea
                   id="edit-description"
-                  placeholder="Mô tả ngắn về link này..."
+                  placeholder={t("descriptionPlaceholder")}
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 />
               </div>
               
               <div>
-                <Label htmlFor="edit-password">Mật khẩu bảo vệ</Label>
+                <Label htmlFor="edit-password">{t("password")}</Label>
                 <Input
                   id="edit-password"
                   type="password"
-                  placeholder="Để trống để xóa mật khẩu"
+                  placeholder={t("passwordPlaceholderEdit")}
                   value={formData.password}
                   onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 />
               </div>
               
               <div>
-                <Label htmlFor="edit-maxClicks">Giới hạn số lượng click</Label>
+                <Label htmlFor="edit-maxClicks">{t("maxClicks")}</Label>
                 <Input
                   id="edit-maxClicks"
                   type="number"
-                  placeholder="Để trống nếu không giới hạn"
+                  placeholder={t("maxClicksPlaceholder")}
                   value={formData.maxClicks}
                   onChange={(e) => setFormData(prev => ({ ...prev, maxClicks: e.target.value }))}
                 />
@@ -639,10 +637,10 @@ export default function DashboardPage() {
             
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-                Hủy
+                {t("cancel")}
               </Button>
               <Button onClick={handleUpdateLink}>
-                Cập Nhật
+                {t("update")}
               </Button>
             </DialogFooter>
           </DialogContent>

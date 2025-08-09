@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -11,6 +12,7 @@ import {
   UserPlusIcon,
   MenuIcon,
   XIcon,
+  Link2,
 } from "lucide-react";
 
 // shadcn components
@@ -33,306 +35,95 @@ import {
 import LanguageSwitcher from "./LanguageSwitcher";
 import { ModeToggle } from "./ModeToggle";
 import Logo from "./Logo";
-
-const NAV = [
-  { title: "Home", href: "/" },
-  {
-    title: "Features",
-    href: "/#features",
-    subItems: [
-      {
-        title: "Tùy chỉnh Link",
-        href: "/features/custom-links",
-        description: "Tạo link ngắn với tên tùy chỉnh",
-      },
-      {
-        title: "Mã QR",
-        href: "/features/qr-code",
-        description: "Tạo mã QR cho link ngắn",
-      },
-      {
-        title: "Link Hết Hạn",
-        href: "/features/expiring-links",
-        description: "Đặt thời gian hết hạn cho link",
-      },
-    ],
-  },
-  {
-    title: "Pricing",
-    href: "/pricing",
-    subItems: [
-      {
-        title: "Gói Miễn Phí",
-        href: "/pricing/free",
-        description: "Tính năng cơ bản miễn phí",
-      },
-      {
-        title: "Gói Pro",
-        href: "/pricing/pro",
-        description: "Tính năng nâng cao cho cá nhân",
-      },
-      {
-        title: "Gói Doanh Nghiệp",
-        href: "/pricing/enterprise",
-        description: "Giải pháp cho doanh nghiệp",
-      },
-    ],
-  },
-  { title: "My Links", href: "/my-links" },
-  {
-    title: "Support",
-    href: "/support",
-    subItems: [
-      {
-        title: "Liên Hệ",
-        href: "/support/contact",
-        description: "Gửi yêu cầu hỗ trợ",
-      },
-      {
-        title: "Cộng Đồng",
-        href: "/support/community",
-        description: "Tham gia cộng đồng người dùng",
-      },
-      {
-        title: "Trạng Thái Dịch Vụ",
-        href: "/support/status",
-        description: "Kiểm tra trạng thái dịch vụ",
-      },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function Header() {
-  const pathname = usePathname?.() || "/";
-  const [openMobile, setOpenMobile] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const pathname = usePathname();
+  const t = useTranslations("Navigation");
 
-  const [session, setSession] = React.useState<{
-    name: string;
-    avatar?: string;
-  } | null>(() => null);
-
-  function handleSignIn() {
-    setSession({ name: "Người Dùng", avatar: "" });
-  }
-
-  function handleSignOut() {
-    setSession(null);
-  }
+  const navigation = [
+    { name: t("home"), href: "/" },
+    { name: t("about"), href: "/about" },
+    { name: t("contact"), href: "/contact" },
+  ];
 
   return (
-    <header className="w-full bg-background/80 backdrop-blur-sm border-b">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Logo />
-
-            <div className="hidden lg:block">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {NAV.map((item) => (
-                    <NavigationMenuItem key={item.href}>
-                      {item.subItems ? (
-                        <>
-                          <NavigationMenuTrigger
-                            className={`${
-                              pathname.startsWith(item.href)
-                                ? "text-primary"
-                                : "text-foreground/80 hover:text-foreground"
-                            }`}
-                          >
-                            {item.title}
-                          </NavigationMenuTrigger>
-                          <NavigationMenuContent>
-                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                              {item.subItems.map((subItem) => (
-                                <li key={subItem.href}>
-                                  <NavigationMenuLink asChild>
-                                    <Link
-                                      href={subItem.href}
-                                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                    >
-                                      <div className="text-sm font-medium leading-none">
-                                        {subItem.title}
-                                      </div>
-                                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                        {subItem.description}
-                                      </p>
-                                    </Link>
-                                  </NavigationMenuLink>
-                                </li>
-                              ))}
-                            </ul>
-                          </NavigationMenuContent>
-                        </>
-                      ) : (
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={item.href}
-                            className={`px-3 py-2 rounded-md text-sm font-medium no-underline ${
-                              pathname === item.href
-                                ? "text-primary"
-                                : "text-foreground/80 hover:text-foreground"
-                            }`}
-                          >
-                            {item.title}
-                          </Link>
-                        </NavigationMenuLink>
-                      )}
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+              <Link2 className="h-5 w-5 text-white" />
             </div>
-          </div>
+            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              ShortLink
+            </span>
+          </Link>
 
-          {/* Right: Actions */}
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2">
-              <LanguageSwitcher />
-              <ModeToggle />
-            </div>
+          {/* Desktop Navigation */}
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              {navigation.map((item) => (
+                <NavigationMenuItem key={item.name}>
+                  <Link href={item.href} legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 ${
+                        pathname === item.href ? "text-foreground" : "text-foreground/60"
+                      }`}
+                    >
+                      {item.name}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
 
-            {/* Auth actions */}
-            {!session ? (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignIn}
-                  className="hidden sm:inline-flex"
-                >
-                  <LogInIcon className="mr-2 h-4 w-4" /> Đăng nhập
-                </Button>
-                <Link href="/register">
-                  <Button size="sm" className="hidden sm:inline-flex">
-                    <UserPlusIcon className="mr-2 h-4 w-4" /> Đăng ký
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-2 rounded-md p-0.5">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={session.avatar || undefined}
-                        alt={session.name}
-                      />
-                      <AvatarFallback>
-                        {session.name?.slice(0, 1)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings">Settings</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {/* Mobile menu toggle */}
-            <button
-              className="inline-flex items-center justify-center rounded-md p-2 lg:hidden"
-              onClick={() => setOpenMobile((s) => !s)}
-              aria-label="Open menu"
+          {/* Right side actions */}
+          <div className="flex items-center space-x-2">
+            <LanguageSwitcher />
+            <ModeToggle />
+            
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {openMobile ? (
+              {isMobileMenuOpen ? (
                 <XIcon className="h-5 w-5" />
               ) : (
                 <MenuIcon className="h-5 w-5" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu panel */}
-      {openMobile && (
-        <div className="lg:hidden border-t bg-background">
-          <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-2">
-              {NAV.map((item) => (
-                <div key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
-                      pathname === item.href
-                        ? "text-primary"
-                        : "text-foreground/80"
-                    }`}
-                  >
-                    {item.title}
-                  </Link>
-                  {item.subItems && (
-                    <div className="ml-4 mt-2 flex flex-col gap-2">
-                      {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.href}
-                          href={subItem.href}
-                          className={`px-3 py-2 rounded-md text-sm ${
-                            pathname === subItem.href
-                              ? "text-primary"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-border">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                    pathname === item.href
+                      ? "bg-accent text-accent-foreground"
+                      : "text-foreground/60"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
               ))}
-
-              <div className="pt-4 flex flex-col gap-3">
-                <div className="flex justify-center gap-3">
-                  <LanguageSwitcher />
-                  <ModeToggle />
-                </div>
-
-                <div className="flex gap-2">
-                  {!session ? (
-                    <>
-                      <Button
-                        size="sm"
-                        className="flex-1"
-                        onClick={handleSignIn}
-                      >
-                        <LogInIcon className="mr-2 h-4 w-4" /> Đăng nhập
-                      </Button>
-                      <Link href="/register" className="flex-1">
-                        <Button size="sm" className="w-full">
-                          <UserPlusIcon className="mr-2 h-4 w-4" /> Đăng ký
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link href="/profile" className="flex-1">
-                        <Button className="w-full">Profile</Button>
-                      </Link>
-                      <Button
-                        className="flex-1"
-                        onClick={handleSignOut}
-                        variant="destructive"
-                      >
-                        Log out
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }

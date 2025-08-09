@@ -12,5 +12,56 @@
     "loading": "Đang tải...",
     "error": "Lỗi",
     "success": "Thành công"
+  },
+  "UrlShortener": {
+    "title": "Rút Gọn Link Thông Minh",
+    "subtitle": "Biến đổi URL dài thành liên kết ngắn mạnh mẽ, có thể theo dõi",
+    "inputPlaceholder": "Nhập URL dài của bạn tại đây...",
+    "shortenButton": "Rút Gọn URL",
+    "customAlias": "Tên Tùy Chỉnh (Tùy chọn)",
+    "aliasPlaceholder": "lien-ket-cua-toi",
+    "expirationDate": "Ngày Hết Hạn (Tùy chọn)",
+    "password": "Bảo Vệ Mật Khẩu (Tùy chọn)",
+    "passwordPlaceholder": "Nhập mật khẩu",
+    "description": "Mô Tả (Tùy chọn)",
+    "descriptionPlaceholder": "Mô tả liên kết của bạn",
+    "advancedOptions": "Tùy Chọn Nâng Cao",
+    "shortUrl": "URL Rút Gọn",
+    "copyButton": "Sao Chép",
+    "copied": "Đã Sao Chép!",
+    "statistics": "Thống Kê",
+    "clicks": "Lượt Nhấp",
+    "created": "Đã Tạo",
+    "expires": "Hết Hạn",
+    "recentLinks": "Liên Kết Gần Đây",
+    "analytics": "Phân Tích",
+    "qrCode": "Mã QR",
+    "downloadQr": "Tải Mã QR",
+    "shareLink": "Chia Sẻ Liên Kết",
+    "editLink": "Chỉnh Sửa",
+    "deleteLink": "Xóa Liên Kết",
+    "linkExpired": "Liên Kết Đã Hết Hạn",
+    "linkNotFound": "Không Tìm Thấy Liên Kết",
+    "invalidUrl": "Vui lòng nhập URL hợp lệ",
+    "linkCreated": "Tạo liên kết thành công!",
+    "features": {
+      "title": "Tại Sao Chọn Dịch Vụ Rút Gọn URL Của Chúng Tôi?",
+      "analytics": {
+        "title": "Phân Tích Chi Tiết",
+        "description": "Theo dõi lượt nhấp, dữ liệu địa lý và hành vi người dùng với bảng điều khiển phân tích toàn diện"
+      },
+      "customization": {
+        "title": "Tùy Chỉnh Thương Hiệu",
+        "description": "Tạo liên kết ngắn có thương hiệu với tên tùy chỉnh và tên miền riêng"
+      },
+      "security": {
+        "title": "Bảo Mật Nâng Cao",
+        "description": "Bảo vệ mật khẩu, ngày hết hạn và các tính năng bảo mật nâng cao"
+      },
+      "qr": {
+        "title": "Tạo Mã QR",
+        "description": "Tự động tạo mã QR để dễ dàng chia sẻ trên thiết bị di động"
+      }
+    }
   }
 }

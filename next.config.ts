@@ -10,11 +10,7 @@ const nextConfig: NextConfig = {
     domains: ["jsonplaceholder.org"],
   },
 
-  experimental: {
-    allowedDevOrigins: [
-      "81332061-acdb-4022-882c-bacf5daf8c5c-00-3rzykuotvhem5.pike.replit.dev"
-    ],
-  },
+  
 
   async rewrites() {
     return [

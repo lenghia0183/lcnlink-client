@@ -43,9 +43,13 @@ interface ShortenedLink {
   shortUrl: string;
   customAlias?: string;
   clicks: number;
+  maxClicks?: number;
   createdAt: Date;
   expiresAt?: Date;
   description?: string;
+  password?: string;
+  isPasswordProtected: boolean;
+  status: "active" | "expired" | "disabled" | "limit_reached";
 }
 
 export default function HomePage() {
@@ -55,6 +59,7 @@ export default function HomePage() {
   const [expirationDate, setExpirationDate] = useState<Date>();
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
+  const [maxClicks, setMaxClicks] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [shortenedLinks, setShortenedLinks] = useState<ShortenedLink[]>([]);
   const [copiedId, setCopiedId] = useState<string>("");
@@ -71,10 +76,14 @@ export default function HomePage() {
         originalUrl: url,
         shortUrl: `https://short.ly/${customAlias || Math.random().toString(36).substr(2, 6)}`,
         customAlias,
-        clicks: Math.floor(Math.random() * 1000),
+        clicks: Math.floor(Math.random() * 100),
+        maxClicks,
         createdAt: new Date(),
         expiresAt: expirationDate,
-        description
+        description,
+        password,
+        isPasswordProtected: !!password,
+        status: "active"
       };
       
       setShortenedLinks(prev => [newLink, ...prev]);
@@ -82,6 +91,7 @@ export default function HomePage() {
       setCustomAlias("");
       setPassword("");
       setDescription("");
+      setMaxClicks(undefined);
       setExpirationDate(undefined);
       setIsLoading(false);
     }, 1000);
@@ -232,6 +242,19 @@ export default function HomePage() {
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
                               className="mt-2"
+                            />
+                          </div>
+
+                          <div>
+                            <Label htmlFor="maxClicks">{t("maxClicks")}</Label>
+                            <Input
+                              id="maxClicks"
+                              type="number"
+                              placeholder={t("maxClicksPlaceholder")}
+                              value={maxClicks || ""}
+                              onChange={(e) => setMaxClicks(e.target.value ? parseInt(e.target.value) : undefined)}
+                              className="mt-2"
+                              min="1"
                             />
                           </div>
                         </div>

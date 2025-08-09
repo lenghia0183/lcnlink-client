@@ -40,8 +40,8 @@
     "shareLink": "Chia Sẻ Liên Kết",
     "editLink": "Chỉnh Sửa",
     "deleteLink": "Xóa Liên Kết",
-    "linkExpired": "Liên Kết Đã Hết Hạn",
-    "linkNotFound": "Không Tìm Thấy Liên Kết",
+    "linkExpired": "Liên kết đã hết hạn",
+    "linkNotFound": "Không tìm thấy liên kết",
     "invalidUrl": "Vui lòng nhập URL hợp lệ",
     "linkCreated": "Tạo liên kết thành công!",
     "features": {

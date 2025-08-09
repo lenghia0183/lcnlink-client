@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/context/ThemeProvider";
 
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,11 +49,12 @@ export default async function RootLayout({
         >
           <LanguageProvider>
             <NextIntlClientProvider messages={messages}>
-              <div className="relative min-h-screen bg-background">
+              <div className="relative min-h-screen bg-background flex flex-col">
                 <Header />
-                <main className="relative">
+                <main className="relative flex-1">
                   {children}
                 </main>
+                <Footer />
                 <Toaster />
               </div>
             </NextIntlClientProvider>

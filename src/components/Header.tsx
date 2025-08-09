@@ -45,7 +45,9 @@ export default function Header() {
   const navigation = [
     { name: t("home"), href: "/" },
     { name: t("about"), href: "/about" },
-    { name: t("contact"), href: "/contact" },
+    { name: t("dashboard"), href: "/dashboard" },
+    { name: t("analytics"), href: "/analytics" },
+    { name: t("pricing"), href: "/pricing" },
   ];
 
   return (
@@ -83,6 +85,14 @@ export default function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-2">
+              <Button variant="ghost" asChild>
+                <Link href="/login">{t("login")}</Link>
+              </Button>
+              <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-600">
+                <Link href="/register">{t("register")}</Link>
+              </Button>
+            </div>
             <LanguageSwitcher />
             <ModeToggle />
             

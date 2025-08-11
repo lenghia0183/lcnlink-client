@@ -188,7 +188,7 @@ export default function HomePage() {
               >
                 <TextField
                   name="originUrl"
-                  placeholder={t("placeholder")}
+                  placeholder={t("inputPlaceholder")}
                   leftIcon={<Globe className=" text-gray-400" />}
                 />
 
@@ -198,7 +198,7 @@ export default function HomePage() {
                   items={[
                     {
                       value: "advanced",
-                      title: "Advanced setting",
+                      title: t("advancedOptions"),
                       content: (
                         <div className="space-y-4 pt-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

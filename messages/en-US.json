@@ -25,6 +25,8 @@
     "passwordPlaceholder": "Enter password",
     "description": "Description (Optional)",
     "descriptionPlaceholder": "Describe your link",
+    "maxClicks": "Click Limit",
+    "maxClicksPlaceholder": "Leave empty for unlimited",
     "advancedOptions": "Advanced Options",
     "shortUrl": "Your Short URL",
     "copyButton": "Copy",

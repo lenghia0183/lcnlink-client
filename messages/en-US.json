@@ -45,6 +45,24 @@
     "invalidUrl": "Please enter a valid URL",
     "linkCreated": "Link created successfully!",
     "features": {
+      "title": "Why Choose Our URL Shortener?",
+      "analytics": {
+        "title": "Detailed Analytics",
+        "description": "Track clicks, geographic data, and user behavior with comprehensive analytics dashboard"
+      },
+      "customization": {
+        "title": "Custom Branding",
+        "description": "Create branded short links with custom aliases and your own domain"
+      },
+      "security": {
+        "title": "Enhanced Security",
+        "description": "Password protection, expiration dates, and advanced security features"
+      },
+      "qr": {
+        "title": "QR Code Generation",
+        "description": "Automatically generate QR codes for easy mobile sharing"
+      }
+    }
   },
   "Dashboard": {
     "title": "Link Dashboard",
@@ -95,24 +113,5 @@
     "comparedToLastMonth": "compared to last month",
     "ofTotalLinks": "of total links",
     "trackUsage": "Track usage"
-  }
-      "title": "Why Choose Our URL Shortener?",
-      "analytics": {
-        "title": "Detailed Analytics",
-        "description": "Track clicks, geographic data, and user behavior with comprehensive analytics dashboard"
-      },
-      "customization": {
-        "title": "Custom Branding",
-        "description": "Create branded short links with custom aliases and your own domain"
-      },
-      "security": {
-        "title": "Enhanced Security",
-        "description": "Password protection, expiration dates, and advanced security features"
-      },
-      "qr": {
-        "title": "QR Code Generation",
-        "description": "Automatically generate QR codes for easy mobile sharing"
-      }
-    }
   }
 }

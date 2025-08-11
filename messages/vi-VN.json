@@ -115,5 +115,18 @@
     "comparedToLastMonth": "so với tháng trước",
     "ofTotalLinks": "trong tổng số liên kết",
     "trackUsage": "Theo dõi sử dụng"
+  },
+  "Footer": {
+    "description": "ShortLink giúp bạn rút gọn, theo dõi và quản lý các liên kết một cách dễ dàng và hiệu quả.",
+    "quickLinks": "Liên kết nhanh",
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "dashboard": "Bảng điều khiển",
+    "pricing": "Bảng giá",
+    "contact": "Liên hệ",
+    "allRightsReserved": "Mọi quyền được bảo lưu",
+    "privacyPolicy": "Chính sách bảo mật",
+    "termsOfService": "Điều khoản dịch vụ",
+    "cookiePolicy": "Chính sách cookie"
   }
 }

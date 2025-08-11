@@ -115,5 +115,18 @@
     "comparedToLastMonth": "compared to last month",
     "ofTotalLinks": "of total links",
     "trackUsage": "Track usage"
+  },
+  "Footer": {
+    "description": "ShortLink helps you shorten, track, and manage your links easily and efficiently.",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "about": "About",
+    "dashboard": "Dashboard",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "allRightsReserved": "All Rights Reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy"
   }
 }

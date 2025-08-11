@@ -1,40 +1,21 @@
-
 "use client";
 
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  SunIcon,
-  MoonIcon,
-  GlobeIcon,
-  LogInIcon,
-  UserPlusIcon,
-  MenuIcon,
-  XIcon,
-  Link2,
-} from "lucide-react";
+import { MenuIcon, XIcon, Link2 } from "lucide-react";
 
-// shadcn components
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { ModeToggle } from "./ModeToggle";
-import Logo from "./Logo";
+
 import { useTranslations } from "next-intl";
 
 export default function Header() {
@@ -60,7 +41,7 @@ export default function Header() {
               <Link2 className="h-5 w-5 text-white" />
             </div>
             <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              ShortLink
+              LcnLink
             </span>
           </Link>
 
@@ -72,7 +53,9 @@ export default function Header() {
                   <Link href={item.href} legacyBehavior passHref>
                     <NavigationMenuLink
                       className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 ${
-                        pathname === item.href ? "text-foreground" : "text-foreground/60"
+                        pathname === item.href
+                          ? "text-foreground"
+                          : "text-foreground/60"
                       }`}
                     >
                       {item.name}
@@ -89,13 +72,16 @@ export default function Header() {
               <Button variant="ghost" asChild>
                 <Link href="/login">{t("login")}</Link>
               </Button>
-              <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-600">
+              <Button
+                asChild
+                className="bg-gradient-to-r from-blue-500 to-purple-600"
+              >
                 <Link href="/register">{t("register")}</Link>
               </Button>
             </div>
             <LanguageSwitcher />
             <ModeToggle />
-            
+
             {/* Mobile menu button */}
             <Button
               variant="ghost"

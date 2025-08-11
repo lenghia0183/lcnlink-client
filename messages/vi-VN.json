@@ -6,7 +6,12 @@
   "Navigation": {
     "home": "Trang chủ",
     "about": "Giới thiệu",
-    "contact": "Liên hệ"
+    "contact": "Liên hệ",
+    "dashboard": "Bảng điều khiển",
+    "analytics": "Phân tích",
+    "pricing": "Giá cả",
+    "login": "Đăng nhập",
+    "register": "Đăng ký"
   },
   "Common": {
     "loading": "Đang tải...",

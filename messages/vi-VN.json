@@ -3,6 +3,65 @@
     "title": "Chào mừng đến với Next.js!",
     "description": "Bắt đầu bằng cách chỉnh sửa app/page.tsx"
   },
+
+  "About": {
+    "hero": {
+      "title": "Về chúng tôi",
+      "subtitle": "Chúng tôi cam kết mang lại giải pháp rút gọn URL nhanh chóng, bảo mật và đáng tin cậy cho mọi người trên toàn thế giới.",
+      "badge": "Tin cậy bởi hàng triệu người dùng"
+    },
+    "stats": {
+      "linksShortened": "Liên kết đã được rút gọn",
+      "activeUsers": "Người dùng hoạt động",
+      "countriesServed": "Quốc gia phục vụ",
+      "uptime": "Thời gian hoạt động"
+    },
+    "mission": {
+      "title": "Sứ mệnh của chúng tôi",
+      "description": "Chúng tôi muốn giúp mọi người chia sẻ thông tin nhanh hơn, dễ dàng hơn và an toàn hơn thông qua các công cụ rút gọn URL mạnh mẽ, dễ sử dụng."
+    },
+    "features": {
+      "title": "Tính năng nổi bật",
+      "fast": {
+        "title": "Nhanh chóng",
+        "description": "Rút gọn URL của bạn chỉ trong vài giây."
+      },
+      "secure": {
+        "title": "Bảo mật",
+        "description": "Bảo vệ liên kết của bạn bằng mật khẩu và mã hóa tiên tiến."
+      },
+      "analytics": {
+        "title": "Phân tích",
+        "description": "Theo dõi chi tiết số lượt nhấp, vị trí và hành vi người dùng."
+      },
+      "global": {
+        "title": "Toàn cầu",
+        "description": "Dịch vụ sẵn sàng cho người dùng trên khắp thế giới."
+      }
+    },
+    "values": {
+      "title": "Giá trị cốt lõi",
+      "userFirst": {
+        "title": "Người dùng là trung tâm",
+        "description": "Chúng tôi ưu tiên trải nghiệm và nhu cầu của bạn."
+      },
+      "privacy": {
+        "title": "Quyền riêng tư",
+        "description": "Chúng tôi bảo vệ dữ liệu của bạn và không chia sẻ cho bên thứ ba."
+      },
+      "excellence": {
+        "title": "Xuất sắc",
+        "description": "Cam kết mang lại chất lượng và sự đổi mới liên tục."
+      }
+    },
+    "cta": {
+      "title": "Bắt đầu rút gọn liên kết của bạn ngay hôm nay!",
+      "description": "Tham gia cùng hàng triệu người đã tin dùng dịch vụ của chúng tôi.",
+      "feature1": "Miễn phí sử dụng",
+      "feature2": "Bảo mật cao",
+      "feature3": "Thống kê chi tiết"
+    }
+  },
   "Navigation": {
     "home": "Trang chủ",
     "about": "Giới thiệu",

@@ -3,6 +3,65 @@
     "title": "Welcome to Next.js!",
     "description": "Get started by editing app/page.tsx"
   },
+
+  "About": {
+    "hero": {
+      "title": "About Us",
+      "subtitle": "We are committed to providing fast, secure, and reliable URL shortening solutions to people worldwide.",
+      "badge": "Trusted by millions of users"
+    },
+    "stats": {
+      "linksShortened": "Links Shortened",
+      "activeUsers": "Active Users",
+      "countriesServed": "Countries Served",
+      "uptime": "Uptime"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "We aim to help people share information faster, easier, and more securely through powerful, user-friendly URL shortening tools."
+    },
+    "features": {
+      "title": "Key Features",
+      "fast": {
+        "title": "Fast",
+        "description": "Shorten your URLs in just seconds."
+      },
+      "secure": {
+        "title": "Secure",
+        "description": "Protect your links with passwords and advanced encryption."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Track clicks, locations, and user behavior in detail."
+      },
+      "global": {
+        "title": "Global",
+        "description": "Service available to users all over the world."
+      }
+    },
+    "values": {
+      "title": "Our Core Values",
+      "userFirst": {
+        "title": "User First",
+        "description": "We prioritize your experience and needs."
+      },
+      "privacy": {
+        "title": "Privacy",
+        "description": "We protect your data and never share it with third parties."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "Committed to quality and continuous innovation."
+      }
+    },
+    "cta": {
+      "title": "Start shortening your links today!",
+      "description": "Join millions who already trust our service.",
+      "feature1": "Free to use",
+      "feature2": "High security",
+      "feature3": "Detailed analytics"
+    }
+  },
   "Navigation": {
     "home": "Home",
     "about": "About",

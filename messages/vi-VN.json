@@ -19,6 +19,25 @@
       "signIn": "Đăng nhập",
       "noAccount": "Chưa có tài khoản?",
       "signUp": "Đăng ký"
+    },
+    "register": {
+      "title": "Tham gia ShortLink",
+      "subtitle": "Tạo tài khoản để bắt đầu rút gọn URL",
+      "createAccount": "Tạo tài khoản",
+      "description": "Điền thông tin của bạn để bắt đầu",
+      "name": "Họ và tên",
+      "namePlaceholder": "Nhập họ và tên của bạn",
+      "email": "Email",
+      "emailPlaceholder": "Nhập email của bạn",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "Nhập mật khẩu của bạn",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "confirmPasswordPlaceholder": "Nhập lại mật khẩu của bạn",
+      "agreeTerms": "Tôi đồng ý với",
+      "termsAndConditions": "Điều khoản và Điều kiện",
+      "haveAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "passwordMismatch": "Mật khẩu không khớp"
     }
   },
 

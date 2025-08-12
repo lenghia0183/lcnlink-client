@@ -19,6 +19,25 @@
       "signIn": "Sign In",
       "noAccount": "Don't have an account?",
       "signUp": "Sign Up"
+    },
+    "register": {
+      "title": "Join ShortLink",
+      "subtitle": "Create an account to start shortening URLs",
+      "createAccount": "Create Account",
+      "description": "Fill in your details to get started",
+      "name": "Name",
+      "nameOFFSETPlaceholder": "Enter your full name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "agreeTerms": "I agree to the",
+      "termsAndConditions": "Terms and Conditions",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "passwordMismatch": "Passwords do not match"
     }
   },
 

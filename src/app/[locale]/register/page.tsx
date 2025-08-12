@@ -1,47 +1,84 @@
-
 "use client";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Mail, Lock, Eye, EyeOff, User, Link2 } from "lucide-react";
+import { AppCard } from "@/components/AppCard";
+import z from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TextField } from "@/components/FormFields/TextField";
+import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
+import { AppButton } from "@/components/AppButton";
+
+const schema = z
+  .object({
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters long")
+      .max(50, "Name must be at most 50 characters long"),
+    email: z
+      .string()
+      .url("Please enter a valid URL (e.g., https://example.com)")
+      .min(1, "URL is required"),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters long")
+      .max(100, "Password must be at most 100 characters long"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters long")
+      .max(100, "Confirm password must be at most 100 characters long"),
+    agreeTerms: z
+      .boolean()
+      .array()
+      .refine((val) => val.includes(true), {
+        message: "You must agree to the terms and conditions",
+      }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type FormValues = z.infer<typeof schema>;
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
+
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleShowPassword = () => {
+    setIsShowPassword(!isShowPassword);
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert(t("register.passwordMismatch"));
-      return;
-    }
-    
+  const handleShowConfirmPassword = () => {
+    setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
+
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      agreeTerms: [false],
+    },
+  });
+
+  const handleRegister = async (data: FormValues) => {
     setIsLoading(true);
-    
     // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle registration logic here
-    }, 1000);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("Registration data:", data);
+    setIsLoading(false);
+    // Handle registration logic here
   };
 
   return (
@@ -64,139 +101,107 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>{t("register.createAccount")}</CardTitle>
-            <CardDescription>{t("register.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">{t("register.name")}</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder={t("register.namePlaceholder")}
-                    value={formData.name}
-                    onChange={(e) => handleChange("name", e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+        <AppCard
+          className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+          title={t("register.createAccount")}
+          description={t("register.description")}
+        >
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(handleRegister)}
+              noValidate
+              className="space-y-4"
+            >
+              <TextField
+                name="name"
+                label={t("register.name")}
+                placeholder={t("register.namePlaceholder")}
+                leftIcon={<User className="h-4 w-4 text-gray-400" />}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">{t("register.email")}</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder={t("register.emailPlaceholder")}
-                    value={formData.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+              <TextField
+                name="email"
+                label={t("register.email")}
+                placeholder={t("register.emailPlaceholder")}
+                leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="password">{t("register.password")}</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={t("register.passwordPlaceholder")}
-                    value={formData.password}
-                    onChange={(e) => handleChange("password", e.target.value)}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
-                    )}
-                  </Button>
-                </div>
-              </div>
+              <TextField
+                name="password"
+                label={t("register.password")}
+                type={isShowPassword ? "text" : "password"}
+                placeholder={t("register.passwordPlaceholder")}
+                leftIcon={<Lock className="h-4 w-4 text-gray-400" />}
+                rightIcon={
+                  isShowPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400" />
+                  )
+                }
+                rightIconOnClick={handleShowPassword}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">{t("register.confirmPassword")}</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder={t("register.confirmPasswordPlaceholder")}
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleChange("confirmPassword", e.target.value)}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
-                    )}
-                  </Button>
-                </div>
-              </div>
+              <TextField
+                name="confirmPassword"
+                label={t("register.confirmPassword")}
+                type={isShowConfirmPassword ? "text" : "password"}
+                placeholder={t("register.confirmPasswordPlaceholder")}
+                leftIcon={<Lock className="h-4 w-4 text-gray-400" />}
+                rightIcon={
+                  isShowConfirmPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400" />
+                  )
+                }
+                rightIconOnClick={handleShowConfirmPassword}
+              />
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="terms"
-                  checked={agreeTerms}
-                  onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
-                />
-                <Label htmlFor="terms" className="text-sm">
-                  {t("register.agreeTerms")}{" "}
-                  <Link href="/terms" className="text-blue-600 hover:text-blue-500 dark:text-blue-400">
-                    {t("register.termsAndConditions")}
-                  </Link>
-                </Label>
-              </div>
+              <CheckboxGroupField
+                name="agreeTerms"
+                options={[
+                  {
+                    id: "terms",
+                    label: (
+                      <>
+                        {t("register.agreeTerms")}{" "}
+                        <AppButton
+                          variant="link"
+                          href="/terms"
+                          className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
+                        >
+                          {t("register.termsAndConditions")}
+                        </AppButton>
+                      </>
+                    ),
+                  },
+                ]}
+              />
 
-              <Button
+              <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                disabled={isLoading || !agreeTerms}
+                disabled={isLoading}
               >
                 {isLoading ? t("Common.loading") : t("register.createAccount")}
-              </Button>
+              </AppButton>
             </form>
+          </FormProvider>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {t("register.haveAccount")}{" "}
-                <Link
-                  href="/login"
-                  className="text-blue-600 hover:text-blue-500 dark:text-blue-400 font-medium"
-                >
-                  {t("register.signIn")}
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              {t("register.haveAccount")}
+              <AppButton
+                variant="link"
+                href="/login"
+                className="text-blue-600 hover:text-blue-500 dark:text-blue-400 font-medium"
+              >
+                {t("register.signIn")}
+              </AppButton>
+            </p>
+          </div>
+        </AppCard>
       </div>
     </div>
   );

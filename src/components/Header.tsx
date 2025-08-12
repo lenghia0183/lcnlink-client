@@ -49,7 +49,7 @@ export default function Header() {
             <NavigationMenuList>
               {navigation.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <Link href={item.href} legacyBehavior passHref>
+                  <Link href={item.href}>
                     <NavigationMenuLink
                       className={cn(
                         "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",

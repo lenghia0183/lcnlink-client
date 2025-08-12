@@ -4,6 +4,24 @@
     "description": "Bắt đầu bằng cách chỉnh sửa app/page.tsx"
   },
 
+  "Auth": {
+    "login": {
+      "title": "Chào mừng đến với ShortLink",
+      "subtitle": "Đăng nhập để quản lý các URL rút gọn của bạn",
+      "welcomeBack": "Chào mừng trở lại!",
+      "description": "Nhập thông tin đăng nhập để truy cập tài khoản của bạn",
+      "email": "Email hoặc URL",
+      "emailPlaceholder": "Nhập email hoặc URL của bạn",
+      "password": " Mật khẩu",
+      "passwordPlaceholder": "Nhập mật khẩu của bạn",
+      "rememberMe": "Ghi nhớ tôi",
+      "forgotPassword": "Quên mật khẩu?",
+      "signIn": "Đăng nhập",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký"
+    }
+  },
+
   "About": {
     "hero": {
       "title": "Về chúng tôi",

@@ -1,33 +1,56 @@
-
 "use client";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Mail, Lock, Eye, EyeOff, Link2 } from "lucide-react";
+import { AppCard } from "@/components/AppCard";
+import z from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TextField } from "@/components/FormFields/TextField";
+import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
+import { AppButton } from "@/components/AppButton";
+
+const schema = z.object({
+  email: z
+    .string()
+    .url("Please enter a valid URL (e.g., https://example.com)")
+    .min(1, "URL is required"),
+
+  password: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val.length >= 6,
+      "Password must be at least 6 characters long"
+    ),
+});
+
+type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+
+  const [isShowPassword, setIsShowPassword] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle login logic here
-    }, 1000);
+  const handleShowPassword = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    console.log("data", data);
   };
 
   return (
@@ -50,99 +73,83 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>{t("login.welcomeBack")}</CardTitle>
-            <CardDescription>{t("login.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">{t("login.email")}</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder={t("login.emailPlaceholder")}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+        <AppCard
+          className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+          title={t("login.welcomeBack")}
+          description={t("login.description")}
+        >
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              noValidate
+              className="space-y-4"
+            >
+              <TextField
+                name="email"
+                label={t("login.email")}
+                placeholder={t("login.emailPlaceholder")}
+                leftIcon={<Mail className="w-4 h-4" />}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="password">{t("login.password")}</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={t("login.passwordPlaceholder")}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
-                    )}
-                  </Button>
-                </div>
-              </div>
+              <TextField
+                name="password"
+                label={t("login.password")}
+                type={isShowPassword ? "text" : "password"}
+                placeholder={t("login.passwordPlaceholder")}
+                leftIcon={<Lock className="h-4 w-4 text-gray-400" />}
+                rightIcon={
+                  isShowPassword ? (
+                    <EyeOff className="h-4 w-4 " />
+                  ) : (
+                    <Eye className="h-4 w-4 " />
+                  )
+                }
+                rightIconOnClick={handleShowPassword}
+              />
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                  />
-                  <Label htmlFor="remember" className="text-sm">
-                    {t("login.rememberMe")}
-                  </Label>
-                </div>
-                <Link
+                <CheckboxGroupField
+                  name="remember"
+                  options={[
+                    {
+                      id: "remember",
+                      label: t("login.rememberMe"),
+                    },
+                  ]}
+                />
+
+                <AppButton
                   href="/forgot-password"
+                  variant="link"
                   className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400"
                 >
                   {t("login.forgotPassword")}
-                </Link>
+                </AppButton>
               </div>
 
-              <Button
+              <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                 disabled={isLoading}
               >
                 {isLoading ? t("Common.loading") : t("login.signIn")}
-              </Button>
+              </AppButton>
             </form>
+          </FormProvider>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {t("login.noAccount")}{" "}
-                <Link
-                  href="/register"
-                  className="text-blue-600 hover:text-blue-500 dark:text-blue-400 font-medium"
-                >
-                  {t("login.signUp")}
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              {t("login.noAccount")}
+              <AppButton
+                href="/register"
+                variant="link"
+                className="text-blue-600 hover:text-blue-500 dark:text-blue-400 font-medium"
+              >
+                {t("login.signUp")}
+              </AppButton>
+            </p>
+          </div>
+        </AppCard>
       </div>
     </div>
   );

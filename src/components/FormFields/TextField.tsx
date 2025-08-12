@@ -27,7 +27,8 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   allow?: RegExp;
   prevent?: RegExp;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  iconOnClick?: () => void;
+  leftIconOnClick?: () => void;
+  rightIconOnClick?: () => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
@@ -43,7 +44,8 @@ export function TextField({
   inputClassName,
   labelClassName,
   labelWidth = "90px",
-  iconOnClick,
+  leftIconOnClick,
+  rightIconOnClick,
   allow,
   prevent,
   onChange,
@@ -86,7 +88,10 @@ export function TextField({
         const inputField = (
           <div className="relative w-full">
             {leftIcon && (
-              <span className={cn("left-3", iconClass)} onClick={iconOnClick}>
+              <span
+                className={cn("left-3", iconClass)}
+                onClick={leftIconOnClick}
+              >
                 {leftIcon}
               </span>
             )}
@@ -104,7 +109,10 @@ export function TextField({
               {...inputProps}
             />
             {rightIcon && (
-              <span className={cn("right-3", iconClass)} onClick={iconOnClick}>
+              <span
+                className={cn("right-3", iconClass)}
+                onClick={rightIconOnClick}
+              >
                 {rightIcon}
               </span>
             )}

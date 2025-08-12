@@ -4,6 +4,24 @@
     "description": "Get started by editing app/page.tsx"
   },
 
+  "Auth": {
+    "login": {
+      "title": "Welcome to ShortLink",
+      "subtitle": "Sign in to manage your shortened URLs",
+      "welcomeBack": "Welcome Back!",
+      "description": "Enter your credentials to access your account",
+      "email": "Email or URL",
+      "emailPlaceholder": "Enter your email or URL",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up"
+    }
+  },
+
   "About": {
     "hero": {
       "title": "About Us",

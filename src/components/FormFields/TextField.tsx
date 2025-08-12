@@ -68,9 +68,12 @@ export function TextField({
       render={({ field, fieldState }) => {
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           let newValue = e.target.value;
+          console.log("newValue before", newValue);
+          console.log("allow", allow);
           if (allow) {
             newValue = newValue.replace(allow, "");
           }
+          console.log("newValue after", newValue);
           field.onChange(newValue);
           if (onChange) onChange(e);
         };

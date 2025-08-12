@@ -34,6 +34,7 @@ import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
 
 import { AppButton } from "@/components/AppButton";
+import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 
 interface ShortenedLink {
   id: string;
@@ -71,7 +72,10 @@ const schema = z.object({
       "Password must be at least 6 characters long"
     ),
   description: z.string().optional(),
-  maxClicks: z.string("Maximum clicks must be a number").nullable().optional(),
+  maxClicks: z.coerce
+    .number("Maximum clicks must be a number")
+    .nullable()
+    .optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -231,9 +235,7 @@ export default function HomePage() {
                             name="maxClicks"
                             placeholder={t("maxClicksPlaceholder")}
                             label={t("maxClicks")}
-                            inputProps={{
-                              type: "number",
-                            }}
+                            allow={TEXTFIELD_ALLOW.POSITIVE_DECIMAL}
                           />
                         </div>
                       ),

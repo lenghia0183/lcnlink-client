@@ -2,11 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { MenuIcon, XIcon, Link2 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -15,11 +11,14 @@ import {
 } from "@/components/ui/navigation-menu";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { ModeToggle } from "./ModeToggle";
-
 import { useTranslations } from "next-intl";
+import { AppButton } from "./AppButton";
+import { AppDrawer } from "./AppDrawer";
+import { usePathname } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isShowNavDrawer, setIsShowNavDrawer] = React.useState(false);
   const pathname = usePathname();
   const t = useTranslations("Navigation");
 
@@ -52,11 +51,12 @@ export default function Header() {
                 <NavigationMenuItem key={item.name}>
                   <Link href={item.href} legacyBehavior passHref>
                     <NavigationMenuLink
-                      className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 ${
+                      className={cn(
+                        "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
                         pathname === item.href
                           ? "text-foreground"
                           : "text-foreground/60"
-                      }`}
+                      )}
                     >
                       {item.name}
                     </NavigationMenuLink>
@@ -69,56 +69,55 @@ export default function Header() {
           {/* Right side actions */}
           <div className="flex items-center space-x-2">
             <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost" asChild>
-                <Link href="/login">{t("login")}</Link>
-              </Button>
-              <Button
+              <AppButton variant="ghost" href="/login" asChild>
+                {t("login")}
+              </AppButton>
+              <AppButton
                 asChild
                 className="bg-gradient-to-r from-blue-500 to-purple-600"
+                href="/register"
               >
-                <Link href="/register">{t("register")}</Link>
-              </Button>
+                {t("register")}
+              </AppButton>
             </div>
             <LanguageSwitcher />
             <ModeToggle />
 
             {/* Mobile menu button */}
-            <Button
+            <AppButton
               variant="ghost"
               size="icon"
               className="md:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setIsShowNavDrawer(!isShowNavDrawer)}
             >
-              {isMobileMenuOpen ? (
+              {isShowNavDrawer ? (
                 <XIcon className="h-5 w-5" />
               ) : (
                 <MenuIcon className="h-5 w-5" />
               )}
-            </Button>
+            </AppButton>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                    pathname === item.href
-                      ? "bg-accent text-accent-foreground"
-                      : "text-foreground/60"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        <AppDrawer open={isShowNavDrawer} onOpenChange={setIsShowNavDrawer}>
+          <>
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "block px-3 py-2 rounded-md text-sm font-medium",
+                  pathname === item.href
+                    ? "bg-accent text-accent-foreground"
+                    : "text-foreground/60"
+                )}
+                onClick={() => setIsShowNavDrawer(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </>
+        </AppDrawer>
       </div>
     </header>
   );

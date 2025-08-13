@@ -1,0 +1,231 @@
+import {
+  CheckCircle,
+  Clock,
+  Shield,
+  MousePointer,
+  Calendar,
+  ExternalLink,
+  Globe,
+  Settings,
+  Copy,
+  QrCode,
+  BarChart3,
+  Edit,
+  Share2,
+  Mail,
+  Twitter,
+  Facebook,
+  Trash2,
+  MoreHorizontal,
+  AlertCircle,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
+import { format } from "date-fns";
+import { AppButton } from "@/components/AppButton";
+import { AppProgress } from "@/components/AppProgress";
+import { AppDropdown } from "@/components/AppDropDown";
+import { AppCard } from "@/components/AppCard";
+import { LinkData } from "@/types/Link";
+import { useTranslations } from "next-intl";
+
+interface LinkCardProps {
+  link: LinkData;
+  onEdit: (link: LinkData) => void;
+  onDelete: (id: string) => void;
+  onCopy: (text: string, id: string) => void;
+  copiedId: string;
+}
+
+export const LinkCard = ({
+  link,
+  onEdit,
+  onDelete,
+  onCopy,
+  copiedId,
+}: LinkCardProps) => {
+  const t = useTranslations("Dashboard");
+
+  const getStatusBadge = () => {
+    const statusConfig = {
+      active: {
+        variant: "default" as const,
+        label: t("active"),
+        icon: <CheckCircle className="h-3 w-3" />,
+      },
+      expired: {
+        variant: "destructive" as const,
+        label: t("expired"),
+        icon: <Clock className="h-3 w-3" />,
+      },
+      disabled: {
+        variant: "secondary" as const,
+        label: t("disabled"),
+        icon: <AlertCircle className="h-3 w-3" />,
+      },
+      limit_reached: {
+        variant: "outline" as const,
+        label: t("limitReached"),
+        icon: <MousePointer className="h-3 w-3" />,
+      },
+    };
+
+    const config = statusConfig[link.status];
+    return (
+      <Badge variant={config.variant} className="flex items-center gap-1">
+        {config.icon}
+        {config.label}
+      </Badge>
+    );
+  };
+
+  const getProgressPercentage = (clicks: number, maxClicks?: number) => {
+    if (!maxClicks) return 0;
+    return Math.min((clicks / maxClicks) * 100, 100);
+  };
+
+  return (
+    <AppCard
+      className="border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow"
+      contentClassName="p-6"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-3">
+            <code className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <Globe className="h-4 w-4" />
+              {link.shortUrl}
+            </code>
+            <AppButton
+              variant="ghost"
+              size="icon"
+              onClick={() => onCopy(link.shortUrl, link.id)}
+              iconLeft={
+                copiedId === link.id ? (
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )
+              }
+            />
+            {getStatusBadge()}
+            {link.isPasswordProtected && (
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Shield className="h-3 w-3" />
+                {t("protected")}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2 mb-3">
+            <ExternalLink className="h-4 w-4 text-gray-400" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+              {link.originalUrl}
+            </p>
+          </div>
+          {link.description && (
+            <p className="text-sm text-gray-500 mb-3 italic">
+              {link.description}
+            </p>
+          )}
+          {link.maxClicks && (
+            <AppProgress
+              leftLabel={`
+                  ${t("clicks")}: ${link.clicks}/${link.maxClicks}
+                `}
+              rightLabel={`
+                  ${getProgressPercentage(link.clicks, link.maxClicks).toFixed(
+                    1
+                  )}%
+                `}
+              value={getProgressPercentage(link.clicks, link.maxClicks)}
+              indicatorClassName={
+                link.status === "limit_reached" ? "bg-red-500" : "bg-blue-500"
+              }
+            />
+          )}
+          <div className="flex items-center gap-6 text-xs text-gray-500">
+            <span className="flex items-center gap-1">
+              <MousePointer className="h-3 w-3" />
+              {link.clicks} {t("clicks")}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {format(link.createdAt, "dd/MM/yyyy")}
+            </span>
+            {link.expiresAt && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {t("expires")} {format(link.expiresAt, "dd/MM/yyyy")}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 ml-4">
+          <AppButton variant="outline" size="icon" iconLeft={<QrCode />} />
+          <AppButton variant="outline" size="icon" iconLeft={<BarChart3 />} />
+          <AppButton
+            variant="outline"
+            size="icon"
+            iconLeft={<Settings />}
+            onClick={() => onEdit(link)}
+          />
+          <AppDropdown
+            items={[
+              {
+                label: t("edit"),
+                icon: <Edit className="h-4 w-4" />,
+                onClick: () => onEdit(link),
+              },
+              {
+                label: "Share",
+                icon: <Share2 className="h-4 w-4" />,
+                submenu: [
+                  {
+                    label: "Copy link",
+                    icon: <Copy className="h-4 w-4" />,
+                    onClick: () => console.log("Copy link clicked"),
+                  },
+                  {
+                    label: "Share via email",
+                    icon: <Mail className="h-4 w-4" />,
+                    onClick: () => console.log("Email share clicked"),
+                  },
+                  {
+                    label: "Social media",
+                    submenu: [
+                      {
+                        label: "Twitter",
+                        icon: <Twitter className="h-4 w-4" />,
+                        onClick: () => console.log("Twitter share clicked"),
+                      },
+                      {
+                        label: "Facebook",
+                        icon: <Facebook className="h-4 w-4" />,
+                        onClick: () => console.log("Facebook share clicked"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: t("delete"),
+                icon: <Trash2 className="h-4 w-4" />,
+                onClick: () => onDelete(link.id),
+                className:
+                  "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20",
+              },
+            ]}
+            trigger={
+              <AppButton
+                variant="outline"
+                size="icon"
+                iconLeft={<MoreHorizontal />}
+              />
+            }
+            withChevron={false}
+          />
+        </div>
+      </div>
+    </AppCard>
+  );
+};

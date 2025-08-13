@@ -1,0 +1,134 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { useForm, FormProvider } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { TextField } from "@/components/FormFields/TextField";
+import { TextAreaField } from "@/components/FormFields/TextAreaField";
+import { DatePickerField } from "@/components/FormFields/DatePickerField";
+import { TEXTFIELD_ALLOW } from "@/constants/regexes";
+import { AppDialog } from "@/components/AppDialog";
+
+import { useRef } from "react";
+
+const schema = z.object({
+  originUrl: z.string().url("Invalid URL"),
+  alias: z.string().optional(),
+  expirationDate: z.date().nullable().optional(),
+  password: z.string().optional(),
+  description: z.string().optional(),
+  maxClicks: z
+    .preprocess(
+      (v) => (v === "" || v === undefined ? null : Number(v)),
+      z.number().positive().nullable()
+    )
+    .optional(),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+interface CreateLinkDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const CreateLinkDialog = ({
+  open,
+  onOpenChange,
+}: CreateLinkDialogProps) => {
+  const t = useTranslations("Dashboard");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      originUrl: "",
+      alias: "",
+      expirationDate: null,
+      password: "",
+      description: "",
+      maxClicks: null,
+    },
+    mode: "onSubmit",
+  });
+
+  const onSubmit = (data: FormValues) => {
+    console.log("Submited data:", data);
+    onOpenChange(false);
+    methods.reset();
+  };
+
+  const footerActions = [
+    {
+      label: t("cancel"),
+      onClick: () => onOpenChange(false),
+      variant: "outline" as const,
+      disabled: false,
+    },
+    {
+      label: t("create"),
+      onClick: () => {
+        formRef.current?.dispatchEvent(
+          new Event("submit", { cancelable: true, bubbles: true })
+        );
+      },
+      disabled: false,
+    },
+  ];
+
+  return (
+    <AppDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t("createDialogTitle")}
+      description={t("createDialogDescription")}
+      footerActions={footerActions}
+      closeOnOverlayClick={false}
+    >
+      <FormProvider {...methods}>
+        <form
+          ref={formRef}
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="space-y-4"
+          noValidate
+        >
+          <TextField
+            name="originUrl"
+            label={t("originalUrl")}
+            placeholder={t("urlPlaceholder")}
+            required
+          />
+          <TextField
+            name="alias"
+            label={t("customAlias")}
+            placeholder={t("aliasPlaceholder")}
+          />
+          <TextAreaField
+            name="description"
+            label={t("description")}
+            placeholder={t("descriptionPlaceholder")}
+          />
+          <TextField
+            name="password"
+            label={t("password")}
+            type="password"
+            placeholder={t("passwordPlaceholder")}
+          />
+          <TextField
+            name="maxClicks"
+            label={t("maxClicks")}
+            placeholder={t("maxClicksPlaceholder")}
+            allow={TEXTFIELD_ALLOW.POSITIVE_DECIMAL}
+          />
+          <DatePickerField
+            name="expirationDate"
+            label={t("expirationDate")}
+            placeholder={t("expirationDate")}
+          />
+        </form>
+      </FormProvider>
+    </AppDialog>
+  );
+};

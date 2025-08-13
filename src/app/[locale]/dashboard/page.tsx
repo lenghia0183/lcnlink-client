@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { format } from "date-fns";
 
 import { LinkData } from "@/types/Link";
 import { CreateLinkDialog } from "./CreateLinkDialog";
@@ -26,16 +25,9 @@ export default function DashboardPage() {
   const [copiedId, setCopiedId] = useState<string>("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingLink, setEditingLink] = useState<LinkData | null>(null);
-
-  const [formData, setFormData] = useState({
-    url: "",
-    customAlias: "",
-    description: "",
-    password: "",
-    maxClicks: "",
-    expiresAt: "",
-  });
+  const [selectedLink, setSelectedLink] = useState<LinkData | undefined>(
+    undefined
+  );
 
   // Mock data
   const [links, setLinks] = useState<LinkData[]>([
@@ -167,47 +159,12 @@ export default function DashboardPage() {
   };
 
   const handleEditLink = (link: LinkData) => {
-    setEditingLink(link);
-    setFormData({
-      url: link.originalUrl,
-      customAlias: link.customAlias || "",
-      description: link.description || "",
-      password: link.password || "",
-      maxClicks: link.maxClicks?.toString() || "",
-      expiresAt: link.expiresAt ? format(link.expiresAt, "yyyy-MM-dd") : "",
-    });
+    setSelectedLink(link);
     setIsEditDialogOpen(true);
-  };
-
-  const handleUpdateLink = () => {
-    if (!editingLink) return;
-
-    setLinks((prev) =>
-      prev.map((link) =>
-        link.id === editingLink.id
-          ? {
-              ...link,
-              description: formData.description,
-              password: formData.password,
-              isPasswordProtected: !!formData.password,
-              maxClicks: formData.maxClicks
-                ? parseInt(formData.maxClicks)
-                : undefined,
-            }
-          : link
-      )
-    );
-
-    setIsEditDialogOpen(false);
-    setEditingLink(null);
   };
 
   const handleDeleteLink = (id: string) => {
     setLinks((prev) => prev.filter((link) => link.id !== id));
-  };
-
-  const handleFormDataChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -257,9 +214,7 @@ export default function DashboardPage() {
         <EditLinkDialog
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
-          onUpdate={handleUpdateLink}
-          formData={formData}
-          onFormDataChange={handleFormDataChange}
+          selectedLink={selectedLink}
         />
       </div>
     </div>

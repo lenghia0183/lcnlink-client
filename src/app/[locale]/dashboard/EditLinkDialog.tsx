@@ -1,83 +1,104 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+"use client";
+
 import { useTranslations } from "next-intl";
+import { useForm, FormProvider } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { TextField } from "@/components/FormFields/TextField";
+import { TextAreaField } from "@/components/FormFields/TextAreaField";
+import { TEXTFIELD_ALLOW } from "@/constants/regexes";
+import { AppDialog } from "@/components/AppDialog";
+import { LinkData } from "@/types/Link";
+
+const editSchema = z.object({
+  description: z.string().optional(),
+  password: z.string().optional(),
+  maxClicks: z.string().optional(),
+});
+
+type EditFormValues = z.infer<typeof editSchema>;
 
 interface EditLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onUpdate: () => void;
-  formData: any;
-  onFormDataChange: (field: string, value: string) => void;
+  selectedLink?: LinkData;
 }
 
 export const EditLinkDialog = ({
   open,
   onOpenChange,
-  onUpdate,
-  formData,
-  onFormDataChange,
+  selectedLink,
 }: EditLinkDialogProps) => {
   const t = useTranslations("Dashboard");
+  console.log("selectedLink", selectedLink);
+
+  const initialData: EditFormValues = {
+    description: selectedLink?.description,
+    password: selectedLink?.password,
+    maxClicks: "",
+  };
+
+  const methods = useForm<EditFormValues>({
+    resolver: zodResolver(editSchema),
+    defaultValues: initialData,
+    mode: "onChange",
+  });
+
+  const handleSubmit = (data: EditFormValues) => {
+    console.log("data", data);
+
+    onOpenChange(false);
+  };
+
+  const footerActions = [
+    {
+      label: t("cancel"),
+      onClick: () => onOpenChange(false),
+      variant: "outline" as const,
+      disabled: false,
+    },
+    {
+      label: t("update"),
+      onClick: methods.handleSubmit(handleSubmit),
+      disabled: !methods.formState.isValid,
+    },
+  ];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("editDialogTitle")}</DialogTitle>
-          <DialogDescription>{t("editDialogDescription")}</DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="edit-description">{t("description")}</Label>
-            <Textarea
-              id="edit-description"
-              placeholder={t("descriptionPlaceholder")}
-              value={formData.description}
-              onChange={(e) => onFormDataChange("description", e.target.value)}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="edit-password">{t("password")}</Label>
-            <Input
-              id="edit-password"
-              type="password"
-              placeholder={t("passwordPlaceholderEdit")}
-              value={formData.password}
-              onChange={(e) => onFormDataChange("password", e.target.value)}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="edit-maxClicks">{t("maxClicks")}</Label>
-            <Input
-              id="edit-maxClicks"
-              type="number"
-              placeholder={t("maxClicksPlaceholder")}
-              value={formData.maxClicks}
-              onChange={(e) => onFormDataChange("maxClicks", e.target.value)}
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t("cancel")}
-          </Button>
-          <Button onClick={onUpdate}>{t("update")}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <AppDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t("editDialogTitle")}
+      description={t("editDialogDescription")}
+      footerActions={footerActions}
+      closeOnOverlayClick={false}
+    >
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(handleSubmit)}
+          className="space-y-4"
+          noValidate
+        >
+          <TextAreaField
+            name="description"
+            label={t("description")}
+            placeholder={t("descriptionPlaceholder")}
+          />
+          <TextField
+            name="password"
+            label={t("password")}
+            type="password"
+            placeholder={t("passwordPlaceholderEdit")}
+          />
+          <TextField
+            name="maxClicks"
+            label={t("maxClicks")}
+            placeholder={t("maxClicksPlaceholder")}
+            allow={TEXTFIELD_ALLOW.POSITIVE_DECIMAL}
+          />
+        </form>
+      </FormProvider>
+    </AppDialog>
   );
 };

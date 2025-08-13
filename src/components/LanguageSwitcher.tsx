@@ -27,7 +27,6 @@ const langFromPathname = (path: string): Locale => {
 export default function LanguageSwitcher() {
   const { changeLanguage } = useLanguage();
   const pathname = usePathname();
-  const router = useRouter();
 
   const currentLang = langFromPathname(pathname);
 
@@ -38,10 +37,6 @@ export default function LanguageSwitcher() {
 
   const handleLanguageChange = (lang: (typeof languages)[number]) => {
     changeLanguage(lang.value);
-    const segments = pathname.split("/");
-    segments[1] = lang.locale;
-    const newPath = segments.join("/") || "/";
-    router.push(newPath);
   };
 
   return (

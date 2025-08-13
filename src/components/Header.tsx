@@ -49,8 +49,9 @@ export default function Header() {
             <NavigationMenuList>
               {navigation.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <Link href={item.href}>
-                    <NavigationMenuLink
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={item.href}
                       className={cn(
                         "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
                         pathname === item.href
@@ -59,8 +60,8 @@ export default function Header() {
                       )}
                     >
                       {item.name}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

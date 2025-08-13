@@ -1,4 +1,3 @@
-// components/ui/app-dropdown.tsx
 "use client";
 
 import {
@@ -11,7 +10,7 @@ import {
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+
 import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 export type DropdownItem = {
@@ -56,10 +55,7 @@ export function AppDropdown({
             {item.icon && <span className="h-4 w-4">{item.icon}</span>}
             <span className="flex-1">{item.label}</span>
           </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent
-            className={cn(level > 0 ? "ml-1" : "")}
-            sideOffset={level > 0 ? 4 : 0}
-          >
+          <DropdownMenuSubContent>
             {item.submenu.map((subItem, subIndex) =>
               renderItem(subItem, subIndex, level + 1)
             )}

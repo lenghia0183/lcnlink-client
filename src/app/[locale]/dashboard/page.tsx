@@ -235,8 +235,6 @@ export default function DashboardPage() {
             <CreateLinkDialog
               open={isCreateDialogOpen}
               onOpenChange={setIsCreateDialogOpen}
-              formData={formData}
-              onFormDataChange={handleFormDataChange}
             />
           </Dialog>
         </div>

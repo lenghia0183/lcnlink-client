@@ -19,12 +19,7 @@ const schema = z.object({
   expirationDate: z.date().nullable().optional(),
   password: z.string().optional(),
   description: z.string().optional(),
-  maxClicks: z
-    .preprocess(
-      (v) => (v === "" || v === undefined ? null : Number(v)),
-      z.number().positive().nullable()
-    )
-    .optional(),
+  maxClicks: z.string(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -49,7 +44,7 @@ export const CreateLinkDialog = ({
       expirationDate: null,
       password: "",
       description: "",
-      maxClicks: null,
+      maxClicks: "",
     },
     mode: "onSubmit",
   });

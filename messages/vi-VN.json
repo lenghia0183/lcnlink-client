@@ -215,7 +215,10 @@
     "expires": "Hết hạn",
     "comparedToLastMonth": "so với tháng trước",
     "ofTotalLinks": "trong tổng số liên kết",
-    "trackUsage": "Theo dõi sử dụng"
+    "trackUsage": "Theo dõi sử dụng",
+    "deleteLinkTitle": "Xóa liên kết?",
+    "deleteLinkDescription": "Bạn có chắc chắn muốn xóa liên kết \"{name}\"? Hành động này không thể hoàn tác.",
+    "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác."
   },
   "Footer": {
     "description": "ShortLink giúp bạn rút gọn, theo dõi và quản lý các liên kết một cách dễ dàng và hiệu quả.",

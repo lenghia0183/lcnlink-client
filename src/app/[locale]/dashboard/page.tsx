@@ -14,6 +14,7 @@ import { SearchAndFilters } from "./SearchAndFilters";
 import { LinkManagementCard } from "./LinkManagementCard";
 import { EditLinkDialog } from "./EditLinkDialog";
 import { useQueryState } from "@/hooks/useQueryState";
+import { DeleteLinkDialog } from "./DeleteLinkDialog";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const [copiedId, setCopiedId] = useState<string>("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState<LinkData | undefined>(
     undefined
   );
@@ -164,6 +166,7 @@ export default function DashboardPage() {
   };
 
   const handleDeleteLink = (id: string) => {
+    setIsDeleteDialogOpen(true);
     setLinks((prev) => prev.filter((link) => link.id !== id));
   };
 
@@ -214,6 +217,12 @@ export default function DashboardPage() {
         <EditLinkDialog
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
+          selectedLink={selectedLink}
+        />
+
+        <DeleteLinkDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
           selectedLink={selectedLink}
         />
       </div>

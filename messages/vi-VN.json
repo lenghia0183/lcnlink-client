@@ -220,6 +220,33 @@
     "deleteLinkDescription": "Bạn có chắc chắn muốn xóa liên kết \"{name}\"? Hành động này không thể hoàn tác.",
     "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác."
   },
+  "Analytics": {
+    "title": "Phân tích liên kết",
+    "subtitle": "Theo dõi và phân tích hiệu suất liên kết của bạn",
+    "refresh": "Làm mới",
+    "export": "Xuất dữ liệu",
+    "totalClicks": "Tổng số lượt nhấp",
+    "uniqueVisitors": "Khách truy cập duy nhất",
+    "avgSessionDuration": "Thời lượng phiên trung bình",
+    "clickThroughRate": "Tỷ lệ nhấp qua",
+    "clickTrends": {
+      "title": "Xu hướng lượt nhấp",
+      "description": "Biểu đồ hiển thị lượt nhấp theo thời gian"
+    },
+    "geographic": {
+      "title": "Phân bố địa lý",
+      "description": "Các quốc gia hàng đầu truy cập liên kết của bạn"
+    },
+    "devices": {
+      "title": "Loại thiết bị",
+      "description": "Phân bố lượt nhấp theo loại thiết bị"
+    },
+    "browsers": {
+      "title": "Trình duyệt",
+      "description": "Phân bố lượt nhấp theo trình duyệt"
+    },
+    "chartPlaceholder": "Biểu đồ sẽ hiển thị ở đây"
+  },
   "Footer": {
     "description": "ShortLink giúp bạn rút gọn, theo dõi và quản lý các liên kết một cách dễ dàng và hiệu quả.",
     "quickLinks": "Liên kết nhanh",

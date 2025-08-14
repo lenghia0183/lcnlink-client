@@ -220,6 +220,33 @@
     "deleteLinkDescription": "Are you sure you want to delete the link \"{name}\"? This action cannot be undone.",
     "deleteLinkDefaultDescription": "Are you sure you want to delete this link? This action cannot be undone."
   },
+  "Analytics": {
+    "title": "Link Analytics",
+    "subtitle": "Track and analyze your link performance",
+    "refresh": "Refresh",
+    "export": "Export Data",
+    "totalClicks": "Total Clicks",
+    "uniqueVisitors": "Unique Visitors",
+    "avgSessionDuration": "Average Session Duration",
+    "clickThroughRate": "Click-Through Rate",
+    "clickTrends": {
+      "title": "Click Trends",
+      "description": "Chart showing clicks over time"
+    },
+    "geographic": {
+      "title": "Geographic Distribution",
+      "description": "Top countries accessing your links"
+    },
+    "devices": {
+      "title": "Device Types",
+      "description": "Click distribution by device type"
+    },
+    "browsers": {
+      "title": "Browsers",
+      "description": "Click distribution by browser"
+    },
+    "chartPlaceholder": "Chart will display here"
+  },
   "Footer": {
     "description": "ShortLink helps you shorten, track, and manage your links easily and efficiently.",
     "quickLinks": "Quick Links",

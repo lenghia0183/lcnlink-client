@@ -311,6 +311,12 @@
       "a4": "Chúng tôi chấp nhận tất cả các loại thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói doanh nghiệp."
     }
   },
+  "ShortLinkCard": {
+    "domain": "short.magic",
+    "shortLinkLabel": "Liên kết rút gọn của bạn",
+    "visits": "Lượt truy cập",
+    "qrScans": "Lượt quét QR"
+  },
   "Footer": {
     "description": "ShortLink giúp bạn rút gọn, theo dõi và quản lý các liên kết một cách dễ dàng và hiệu quả.",
     "quickLinks": "Liên kết nhanh",

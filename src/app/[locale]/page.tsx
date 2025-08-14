@@ -35,6 +35,7 @@ import { TextAreaField } from "@/components/FormFields/TextAreaField";
 
 import { AppButton } from "@/components/AppButton";
 import { TEXTFIELD_ALLOW } from "@/constants/regexes";
+import ShortLinkCard from "@/components/ShortLinkCard";
 
 interface ShortenedLink {
   id: string;
@@ -385,9 +386,15 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
+        <div className="flex items-center justify-center p-16">
+          <ShortLinkCard
+            shortUrl="short.magic/xyz123"
+            visits={1245}
+            qrScans={568}
+          />
+        </div>
         {/* Stats Section */}
-        <div className="max-w-4xl mx-auto mt-16">
+        <div className="max-w-4xl mx-auto">
           <AppCard className="border-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center p-8">
               <div>

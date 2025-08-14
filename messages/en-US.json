@@ -311,6 +311,12 @@
       "a4": "We accept all major credit cards, PayPal, and bank transfers for enterprise plans."
     }
   },
+  "ShortLinkCard": {
+    "domain": "short.magic",
+    "shortLinkLabel": "Your shortened link",
+    "visits": "Visits",
+    "qrScans": "QR Scans"
+  },
   "Footer": {
     "description": "ShortLink helps you shorten, track, and manage your links easily and efficiently.",
     "quickLinks": "Quick Links",

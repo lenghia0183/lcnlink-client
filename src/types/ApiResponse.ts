@@ -1,3 +1,4 @@
+import { ResponseCodeEnum } from "@/constants/reponse-code";
 import { AxiosError } from "axios";
 
 export interface Pagination {
@@ -9,7 +10,7 @@ export interface Pagination {
 }
 
 export interface ApiResponse<T> {
-  code: number;
+  statusCode: ResponseCodeEnum;
   data?: T;
   errorDetails?: AxiosError;
   message: string;

@@ -11,12 +11,19 @@ import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
 import { getAuthSchema, AuthFormValues } from "./validation";
+import { useLogin } from "@/services/api/auth.ts/login";
+import { toast } from "@/components/AppToast";
+import validateResponseCode from "@/utils/validateResponseCode";
+import { nextApi } from "@/services/axios";
 
 type FormValues = AuthFormValues;
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
   const schema = getAuthSchema(t);
+
+  const { isMutating, trigger } = useLogin();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -28,15 +35,27 @@ export default function LoginPage() {
 
   const [isShowPassword, setIsShowPassword] = useState(false);
   const handleShowPassword = () => setIsShowPassword((v) => !v);
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: FormValues) => {
-    setIsLoading(true);
-    try {
-      console.log("data", data);
-    } finally {
-      setIsLoading(false);
-    }
+    trigger(data, {
+      onSuccess: async (response) => {
+        if (validateResponseCode(response.statusCode)) {
+          const res = await nextApi.post("/auth/set-cookie", {
+            accessToken: response.data?.accessToken,
+            refreshToken: response.data?.refreshToken,
+          });
+
+          if (validateResponseCode(res.statusCode)) {
+            toast.success(response.message);
+          }
+        } else {
+          toast.error(response.message);
+        }
+      },
+      onError: (response) => {
+        toast.error(response.message);
+      },
+    });
   };
 
   return (
@@ -116,9 +135,9 @@ export default function LoginPage() {
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                disabled={isLoading}
+                disabled={isMutating}
               >
-                {isLoading ? t("Common.loading") : t("login.signIn")}
+                {isMutating ? tCommon("loading") : t("login.signIn")}
               </AppButton>
             </form>
           </FormProvider>

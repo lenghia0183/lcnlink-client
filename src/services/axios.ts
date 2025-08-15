@@ -125,7 +125,7 @@ export const createInstance = (
 const handleAxiosError = <T>(err: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(err)) {
     const errorResponse: ApiResponse<T> = {
-      code: err.response?.data?.code || err.response?.status || 500,
+      statusCode: err.response?.data?.code || err.response?.status || 500,
       message: err.response?.data?.message || err.message,
       ...(isDevelopment ? { errorDetails: err } : {}),
     };

@@ -5,52 +5,38 @@ import { useTranslations } from "next-intl";
 
 import { Mail, Lock, Eye, EyeOff, Link2 } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
-import z from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
+import { authSchema, AuthFormValues } from "./validation";
 
-const schema = z.object({
-  email: z
-    .string()
-    .url("Please enter a valid URL (e.g., https://example.com)")
-    .min(1, "URL is required"),
-
-  password: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || val.length >= 6,
-      "Password must be at least 6 characters long"
-    ),
-});
-
-type FormValues = z.infer<typeof schema>;
+const schema = authSchema;
+type FormValues = AuthFormValues;
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
 
-  const [isShowPassword, setIsShowPassword] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleShowPassword = () => {
-    setIsShowPassword(!isShowPassword);
-  };
-
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
-    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const handleShowPassword = () => setIsShowPassword((v) => !v);
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = async (data: FormValues) => {
-    console.log("data", data);
+    setIsLoading(true);
+    try {
+      console.log("data", data);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

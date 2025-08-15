@@ -27,7 +27,7 @@ import { format } from "date-fns";
 
 import { AppCard } from "@/components/AppCard";
 import { TextField } from "@/components/FormFields/TextField";
-import z from "zod";
+import { urlSchema, UrlFormValues } from "./validation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
@@ -52,34 +52,8 @@ interface ShortenedLink {
   status: "active" | "expired" | "disabled" | "limit_reached";
 }
 
-const schema = z.object({
-  originUrl: z
-    .string()
-    .url("Please enter a valid URL (e.g., https://example.com)")
-    .min(1, "URL is required"),
-  alias: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || /^[a-zA-Z0-9-]{3,20}$/.test(val),
-      "Alias must be 3-20 characters long and contain only letters, numbers, or hyphens"
-    ),
-  expirationDate: z.date().nullable().optional(),
-  password: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || val.length >= 6,
-      "Password must be at least 6 characters long"
-    ),
-  description: z.string().optional(),
-  maxClicks: z.coerce
-    .number("Maximum clicks must be a number")
-    .nullable()
-    .optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
+const schema = urlSchema;
+type FormValues = UrlFormValues;
 export default function HomePage() {
   const t = useTranslations("UrlShortener");
   const [isSubmitting, setIsSubmitting] = useState(false);

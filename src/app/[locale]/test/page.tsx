@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, FormProvider } from "react-hook-form";
-import { z } from "zod";
+import { testSchema, TestFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock, Send, Save, FileText } from "lucide-react";
 import { useState } from "react";
@@ -25,41 +25,9 @@ import { AppDrawer } from "@/components/AppDrawer";
 import { AppAlertDialog } from "@/components/AppAlertDialog";
 import { AppButton } from "@/components/AppButton";
 import { AppAccordion } from "@/components/AppAccordion";
-import Logo from "@/components/Logo";
-
 // Schema validation
-const schema = z.object({
-  email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(6, "Mật khẩu phải từ 6 ký tự"),
-  note: z.string().optional(),
-  type: z.enum(["all", "mentions", "none"]),
-  birthday: z.date(),
-  eventDuration: z.object({
-    from: z.date().optional(),
-    to: z.date().optional(),
-  }),
-  hobbies: z
-    .array(z.string())
-    .min(1, "Bạn phải chọn ít nhất 1 sở thích")
-    .optional(),
-  country: z
-    .object({
-      code: z.string(),
-      label: z.string(),
-    })
-    .optional(),
-  user: z
-    .array(
-      z.object({
-        id: z.number(),
-        title: z.string(),
-      })
-    )
-    .min(1, "Bạn phải chọn ít nhất 1 người dùng")
-    .optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
+const schema = testSchema;
+type FormValues = TestFormValues;
 
 type Post = {
   userId: number;

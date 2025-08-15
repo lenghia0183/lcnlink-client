@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useForm, FormProvider } from "react-hook-form";
-import { z } from "zod";
+import { createLinkSchema, CreateLinkFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { TextField } from "@/components/FormFields/TextField";
@@ -13,16 +13,8 @@ import { AppDialog } from "@/components/AppDialog";
 
 import { useRef } from "react";
 
-const schema = z.object({
-  originUrl: z.string().url("Invalid URL"),
-  alias: z.string().optional(),
-  expirationDate: z.date().nullable().optional(),
-  password: z.string().optional(),
-  description: z.string().optional(),
-  maxClicks: z.string(),
-});
-
-type FormValues = z.infer<typeof schema>;
+const schema = createLinkSchema;
+type FormValues = CreateLinkFormValues;
 
 interface CreateLinkDialogProps {
   open: boolean;

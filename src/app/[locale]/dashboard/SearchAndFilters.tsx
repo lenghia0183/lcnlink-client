@@ -6,15 +6,12 @@ import { Search, Filter, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AppCard } from "@/components/AppCard";
 import { TextField } from "@/components/FormFields/TextField";
-import { z } from "zod";
+import { searchSchema, SearchFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppButton } from "@/components/AppButton";
 
-const schema = z.object({
-  searchTerm: z.string().max(100, "Search term must be at most 100 characters"),
-});
-
-type FormValues = z.infer<typeof schema>;
+const schema = searchSchema;
+type FormValues = SearchFormValues;
 
 interface SearchAndFiltersProps {
   defaultSearch?: string;

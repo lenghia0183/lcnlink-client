@@ -220,6 +220,103 @@
     "deleteLinkDescription": "Bạn có chắc chắn muốn xóa liên kết \"{name}\"? Hành động này không thể hoàn tác.",
     "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác."
   },
+  "Analytics": {
+    "title": "Phân tích liên kết",
+    "subtitle": "Theo dõi và phân tích hiệu suất liên kết của bạn",
+    "refresh": "Làm mới",
+    "export": "Xuất dữ liệu",
+    "totalClicks": "Tổng số lượt nhấp",
+    "uniqueVisitors": "Khách truy cập duy nhất",
+    "avgSessionDuration": "Thời lượng phiên trung bình",
+    "clickThroughRate": "Tỷ lệ nhấp qua",
+    "clickTrends": {
+      "title": "Xu hướng lượt nhấp",
+      "description": "Biểu đồ hiển thị lượt nhấp theo thời gian"
+    },
+    "geographic": {
+      "title": "Phân bố địa lý",
+      "description": "Các quốc gia hàng đầu truy cập liên kết của bạn"
+    },
+    "devices": {
+      "title": "Loại thiết bị",
+      "description": "Phân bố lượt nhấp theo loại thiết bị"
+    },
+    "browsers": {
+      "title": "Trình duyệt",
+      "description": "Phân bố lượt nhấp theo trình duyệt"
+    },
+    "chartPlaceholder": "Biểu đồ sẽ hiển thị ở đây"
+  },
+  "Pricing": {
+    "title": "Bảng giá",
+    "subtitle": "Chọn gói phù hợp nhất với nhu cầu của bạn",
+    "monthly": "Hàng tháng",
+    "yearly": "Hàng năm",
+    "save20": "Tiết kiệm 20%",
+    "month": "tháng",
+    "year": "năm",
+    "billedYearly": "thanh toán hàng năm",
+    "mostPopular": "Phổ biến nhất",
+    "getStarted": "Bắt đầu",
+    "startFreeTrial": "Dùng thử miễn phí",
+    "contactSales": "Liên hệ bộ phận bán hàng",
+    "plans": {
+      "free": {
+        "name": "Miễn phí",
+        "description": "Hoàn hảo để bắt đầu với các tính năng cơ bản"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Lý tưởng cho các cá nhân và đội nhóm cần các tính năng nâng cao"
+      },
+      "business": {
+        "name": "Doanh nghiệp",
+        "description": "Dành cho các tổ chức lớn với nhu cầu toàn diện"
+      }
+    },
+    "features": {
+      "linksPerMonth": "{count} liên kết mỗi tháng",
+      "basicAnalytics": "Phân tích cơ bản",
+      "standardSupport": "Hỗ trợ tiêu chuẩn",
+      "customDomain": "Tên miền tùy chỉnh",
+      "advancedAnalytics": "Phân tích nâng cao",
+      "teamCollaboration": "Hợp tác nhóm",
+      "apiAccess": "Truy cập API",
+      "passwordProtection": "Bảo vệ bằng mật khẩu",
+      "qrCodes": "Mã QR",
+      "prioritySupport": "Hỗ trợ ưu tiên",
+      "unlimitedLinks": "Liên kết không giới hạn",
+      "whiteLabel": "Nhãn trắng",
+      "advancedSecurity": "Bảo mật nâng cao",
+      "dedicatedSupport": "Hỗ trợ chuyên dụng",
+      "customIntegrations": "Tích hợp tùy chỉnh"
+    },
+    "enterprise": {
+      "title": "Doanh nghiệp tùy chỉnh",
+      "description": "Giải pháp tùy chỉnh cho các doanh nghiệp lớn với các yêu cầu đặc biệt",
+      "feature1": "Quản lý tài khoản chuyên dụng",
+      "feature2": "Hỗ trợ ưu tiên 24/7",
+      "feature3": "Tích hợp tùy chỉnh",
+      "contactUs": "Liên hệ với chúng tôi"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "q1": "Tôi có thể hủy đăng ký của mình bất kỳ lúc nào không?",
+      "a1": "Có, bạn có thể hủy đăng ký bất kỳ lúc nào mà không mất thêm chi phí.",
+      "q2": "Có bản dùng thử miễn phí không?",
+      "a2": "Chúng tôi cung cấp bản dùng thử miễn phí 14 ngày cho gói Pro. Không cần thẻ tín dụng.",
+      "q3": "Tôi có thể nâng cấp hoặc hạ cấp gói bất kỳ lúc nào không?",
+      "a3": "Có, bạn có thể thay đổi gói bất kỳ lúc nào và các thay đổi sẽ được áp dụng ngay lập tức.",
+      "q4": "Phương thức thanh toán nào được chấp nhận?",
+      "a4": "Chúng tôi chấp nhận tất cả các loại thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói doanh nghiệp."
+    }
+  },
+  "ShortLinkCard": {
+    "domain": "short.magic",
+    "shortLinkLabel": "Liên kết rút gọn của bạn",
+    "visits": "Lượt truy cập",
+    "qrScans": "Lượt quét QR"
+  },
   "Footer": {
     "description": "ShortLink giúp bạn rút gọn, theo dõi và quản lý các liên kết một cách dễ dàng và hiệu quả.",
     "quickLinks": "Liên kết nhanh",

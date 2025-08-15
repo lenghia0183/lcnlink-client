@@ -220,6 +220,103 @@
     "deleteLinkDescription": "Are you sure you want to delete the link \"{name}\"? This action cannot be undone.",
     "deleteLinkDefaultDescription": "Are you sure you want to delete this link? This action cannot be undone."
   },
+  "Analytics": {
+    "title": "Link Analytics",
+    "subtitle": "Track and analyze your link performance",
+    "refresh": "Refresh",
+    "export": "Export Data",
+    "totalClicks": "Total Clicks",
+    "uniqueVisitors": "Unique Visitors",
+    "avgSessionDuration": "Average Session Duration",
+    "clickThroughRate": "Click-Through Rate",
+    "clickTrends": {
+      "title": "Click Trends",
+      "description": "Chart showing clicks over time"
+    },
+    "geographic": {
+      "title": "Geographic Distribution",
+      "description": "Top countries accessing your links"
+    },
+    "devices": {
+      "title": "Device Types",
+      "description": "Click distribution by device type"
+    },
+    "browsers": {
+      "title": "Browsers",
+      "description": "Click distribution by browser"
+    },
+    "chartPlaceholder": "Chart will display here"
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "subtitle": "Choose the plan that best fits your needs",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save20": "Save 20%",
+    "month": "month",
+    "year": "year",
+    "billedYearly": "billed yearly",
+    "mostPopular": "Most Popular",
+    "getStarted": "Get Started",
+    "startFreeTrial": "Start Free Trial",
+    "contactSales": "Contact Sales",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Perfect for getting started with basic features"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Ideal for individuals and teams needing advanced features"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Designed for large organizations with comprehensive needs"
+      }
+    },
+    "features": {
+      "linksPerMonth": "{count} links per month",
+      "basicAnalytics": "Basic Analytics",
+      "standardSupport": "Standard Support",
+      "customDomain": "Custom Domain",
+      "advancedAnalytics": "Advanced Analytics",
+      "teamCollaboration": "Team Collaboration",
+      "apiAccess": "API Access",
+      "passwordProtection": "Password Protection",
+      "qrCodes": "QR Codes",
+      "prioritySupport": "Priority Support",
+      "unlimitedLinks": "Unlimited Links",
+      "whiteLabel": "White Label",
+      "advancedSecurity": "Advanced Security",
+      "dedicatedSupport": "Dedicated Support",
+      "customIntegrations": "Custom Integrations"
+    },
+    "enterprise": {
+      "title": "Custom Enterprise",
+      "description": "Tailored solutions for large businesses with specific requirements",
+      "feature1": "Dedicated Account Management",
+      "feature2": "24/7 Priority Support",
+      "feature3": "Custom Integrations",
+      "contactUs": "Contact Us"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "Can I cancel my subscription at any time?",
+      "a1": "Yes, you can cancel your subscription at any time without additional costs.",
+      "q2": "Is there a free trial available?",
+      "a2": "We offer a 14-day free trial for the Pro plan. No credit card required.",
+      "q3": "Can I upgrade or downgrade my plan at any time?",
+      "a3": "Yes, you can change your plan at any time, and changes will apply immediately.",
+      "q4": "What payment methods are accepted?",
+      "a4": "We accept all major credit cards, PayPal, and bank transfers for enterprise plans."
+    }
+  },
+  "ShortLinkCard": {
+    "domain": "short.magic",
+    "shortLinkLabel": "Your shortened link",
+    "visits": "Visits",
+    "qrScans": "QR Scans"
+  },
   "Footer": {
     "description": "ShortLink helps you shorten, track, and manage your links easily and efficiently.",
     "quickLinks": "Quick Links",

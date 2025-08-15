@@ -15,6 +15,7 @@ import { useLogin } from "@/services/api/auth.ts/login";
 import { toast } from "@/components/AppToast";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { nextApi } from "@/services/axios";
+import { useUser } from "@/context/userProvider";
 
 type FormValues = AuthFormValues;
 
@@ -22,6 +23,8 @@ export default function LoginPage() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
   const schema = getAuthSchema(t);
+
+  const { loginUser } = useUser();
 
   const { isMutating, trigger } = useLogin();
 
@@ -47,6 +50,7 @@ export default function LoginPage() {
 
           if (validateResponseCode(res.statusCode)) {
             toast.success(response.message);
+            loginUser(response.data);
           }
         } else {
           toast.error(response.message);

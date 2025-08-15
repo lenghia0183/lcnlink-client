@@ -3,8 +3,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 
 import { LinkData } from "@/types/Link";
@@ -15,11 +13,12 @@ import { LinkManagementCard } from "./LinkManagementCard";
 import { EditLinkDialog } from "./EditLinkDialog";
 import { useQueryState } from "@/hooks/useQueryState";
 import { DeleteLinkDialog } from "./DeleteLinkDialog";
+import { AppButton } from "@/components/AppButton";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
 
-  const { tab, setTab, keyword, setKeyword } = useQueryState({
+  const { tab, setTab, keyword, setKeyword, page, setPage } = useQueryState({
     tab: "all",
   });
 
@@ -182,21 +181,15 @@ export default function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-300">{t("subtitle")}</p>
           </div>
 
-          <Dialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
+          <AppButton
+            className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700"
+            iconLeft={<Plus className="h-4 w-4 mr-2" />}
+            onClick={() => {
+              setIsCreateDialogOpen(true);
+            }}
           >
-            <DialogTrigger asChild>
-              <Button className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                {t("createNewLink")}
-              </Button>
-            </DialogTrigger>
-            <CreateLinkDialog
-              open={isCreateDialogOpen}
-              onOpenChange={setIsCreateDialogOpen}
-            />
-          </Dialog>
+            {t("createNewLink")}
+          </AppButton>
         </div>
 
         <StatsCards links={links} />
@@ -212,12 +205,19 @@ export default function DashboardPage() {
           onDelete={handleDeleteLink}
           onCopy={copyToClipboard}
           copiedId={copiedId}
+          page={page}
+          setPage={setPage}
         />
 
         <EditLinkDialog
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           selectedLink={selectedLink}
+        />
+
+        <CreateLinkDialog
+          open={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
         />
 
         <DeleteLinkDialog

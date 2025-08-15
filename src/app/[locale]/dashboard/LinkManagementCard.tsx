@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { LinkCard } from "./LinkCard";
 import { AppCard } from "@/components/AppCard";
 import { Link2 } from "lucide-react";
+import { AppPagination } from "@/components/AppPagination";
 
 interface LinkManagementCardProps {
   links: LinkData[];
@@ -14,6 +15,8 @@ interface LinkManagementCardProps {
   onDelete: (id: string) => void;
   onCopy: (text: string, id: string) => void;
   copiedId: string;
+  page: number;
+  setPage: (value: number) => void;
 }
 
 export const LinkManagementCard = ({
@@ -25,6 +28,8 @@ export const LinkManagementCard = ({
   onDelete,
   onCopy,
   copiedId,
+  page,
+  setPage,
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
 
@@ -116,6 +121,12 @@ export const LinkManagementCard = ({
         defaultValue={activeTab}
         onValueChange={onTabChange}
         className="w-full"
+      />
+      <AppPagination
+        className="mt-10"
+        currentPage={page}
+        onPageChange={setPage}
+        totalPages={10}
       />
     </AppCard>
   );

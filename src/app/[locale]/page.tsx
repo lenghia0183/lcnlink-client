@@ -27,7 +27,7 @@ import { format } from "date-fns";
 
 import { AppCard } from "@/components/AppCard";
 import { TextField } from "@/components/FormFields/TextField";
-import { urlSchema, UrlFormValues } from "./validation";
+import { getUrlSchema, UrlFormValues } from "./validation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
@@ -52,10 +52,10 @@ interface ShortenedLink {
   status: "active" | "expired" | "disabled" | "limit_reached";
 }
 
-const schema = urlSchema;
 type FormValues = UrlFormValues;
 export default function HomePage() {
   const t = useTranslations("UrlShortener");
+  const schema = getUrlSchema(t);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [shortenedLinks, setShortenedLinks] = useState<ShortenedLink[]>([]);

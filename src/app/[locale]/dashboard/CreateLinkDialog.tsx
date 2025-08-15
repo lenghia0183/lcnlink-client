@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useForm, FormProvider } from "react-hook-form";
-import { createLinkSchema, CreateLinkFormValues } from "./validation";
+import { getCreateLinkSchema, CreateLinkFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { TextField } from "@/components/FormFields/TextField";
@@ -13,7 +13,6 @@ import { AppDialog } from "@/components/AppDialog";
 
 import { useRef } from "react";
 
-const schema = createLinkSchema;
 type FormValues = CreateLinkFormValues;
 
 interface CreateLinkDialogProps {
@@ -27,6 +26,7 @@ export const CreateLinkDialog = ({
 }: CreateLinkDialogProps) => {
   const t = useTranslations("Dashboard");
   const formRef = useRef<HTMLFormElement>(null);
+  const schema = getCreateLinkSchema(t);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),

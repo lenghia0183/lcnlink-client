@@ -10,13 +10,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
-import { authSchema, AuthFormValues } from "./validation";
+import { getAuthSchema, AuthFormValues } from "./validation";
 
-const schema = authSchema;
 type FormValues = AuthFormValues;
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
+  const schema = getAuthSchema(t);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),

@@ -1,10 +1,11 @@
 "use client";
 
 import { useForm, FormProvider } from "react-hook-form";
-import { testSchema, TestFormValues } from "./validation";
+import { getTestSchema, TestFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock, Send, Save, FileText } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/FormFields/TextField";
@@ -26,7 +27,6 @@ import { AppAlertDialog } from "@/components/AppAlertDialog";
 import { AppButton } from "@/components/AppButton";
 import { AppAccordion } from "@/components/AppAccordion";
 // Schema validation
-const schema = testSchema;
 type FormValues = TestFormValues;
 
 type Post = {
@@ -37,6 +37,7 @@ type Post = {
 };
 
 export default function TestSiteForm() {
+  const t = useTranslations("Test");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState<FormValues | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,6 +46,8 @@ export default function TestSiteForm() {
   const { page, setPage, tab, setTab } = useQueryState({
     page: 1,
   });
+
+  const schema = getTestSchema(t);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),

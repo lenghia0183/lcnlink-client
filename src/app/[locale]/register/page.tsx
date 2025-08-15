@@ -5,18 +5,19 @@ import { useTranslations } from "next-intl";
 
 import { Mail, Lock, Eye, EyeOff, User, Link2 } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
-import { registerSchema, RegisterFormValues } from "./validation";
+import { getRegisterSchema, RegisterFormValues } from "./validation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
 
-const schema = registerSchema;
 type FormValues = RegisterFormValues;
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
+
+  const schema = getRegisterSchema(t);
 
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);

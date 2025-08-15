@@ -6,11 +6,10 @@ import { Search, Filter, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AppCard } from "@/components/AppCard";
 import { TextField } from "@/components/FormFields/TextField";
-import { searchSchema, SearchFormValues } from "./validation";
+import { getSearchSchema, SearchFormValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppButton } from "@/components/AppButton";
 
-const schema = searchSchema;
 type FormValues = SearchFormValues;
 
 interface SearchAndFiltersProps {
@@ -23,6 +22,8 @@ export const SearchAndFilters = ({
   onSearchChange,
 }: SearchAndFiltersProps) => {
   const t = useTranslations("Dashboard");
+
+  const schema = getSearchSchema(t);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),

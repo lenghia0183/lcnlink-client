@@ -1,16 +1,18 @@
-export const getLocalStorageItem = <T>(itemName: string): T | null => {
-  // Kiểm tra xem có phải đang chạy trên trình duyệt không
+export const getLocalStorageItem = <T>(key: string): T | null => {
   if (typeof window === "undefined") {
-    console.warn("localStorage is not available on the server.");
+    console.warn(`[localStorage] Key "${key}" is not available on the server.`);
     return null;
   }
 
+  const rawValue = localStorage.getItem(key);
+  if (rawValue === null) return null;
+
   try {
-    const item = localStorage.getItem(itemName);
-    return item ? (JSON.parse(item) as T) : null;
-  } catch (error) {
-    console.error(error);
-    return null;
+    // Thử parse JSON
+    return JSON.parse(rawValue) as T;
+  } catch {
+    // Nếu không parse được (chỉ là string hoặc number), trả luôn
+    return rawValue as unknown as T;
   }
 };
 

@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { createContext, useContext } from 'react';
-import { Locale, LocalesArray } from '@/config/locales';
-import { usePathname } from '@/i18n/routing';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext } from "react";
+import { Locale, LocalesArray } from "@/config/locales";
+import { usePathname } from "@/i18n/routing";
+import { useRouter } from "next/navigation";
+import { setLocalStorageItem } from "@/utils/localStorage";
 
 interface LanguageContextType {
   changeLanguage: (lang: Locale) => void;
@@ -19,11 +20,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const changeLanguage = (newLang: Locale) => {
     if (!LocalesArray.includes(newLang)) return;
+    setLocalStorageItem("i18n", newLang);
     router.push(`/${newLang}${pathname}`);
     router.refresh();
   };
 
-  return <LanguageContext.Provider value={{ changeLanguage }}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ changeLanguage }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 export function useLanguage() {

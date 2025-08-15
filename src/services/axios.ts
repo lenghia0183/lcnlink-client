@@ -51,13 +51,18 @@ export const createInstance = (
       config: InternalAxiosRequestConfig
     ): Promise<InternalAxiosRequestConfig> => {
       let token: string | undefined;
+      let locale: string | undefined;
       if (isServer) {
         token = await getServerCookies("accessToken");
       } else {
         token =
           getLocalStorageItem("accessToken") ||
           (getCookie("accessToken") as string | undefined);
+        locale =
+          getLocalStorageItem("i18n") ||
+          (getCookie("i18n") as string | undefined);
       }
+      config.headers.set("x-lang", locale);
 
       if (config.url !== REFRESH_TOKEN_URL && token) {
         config.headers = axios.AxiosHeaders.from(config.headers || {});

@@ -26,6 +26,7 @@
       "createAccount": "Create Account",
       "description": "Fill in your details to get started",
       "name": "Name",
+      "namePlaceholder": "Enter your full name",
       "nameOFFSETPlaceholder": "Enter your full name",
       "email": "Email",
       "emailPlaceholder": "Enter your email",
@@ -37,8 +38,27 @@
       "termsAndConditions": "Terms and Conditions",
       "haveAccount": "Already have an account?",
       "signIn": "Sign In",
-      "passwordMismatch": "Passwords do not match"
+      "passwordMismatch": "Passwords do not match",
+      "nameMin": "Name must be at least 2 characters long",
+      "nameMax": "Name must be at most 50 characters long",
+      "emailInvalid": "Please enter a valid email address",
+      "emailRequired": "Email is required",
+      "passwordMin": "Password must be at least 6 characters long",
+      "passwordMax": "Password must be at most 100 characters long",
+      "confirmPasswordMin": "Confirm password must be at least 6 characters long",
+      "confirmPasswordMax": "Confirm password must be at most 100 characters long",
+
+      "passwordsNotMatch": "Passwords do not match"
+    },
+    "auth": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordMin": "Password must be at least 6 characters long"
     }
+  },
+
+  "auth": {
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters long"
   },
 
   "About": {
@@ -114,6 +134,12 @@
     "error": "Error",
     "success": "Success"
   },
+  "Test": {
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters long",
+    "hobbiesMin": "Please select at least one hobby",
+    "userMin": "Please select at least one user"
+  },
   "UrlShortener": {
     "title": "Smart URL Shortener",
     "subtitle": "Transform your long URLs into powerful, trackable short links",
@@ -147,6 +173,16 @@
     "linkNotFound": "Link Not Found",
     "invalidUrl": "Please enter a valid URL",
     "linkCreated": "Link created successfully!",
+    "originInvalid": "Please enter a valid URL (e.g., https://example.com)",
+    "originRequired": "URL is required",
+    "aliasInvalid": "Alias must be 3-20 characters long and contain only letters, numbers, or hyphens",
+    "passwordMin": "Password must be at least 6 characters long",
+    "url": {
+      "originInvalid": "Please enter a valid URL (e.g., https://example.com)",
+      "originRequired": "URL is required",
+      "aliasInvalid": "Alias must be 3-20 characters long and contain only letters, numbers, or hyphens",
+      "passwordMin": "Password must be at least 6 characters long"
+    },
     "features": {
       "title": "Why Choose Our URL Shortener?",
       "analytics": {
@@ -167,7 +203,43 @@
       }
     }
   },
+  "url": {
+    "originInvalid": "Please enter a valid URL (e.g., https://example.com)",
+    "originRequired": "URL is required",
+    "aliasInvalid": "Alias must be 3-20 characters long and contain only letters, numbers, or hyphens",
+    "passwordMin": "Password must be at least 6 characters long"
+  },
+  "test": {
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters long",
+    "hobbiesMin": "Please select at least one hobby",
+    "userMin": "Please select at least one user"
+  },
+  "register": {
+    "nameMin": "Name must be at least 2 characters long",
+    "nameMax": "Name must be at most 50 characters long",
+    "emailInvalid": "Please enter a valid email address",
+    "emailRequired": "Email is required",
+    "passwordMin": "Password must be at least 6 characters long",
+    "passwordMax": "Password must be at most 100 characters long",
+    "confirmPasswordMin": "Confirm password must be at least 6 characters long",
+    "confirmPasswordMax": "Confirm password must be at most 100 characters long",
+    "agreeTerms": "You must agree to the terms and conditions",
+    "passwordsNotMatch": "Passwords do not match"
+  },
+  "dashboard": {
+    "searchTermMax": "Search term must be at most 100 characters long"
+  },
+  "createLink": {
+    "originInvalid": "Please enter a valid URL (e.g., https://example.com)"
+  },
   "Dashboard": {
+    "dashboard": {
+      "searchTermMax": "Search term must be at most 100 characters long"
+    },
+    "createLink": {
+      "originInvalid": "Please enter a valid URL (e.g., https://example.com)"
+    },
     "title": "Link Dashboard",
     "subtitle": "Manage and monitor all your shortened links",
     "createNewLink": "Create New Link",

@@ -37,8 +37,25 @@
       "termsAndConditions": "Điều khoản và Điều kiện",
       "haveAccount": "Đã có tài khoản?",
       "signIn": "Đăng nhập",
-      "passwordMismatch": "Mật khẩu không khớp"
+      "passwordMismatch": "Mật khẩu không khớp",
+      "nameMin": "Tên phải có ít nhất 2 ký tự",
+      "nameMax": "Tên không được vượt quá 50 ký tự",
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "emailRequired": "Email là bắt buộc",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "passwordMax": "Mật khẩu không được vượt quá 100 ký tự",
+      "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
+      "confirmPasswordMax": "Xác nhận mật khẩu không được vượt quá 100 ký tự",
+      "passwordsNotMatch": "Mật khẩu không khớp"
+    },
+    "auth": {
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
     }
+  },
+  "auth": {
+    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
   },
 
   "About": {
@@ -147,6 +164,12 @@
     "linkNotFound": "Không tìm thấy liên kết",
     "invalidUrl": "Vui lòng nhập một URL hợp lệ",
     "linkCreated": "Liên kết được tạo thành công!",
+    "url": {
+      "originInvalid": "Vui lòng nhập URL hợp lệ (ví dụ: https://example.com)",
+      "originRequired": "URL là bắt buộc",
+      "aliasInvalid": "Bí danh phải có 3-20 ký tự và chỉ chứa chữ, số hoặc dấu gạch ngang",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+    },
     "features": {
       "title": "Tại sao chọn công cụ rút gọn URL của chúng tôi?",
       "analytics": {
@@ -167,7 +190,43 @@
       }
     }
   },
+  "url": {
+    "originInvalid": "Vui lòng nhập URL hợp lệ (ví dụ: https://example.com)",
+    "originRequired": "URL là bắt buộc",
+    "aliasInvalid": "Bí danh phải có 3-20 ký tự và chỉ chứa chữ, số hoặc dấu gạch ngang",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+  },
+  "test": {
+    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+    "hobbiesMin": "Vui lòng chọn ít nhất một sở thích",
+    "userMin": "Vui lòng chọn ít nhất một người dùng"
+  },
+  "register": {
+    "nameMin": "Tên phải có ít nhất 2 ký tự",
+    "nameMax": "Tên không được vượt quá 50 ký tự",
+    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+    "emailRequired": "Email là bắt buộc",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+    "passwordMax": "Mật khẩu không được vượt quá 100 ký tự",
+    "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
+    "confirmPasswordMax": "Xác nhận mật khẩu không được vượt quá 100 ký tự",
+    "agreeTerms": "Bạn phải đồng ý với điều khoản và điều kiện",
+    "passwordsNotMatch": "Mật khẩu không khớp"
+  },
+  "dashboard": {
+    "searchTermMax": "Từ khóa tìm kiếm không được vượt quá 100 ký tự"
+  },
+  "createLink": {
+    "originInvalid": "Vui lòng nhập URL hợp lệ (ví dụ: https://example.com)"
+  },
   "Dashboard": {
+    "dashboard": {
+      "searchTermMax": "Từ khóa tìm kiếm không được vượt quá 100 ký tự"
+    },
+    "createLink": {
+      "originInvalid": "Vui lòng nhập URL hợp lệ (ví dụ: https://example.com)"
+    },
     "title": "Bảng điều khiển liên kết",
     "subtitle": "Quản lý và theo dõi tất cả các liên kết ngắn của bạn",
     "createNewLink": "Tạo liên kết mới",

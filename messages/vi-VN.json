@@ -123,6 +123,7 @@
     "dashboard": "Bảng điều khiển",
     "analytics": "Phân tích",
     "pricing": "Giá cả",
+    "logout": "Đăng xuất",
     "login": "Đăng nhập",
     "register": "Đăng ký"
   },
@@ -130,6 +131,12 @@
     "loading": "Đang tải...",
     "error": "Lỗi",
     "success": "Thành công"
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "logoutSuccessful": "Bạn đã đăng xuất"
   },
   "UrlShortener": {
     "title": "Công cụ rút gọn URL thông minh",

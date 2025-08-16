@@ -125,6 +125,7 @@
     "contact": "Contact",
     "dashboard": "Dashboard",
     "analytics": "Analytics",
+    "logout": "Logout",
     "pricing": "Pricing",
     "login": "Login",
     "register": "Register"
@@ -133,6 +134,12 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "logoutSuccessful": "You have been logged out"
   },
   "Test": {
     "emailInvalid": "Please enter a valid email address",

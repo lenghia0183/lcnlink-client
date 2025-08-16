@@ -16,6 +16,8 @@ import { toast } from "@/components/AppToast";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { nextApi } from "@/services/axios";
 import { useUser } from "@/context/userProvider";
+import { useRouter } from "@/i18n/routing";
+import { PATH } from "@/constants/path";
 
 type FormValues = AuthFormValues;
 
@@ -23,6 +25,7 @@ export default function LoginPage() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
   const schema = getAuthSchema(t);
+  const router = useRouter();
 
   const { loginUser } = useUser();
 
@@ -51,6 +54,7 @@ export default function LoginPage() {
           if (validateResponseCode(res.statusCode)) {
             toast.success(response.message);
             loginUser(response.data);
+            router.push(PATH.HOME);
           }
         } else {
           toast.error(response.message);

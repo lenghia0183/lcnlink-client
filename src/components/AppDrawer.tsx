@@ -31,7 +31,7 @@ type AppDrawerProps = DrawerProps & {
 export function AppDrawer({
   open,
   onOpenChange,
-  title,
+  title = "",
   description,
   children,
   trigger,

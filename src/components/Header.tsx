@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { MenuIcon, XIcon, Link2 } from "lucide-react";
 import {
@@ -16,13 +15,20 @@ import { AppButton } from "./AppButton";
 import { AppDrawer } from "./AppDrawer";
 import { usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/context/userProvider";
+import { useEffect, useState } from "react";
 
 export default function Header() {
-  const [isShowNavDrawer, setIsShowNavDrawer] = React.useState(false);
+  const [isShowNavDrawer, setIsShowNavDrawer] = useState(false);
+  const [navigation, setNavigation] = useState<
+    { name: string; href: string }[]
+  >([]);
+  const [isMounted, setIsMounted] = useState(false);
+
   const pathname = usePathname();
   const t = useTranslations("Navigation");
-
-  const navigation = [
+  const { isLoggedIn, logoutUser } = useUser();
+  const baseNav = [
     { name: t("home"), href: "/" },
     { name: t("about"), href: "/about" },
     { name: t("dashboard"), href: "/dashboard" },
@@ -30,8 +36,32 @@ export default function Header() {
     { name: t("pricing"), href: "/pricing" },
   ];
 
+  useEffect(() => {
+    console.log("isLoggedIn", isLoggedIn);
+
+    if (!isLoggedIn) {
+      baseNav.push({ name: t("login"), href: "/login" });
+      baseNav.push({ name: t("register"), href: "/register" });
+    }
+
+    setNavigation(baseNav);
+  }, [isLoggedIn, t]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
+  console.log("navigation", navigation);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      suppressHydrationWarning
+    >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -47,7 +77,7 @@ export default function Header() {
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
-              {navigation.map((item) => (
+              {baseNav.map((item) => (
                 <NavigationMenuItem key={item.name}>
                   <NavigationMenuLink asChild>
                     <Link
@@ -69,18 +99,26 @@ export default function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-2">
-            <div className="hidden md:flex items-center space-x-2">
-              <AppButton variant="ghost" href="/login" asChild>
-                {t("login")}
-              </AppButton>
-              <AppButton
-                asChild
-                className="bg-gradient-to-r from-blue-500 to-purple-600"
-                href="/register"
-              >
-                {t("register")}
-              </AppButton>
-            </div>
+            {!isLoggedIn ? (
+              <div className="hidden md:flex items-center space-x-2">
+                <AppButton variant="ghost" href="/login" asChild>
+                  {t("login")}
+                </AppButton>
+                <AppButton
+                  asChild
+                  className="bg-gradient-to-r from-blue-500 to-purple-600"
+                  href="/register"
+                >
+                  {t("register")}
+                </AppButton>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-2">
+                <AppButton variant="ghost" onClick={logoutUser}>
+                  {t("logout")}
+                </AppButton>
+              </div>
+            )}
             <LanguageSwitcher />
             <ModeToggle />
 
@@ -100,25 +138,37 @@ export default function Header() {
           </div>
         </div>
 
-        <AppDrawer open={isShowNavDrawer} onOpenChange={setIsShowNavDrawer}>
-          <>
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "block px-3 py-2 rounded-md text-sm font-medium",
-                  pathname === item.href
-                    ? "bg-accent text-accent-foreground"
-                    : "text-foreground/60"
-                )}
-                onClick={() => setIsShowNavDrawer(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </>
-        </AppDrawer>
+        {/* Drawer for mobile */}
+        <div suppressHydrationWarning>
+          <AppDrawer
+            open={isShowNavDrawer}
+            onOpenChange={setIsShowNavDrawer}
+            title="Menu"
+          >
+            <>
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "block px-3 py-2 rounded-md text-sm font-medium",
+                    pathname === item.href
+                      ? "bg-accent text-accent-foreground"
+                      : "text-foreground/60"
+                  )}
+                  onClick={() => setIsShowNavDrawer(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {isLoggedIn && (
+                <AppButton variant="outline" fullWidth onClick={logoutUser}>
+                  {t("logout")}
+                </AppButton>
+              )}
+            </>
+          </AppDrawer>
+        </div>
       </div>
     </header>
   );

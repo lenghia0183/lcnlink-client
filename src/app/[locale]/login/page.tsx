@@ -11,13 +11,14 @@ import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
 import { getAuthSchema, AuthFormValues } from "./validation";
-import { useLogin } from "@/services/api/auth.ts/login";
+
 import { toast } from "@/components/AppToast";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { nextApi } from "@/services/axios";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
+import { useLogin } from "@/services/api/auth";
 
 type FormValues = AuthFormValues;
 

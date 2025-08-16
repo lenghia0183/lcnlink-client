@@ -3,7 +3,7 @@ import { z } from "zod";
 export const getRegisterSchema = (t: (key: string) => string) =>
   z
     .object({
-      name: z
+      fullname: z
         .string()
         .min(2, t("register.nameMin"))
         .max(50, t("register.nameMax")),
@@ -19,7 +19,14 @@ export const getRegisterSchema = (t: (key: string) => string) =>
         .string()
         .min(6, t("register.confirmPasswordMin"))
         .max(100, t("register.confirmPasswordMax")),
-      agreeTerms: z.array(z.boolean()).refine((val) => val.includes(true), {
+      phone: z
+        .string()
+        .min(9, t("register.phoneInvalid"))
+        .max(16, t("register.phoneInvalid"))
+        .regex(/^\+?\d{9,15}$/, t("register.phoneInvalid")),
+      gender: z.string(t("register.genderInvalid")),
+      dateOfBirth: z.date(),
+      agreeTerms: z.array(z.string()).nonempty({
         message: t("register.agreeTerms"),
       }),
     })
@@ -28,5 +35,4 @@ export const getRegisterSchema = (t: (key: string) => string) =>
       path: ["confirmPassword"],
     });
 
-// Keep the type export by inferring from the schema returned with a dummy t
 export type RegisterFormValues = z.infer<ReturnType<typeof getRegisterSchema>>;

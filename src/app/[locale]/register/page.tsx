@@ -3,26 +3,38 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Mail, Lock, Eye, EyeOff, User, Link2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User, Link2, Phone } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
 import { getRegisterSchema, RegisterFormValues } from "./validation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
+import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
+import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { AppButton } from "@/components/AppButton";
+import { useRegister } from "@/services/api/auth";
+import validateResponseCode from "@/utils/validateResponseCode";
+
+import { useRouter } from "@/i18n/routing";
+import { PATH } from "@/constants/path";
+import { toast } from "@/components/AppToast";
+import { USER_GENDER_ENUM } from "@/constants/common";
 
 type FormValues = RegisterFormValues;
 
 export default function RegisterPage() {
   const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
+
+  const router = useRouter();
 
   const schema = getRegisterSchema(t);
 
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const { isMutating, trigger } = useRegister();
 
   const handleShowPassword = () => {
     setIsShowPassword(!isShowPassword);
@@ -36,21 +48,41 @@ export default function RegisterPage() {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      name: "",
+      fullname: "",
       email: "",
       password: "",
       confirmPassword: "",
-      agreeTerms: [false],
+      phone: "",
+      gender: USER_GENDER_ENUM.MALE.toString(),
+      dateOfBirth: undefined,
+      agreeTerms: [],
     },
   });
 
   const handleRegister = async (data: FormValues) => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Registration data:", data);
-    setIsLoading(false);
-    // Handle registration logic here
+    trigger(
+      {
+        fullname: data.fullname,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        gender: Number(data.gender),
+        dateOfBirth:
+          data.dateOfBirth instanceof Date
+            ? data.dateOfBirth.toISOString().split("T")[0]
+            : data.dateOfBirth,
+      },
+      {
+        onSuccess: async (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            router.push(PATH.LOGIN);
+          } else {
+            toast.error(response.message);
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -85,7 +117,7 @@ export default function RegisterPage() {
               className="space-y-4"
             >
               <TextField
-                name="name"
+                name="fullname"
                 label={t("register.name")}
                 placeholder={t("register.namePlaceholder")}
                 leftIcon={<User className="h-4 w-4 text-gray-400" />}
@@ -96,6 +128,13 @@ export default function RegisterPage() {
                 label={t("register.email")}
                 placeholder={t("register.emailPlaceholder")}
                 leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
+              />
+
+              <TextField
+                name="phone"
+                label={t("register.phone")}
+                placeholder={t("register.phonePlaceholder")}
+                leftIcon={<Phone className="h-4 w-4 text-gray-400" />}
               />
 
               <TextField
@@ -130,6 +169,32 @@ export default function RegisterPage() {
                 rightIconOnClick={handleShowConfirmPassword}
               />
 
+              <RadioGroupField
+                name="gender"
+                label={t("register.gender")}
+                options={[
+                  {
+                    value: USER_GENDER_ENUM.MALE.toString(),
+                    label: t("register.genderMale"),
+                  },
+                  {
+                    value: USER_GENDER_ENUM.FEMALE.toString(),
+                    label: t("register.genderFemale"),
+                  },
+                  {
+                    value: USER_GENDER_ENUM.OTHER.toString(),
+                    label: t("register.genderOther"),
+                  },
+                ]}
+                direction="row"
+              />
+
+              <DatePickerField
+                name="dateOfBirth"
+                label={t("register.dateOfBirth")}
+                placeholder={t("register.dateOfBirthPlaceholder")}
+              />
+
               <CheckboxGroupField
                 name="agreeTerms"
                 options={[
@@ -137,7 +202,7 @@ export default function RegisterPage() {
                     id: "terms",
                     label: (
                       <>
-                        {t("register.agreeTerms")}{" "}
+                        {t("register.agreeTerms")}
                         <AppButton
                           variant="link"
                           href="/terms"
@@ -154,9 +219,9 @@ export default function RegisterPage() {
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                disabled={isLoading}
+                disabled={isMutating}
               >
-                {isLoading ? t("Common.loading") : t("register.createAccount")}
+                {isMutating ? tCommon("loading") : t("register.createAccount")}
               </AppButton>
             </form>
           </FormProvider>

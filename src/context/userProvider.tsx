@@ -10,11 +10,12 @@ import { PATH } from "@/constants/path";
 import { useTranslations } from "next-intl";
 import eventEmitter from "@/utils/eventEmitter";
 import { EVENT_EMITTER } from "@/constants/common";
-import { useGetMe } from "@/services/api/auth.ts";
+
 import { User } from "@/types/user";
 import { nextApi } from "@/services/axios";
 import { setLocalStorageItem } from "@/utils/localStorage";
 import { toast } from "@/components/AppToast";
+import { useGetMe } from "@/services/api/auth";
 
 interface UserContextType {
   userData: User | null;

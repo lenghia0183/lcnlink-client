@@ -11,9 +11,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { UserProvider } from "@/context/userProvider";
 import { cookies } from "next/headers";
-import { api, nextApi } from "@/services/axios";
+import { api } from "@/services/axios";
 import { User } from "@/types/user";
-import validateResponseCode from "@/utils/validateResponseCode";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +42,16 @@ export default async function RootLayout({
   const { locale } = await params;
   const messages = await getMessages();
 
+  const cookieStore = cookies();
+
+  let serverUser: User | null = null;
+  const accessToken = (await cookieStore).get("accessToken")?.value || "";
+
+  if (accessToken) {
+    const response = await api.get<User>("v1/auth/me");
+    serverUser = response?.data || null;
+  }
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
@@ -56,7 +65,7 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <LanguageProvider>
-              <UserProvider initialUser={null}>
+              <UserProvider initialUser={serverUser}>
                 <div className="relative min-h-screen bg-background flex flex-col">
                   <Header />
                   <main className="relative flex-1">{children}</main>

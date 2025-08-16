@@ -52,7 +52,7 @@ export function UserProvider({
   const [userData, setUserData] = useState<User | null>(
     initialUser ?? data ?? null
   );
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(initialUser));
 
   useEffect(() => {
     if (data) {
@@ -94,6 +94,7 @@ export function UserProvider({
     return () => {
       eventEmitter.removeAllListeners(EVENT_EMITTER.LOGOUT);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

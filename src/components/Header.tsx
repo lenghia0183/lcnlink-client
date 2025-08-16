@@ -42,6 +42,7 @@ export default function Header() {
     }
 
     setNavigation(baseNav);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, t]);
 
   return (

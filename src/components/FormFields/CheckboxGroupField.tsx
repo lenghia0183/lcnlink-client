@@ -45,7 +45,7 @@ export const CheckboxGroupField = ({
       control={control}
       name={name}
       render={() => (
-        <FormItem className={cn("space-y-2", containerClassName)}>
+        <FormItem className={cn("gap-0", containerClassName)}>
           {label && (
             <FormLabel className={cn("gap-1", labelClassName)}>
               {required && <span className="text-destructive">*</span>}
@@ -55,9 +55,7 @@ export const CheckboxGroupField = ({
           {description && <FormDescription>{description}</FormDescription>}
 
           <div
-            className={cn(
-              direction === "row" ? "flex flex-wrap gap-4" : "space-y-2"
-            )}
+            className={cn(direction === "row" ? "flex flex-wrap gap-4" : "")}
           >
             {options.map((option) => (
               <FormField
@@ -66,7 +64,7 @@ export const CheckboxGroupField = ({
                 name={name}
                 render={({ field }) => {
                   return (
-                    <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                    <FormItem className="flex flex-row items-center space-y-0">
                       <FormControl>
                         <Checkbox
                           checked={field.value?.includes(option.id)}

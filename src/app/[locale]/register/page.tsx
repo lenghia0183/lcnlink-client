@@ -206,7 +206,7 @@ export default function RegisterPage() {
                         <AppButton
                           variant="link"
                           href="/terms"
-                          className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
+                          className="text-blue-600 hover:text-blue-500 dark:text-blue-400 pl-1"
                         >
                           {t("register.termsAndConditions")}
                         </AppButton>

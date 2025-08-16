@@ -27,7 +27,7 @@ export const getRegisterSchema = (t: (key: string) => string) =>
       gender: z.string(t("register.genderInvalid")),
       dateOfBirth: z.date(),
       agreeTerms: z.array(z.string()).nonempty({
-        message: t("register.agreeTerms"),
+        message: t("register.agreeTermsInvalid"),
       }),
     })
     .refine((data) => data.password === data.confirmPassword, {

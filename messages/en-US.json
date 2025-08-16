@@ -45,6 +45,7 @@
       "confirmPassword": "Confirm Password",
       "confirmPasswordPlaceholder": "Re-enter your password",
       "agreeTerms": "I agree to the",
+      "agreeTermsInvalid": "You must accept the terms and conditions",
       "termsAndConditions": "Terms and Conditions",
       "haveAccount": "Already have an account?",
       "signIn": "Sign In",

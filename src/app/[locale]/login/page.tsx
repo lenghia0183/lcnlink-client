@@ -19,6 +19,7 @@ import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
 import { useLogin } from "@/services/api/auth";
+import { getCookieMaxAge } from "@/utils/cookies.";
 
 type FormValues = AuthFormValues;
 
@@ -48,8 +49,30 @@ export default function LoginPage() {
       onSuccess: async (response) => {
         if (validateResponseCode(response.statusCode)) {
           const res = await nextApi.post("/auth/set-cookie", {
-            accessToken: response.data?.accessToken,
-            refreshToken: response.data?.refreshToken,
+            cookies: [
+              {
+                name: "accessToken",
+                value: response.data?.accessToken ?? "",
+                options: {
+                  httpOnly: false,
+                  path: "/",
+                  maxAge: getCookieMaxAge(
+                    process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
+                  ),
+                },
+              },
+              {
+                name: "refreshToken",
+                value: response.data?.refreshToken ?? "",
+                options: {
+                  httpOnly: false,
+                  path: "/",
+                  maxAge: getCookieMaxAge(
+                    process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
+                  ),
+                },
+              },
+            ],
           });
 
           if (validateResponseCode(res.statusCode)) {

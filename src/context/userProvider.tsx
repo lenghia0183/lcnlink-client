@@ -81,8 +81,18 @@ export function UserProvider({
     setUserData(null);
     setIsLoggedIn(false);
     await nextApi.post("/auth/set-cookie", {
-      accessToken: "",
-      refreshToken: "",
+      cookies: [
+        {
+          name: "accessToken",
+          value: "",
+          options: { maxAge: 0, path: "/" },
+        },
+        {
+          name: "refreshToken",
+          value: "",
+          options: { maxAge: 0, path: "/" },
+        },
+      ],
     });
     toast.success(tCommon("logoutSuccessful"));
     router.replace(PATH.LOGIN);

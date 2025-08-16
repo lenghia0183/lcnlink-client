@@ -1,8 +1,13 @@
 import useSWR from "swr";
 import { User } from "@/types/user";
 import { api, apiNoToken } from "@/services/axios";
-import { LoginResponse, RegisterBody, RegisterResponse } from "@/types/auth";
-import { AuthFormValues } from "@/app/[locale]/login/validation";
+import {
+  LoginBody,
+  LoginResponse,
+  RegisterBody,
+  RegisterResponse,
+} from "@/types/auth";
+
 import useSWRMutation from "swr/mutation";
 
 export const useGetMe = () => {
@@ -18,8 +23,8 @@ export const useGetMe = () => {
 export const useLogin = () => {
   const url = "v1/auth/login";
 
-  const fetcher = async (key: string, { arg }: { arg: AuthFormValues }) => {
-    return apiNoToken.post<LoginResponse, AuthFormValues>(key, arg);
+  const fetcher = async (key: string, { arg }: { arg: LoginBody }) => {
+    return apiNoToken.post<LoginResponse, LoginBody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

@@ -7,6 +7,7 @@ export const getAuthSchema = (t: (key: string) => string) =>
       .string()
       .optional()
       .refine((val) => !val || val.length >= 6, t("auth.passwordMin")),
+    remember: z.array(z.string()),
   });
 
 export type AuthFormValues = z.infer<ReturnType<typeof getAuthSchema>>;

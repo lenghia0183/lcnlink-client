@@ -6,6 +6,11 @@ export interface LoginResponse {
   userData: User;
 }
 
+export interface LoginBody {
+  password: string;
+  email: string;
+}
+
 export interface RefreshTokenResponse {
   accessToken: string;
   refreshToken: string;

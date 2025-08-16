@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Mail, Lock, Eye, EyeOff, Link2 } from "lucide-react";
@@ -15,6 +15,7 @@ import { getAuthSchema, AuthFormValues } from "./validation";
 import { toast } from "@/components/AppToast";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { nextApi } from "@/services/axios";
+import { getCookie } from "cookies-next";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
@@ -36,8 +37,9 @@ export default function LoginPage() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "lenghia0108@gmail.com",
-      password: "Lenghia@gmail.com",
+      email: "",
+      password: "",
+      remember: [],
     },
   });
 
@@ -45,11 +47,16 @@ export default function LoginPage() {
   const handleShowPassword = () => setIsShowPassword((v) => !v);
 
   const onSubmit = async (data: FormValues) => {
-    trigger(data, {
-      onSuccess: async (response) => {
-        if (validateResponseCode(response.statusCode)) {
-          const res = await nextApi.post("/auth/set-cookie", {
-            cookies: [
+    trigger(
+      {
+        email: data.email,
+        password: data.password || "",
+      },
+      {
+        onSuccess: async (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            // always set access/refresh tokens
+            const cookiesToSet: unknown[] = [
               {
                 name: "accessToken",
                 value: response.data?.accessToken ?? "",
@@ -72,23 +79,87 @@ export default function LoginPage() {
                   ),
                 },
               },
-            ],
-          });
+            ];
 
-          if (validateResponseCode(res.statusCode)) {
-            toast.success(response.message);
-            loginUser(response.data);
-            router.push(PATH.HOME);
+            // handle remember me
+            const remember = data.remember[0] == "true";
+            if (remember) {
+              // save email/password and remember flag in cookies (client-side)
+              cookiesToSet.push(
+                {
+                  name: "remember",
+                  value: "true",
+                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                },
+                {
+                  name: "savedEmail",
+                  value: data.email,
+                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                },
+                {
+                  name: "savedPassword",
+                  value: data.password,
+                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                }
+              );
+            } else {
+              // clear saved credentials
+              cookiesToSet.push(
+                {
+                  name: "remember",
+                  value: "",
+                  options: { maxAge: 0, path: "/" },
+                },
+                {
+                  name: "savedEmail",
+                  value: "",
+                  options: { maxAge: 0, path: "/" },
+                },
+                {
+                  name: "savedPassword",
+                  value: "",
+                  options: { maxAge: 0, path: "/" },
+                }
+              );
+            }
+
+            const res = await nextApi.post("/auth/set-cookie", {
+              cookies: cookiesToSet,
+            });
+
+            if (validateResponseCode(res.statusCode)) {
+              toast.success(response.message);
+              loginUser(response.data);
+              router.push(PATH.HOME);
+            }
+          } else {
+            toast.error(response.message);
           }
-        } else {
+        },
+        onError: (response) => {
           toast.error(response.message);
-        }
-      },
-      onError: (response) => {
-        toast.error(response.message);
-      },
-    });
+        },
+      }
+    );
   };
+
+  // on mount, prefill email/password if remember cookie is true
+  useEffect(() => {
+    try {
+      const remember = getCookie("remember") as string | undefined;
+      if (remember === "true") {
+        const savedEmail = getCookie("savedEmail") as string | undefined;
+        const savedPassword = getCookie("savedPassword") as string | undefined;
+        methods.reset({
+          email: savedEmail || "",
+          password: savedPassword || "",
+          remember: ["true"],
+        });
+      }
+    } catch {
+      // ignore
+    }
+  }, [methods]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">
@@ -149,7 +220,7 @@ export default function LoginPage() {
                   name="remember"
                   options={[
                     {
-                      id: "remember",
+                      id: "true",
                       label: t("login.rememberMe"),
                     },
                   ]}

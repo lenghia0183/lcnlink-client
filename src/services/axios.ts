@@ -10,6 +10,8 @@ import { getCookie } from "cookies-next";
 import { ApiResponse } from "@/types/ApiResponse";
 import eventEmitter from "@/utils/eventEmitter";
 import { EVENT_EMITTER } from "@/constants/common";
+import { getServerCookies } from "@/utils/cookies.";
+import { isServer } from "@/utils/env";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL + "/api/" || "";
 const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN + "/api/" || "";
@@ -18,16 +20,6 @@ const isDevelopment = process.env.NEXT_PUBLIC_ENV === "development";
 const REFRESH_TOKEN_URL = "auth/refresh-token";
 const HEADERS_MULTIPLE_PART = {
   "Content-Type": "multipart/form-data; boundary=something",
-};
-
-const isServer = typeof window === "undefined";
-
-// --- Lấy cookie trên server ---
-const getServerCookies = async (name: string) => {
-  if (!isServer) return undefined;
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  return cookieStore.get(name)?.value;
 };
 
 // --- Tạo Axios instance ---

@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     cookieStore.set({
       name: "accessToken",
       value: response.accessToken,
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       sameSite: "lax",
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     cookieStore.set({
       name: "refreshToken",
       value: response.refreshToken,
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       sameSite: "lax",

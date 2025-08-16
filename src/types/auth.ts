@@ -5,3 +5,8 @@ export interface LoginResponse {
   refreshToken: string;
   userData: User;
 }
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}

@@ -32,7 +32,13 @@ const UserContext = createContext<UserContextType>({
   logoutUser: () => {},
 });
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
+export function UserProvider({
+  children,
+  initialUser,
+}: {
+  children: React.ReactNode;
+  initialUser?: User | null;
+}) {
   const {
     data,
     isLoading: isLoadingGetMe,
@@ -43,18 +49,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const tCommon = useTranslations("common");
   const router = useRouter();
 
-  const [userData, setUserData] = useState<User | null>(data ?? null);
+  const [userData, setUserData] = useState<User | null>(
+    initialUser ?? data ?? null
+  );
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setUserData(data ?? null);
-    setIsLoggedIn(true);
-  }, [data]);
+    if (data) {
+      setUserData(data ?? null);
+      setIsLoggedIn(true);
+    } else {
+      setUserData(initialUser ?? null);
+      setIsLoggedIn(Boolean(initialUser));
+    }
+  }, [data, initialUser]);
 
   const loginUser = (loginData: LoginResponse | undefined) => {
     setLocalStorageItem("user", loginData?.userData);
-    setLocalStorageItem("accessToken", loginData?.accessToken);
-    setLocalStorageItem("refreshToken", loginData?.refreshToken);
 
     if (loginData) {
       setUserData(loginData.userData);
@@ -65,12 +76,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const logoutUser = async () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
 
     setUserData(null);
     setIsLoggedIn(false);
-    nextApi.post("/auth/set-cookie", {
+    await nextApi.post("/auth/set-cookie", {
       accessToken: "",
       refreshToken: "",
     });
@@ -80,7 +89,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     eventEmitter.once(EVENT_EMITTER.LOGOUT, () => {
-      logoutUser();
+      console.log("logout");
+      // logoutUser();
     });
     return () => {
       eventEmitter.removeAllListeners(EVENT_EMITTER.LOGOUT);
@@ -92,7 +102,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       value={{
         userData,
         isLoggedIn,
-        isLoading: isLoadingGetMe || isValidatingGetMe,
+        isLoading: initialUser
+          ? isValidatingGetMe
+          : isLoadingGetMe || isValidatingGetMe,
         loginUser,
         logoutUser,
       }}

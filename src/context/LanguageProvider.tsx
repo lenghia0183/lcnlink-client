@@ -5,6 +5,7 @@ import { Locale, LocalesArray } from "@/config/locales";
 import { usePathname } from "@/i18n/routing";
 import { useRouter } from "next/navigation";
 import { setLocalStorageItem } from "@/utils/localStorage";
+import { setCookie } from "cookies-next";
 
 interface LanguageContextType {
   changeLanguage: (lang: Locale) => void;
@@ -21,6 +22,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const changeLanguage = (newLang: Locale) => {
     if (!LocalesArray.includes(newLang)) return;
     setLocalStorageItem("i18n", newLang);
+    setCookie("i18n", newLang);
     router.push(`/${newLang}${pathname}`);
     router.refresh();
   };

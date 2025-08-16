@@ -10,6 +10,10 @@ import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { UserProvider } from "@/context/userProvider";
+import { cookies } from "next/headers";
+import { api, nextApi } from "@/services/axios";
+import { User } from "@/types/user";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,7 +56,7 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <LanguageProvider>
-              <UserProvider>
+              <UserProvider initialUser={null}>
                 <div className="relative min-h-screen bg-background flex flex-col">
                   <Header />
                   <main className="relative flex-1">{children}</main>

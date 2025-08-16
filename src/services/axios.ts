@@ -4,7 +4,6 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosError,
   AxiosResponse,
-  AxiosHeaders,
 } from "axios";
 import { getCookie } from "cookies-next";
 
@@ -14,26 +13,28 @@ import { EVENT_EMITTER } from "@/constants/common";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL + "/api/" || "";
 const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN + "/api/" || "";
-
 const isDevelopment = process.env.NEXT_PUBLIC_ENV === "development";
 
-const REFRESH_TOKEN_URL = "/api/auth/refresh-token"; // Next API route
+const REFRESH_TOKEN_URL = "auth/refresh-token";
 const HEADERS_MULTIPLE_PART = {
   "Content-Type": "multipart/form-data; boundary=something",
 };
 
 const isServer = typeof window === "undefined";
 
+// --- Lấy cookie trên server ---
 const getServerCookies = async (name: string) => {
   if (!isServer) return undefined;
   const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
-  return await cookieStore.get(name)?.value;
+  return cookieStore.get(name)?.value;
 };
 
+// --- Tạo Axios instance ---
 export const createInstance = (
   baseURL: string,
-  customHeaders: Record<string, string> = {}
+  customHeaders: Record<string, string> = {},
+  useToken = true
 ): AxiosInstance => {
   const instance = axios.create({
     baseURL,
@@ -45,38 +46,42 @@ export const createInstance = (
     },
   });
 
-  // request interceptor
+  // request interceptor chỉ thêm token nếu useToken = true
   instance.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
       let token: string | undefined;
       let locale: string | undefined;
+
       if (isServer) {
         token = await getServerCookies("accessToken");
-        console.log(token);
       } else {
         token = getCookie("accessToken") as string | undefined;
-        console.log("token", token);
         locale = getCookie("i18n") as string | undefined;
-        console.log("locale", locale);
       }
-      if (locale) config.headers.set("x-lang", locale);
+
+      if (locale) {
+        config.headers = axios.AxiosHeaders.from(config.headers || {});
+        config.headers.set("x-lang", locale);
+      }
 
       if (token && config.url !== REFRESH_TOKEN_URL) {
         config.headers = axios.AxiosHeaders.from(config.headers || {});
-        config.headers.set("Authorization", `Bearer ${token}`);
+        if (useToken) {
+          config.headers.set("Authorization", `Bearer ${token}`);
+        }
       }
+
       return config;
     },
     (error: AxiosError) => Promise.reject(error)
   );
 
-  // response interceptor
+  // response interceptor: refresh token nếu 401
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
-      if (response.status >= 200 && response.status < 300) {
-        return response.data;
-      }
-      return Promise.reject(response);
+      return response.status >= 200 && response.status < 300
+        ? response.data
+        : Promise.reject(response);
     },
     async (error: AxiosError) => {
       const { response } = error;
@@ -91,15 +96,13 @@ export const createInstance = (
       ) {
         originalRequest._retry = true;
         try {
-          // gọi API refresh
           await refreshAccessToken();
-
-          // accessToken mới đã được server set trong cookie → chỉ cần gọi lại request cũ
           return instance(originalRequest);
-        } catch (refreshError) {
+        } catch {
           eventEmitter.emit(EVENT_EMITTER.LOGOUT);
         }
       }
+
       return Promise.reject(error);
     }
   );
@@ -107,18 +110,19 @@ export const createInstance = (
   return instance;
 };
 
+// --- Xử lý lỗi ---
 const handleAxiosError = <T>(err: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(err)) {
-    const errorResponse: ApiResponse<T> = {
+    return {
       statusCode: err.response?.data?.code || err.response?.status || 500,
       message: err.response?.data?.message || err.message,
       ...(isDevelopment ? { errorDetails: err } : {}),
     };
-    return errorResponse;
   }
   throw err;
 };
 
+// --- Tạo API wrapper ---
 export const createApi = (instance: AxiosInstance) => ({
   instance,
 
@@ -127,7 +131,6 @@ export const createApi = (instance: AxiosInstance) => ({
     body: Body
   ): Promise<ApiResponse<T>> => {
     try {
-      console.log("body", body);
       return await instance.post(endpoint, body);
     } catch (err: unknown) {
       return handleAxiosError(err);
@@ -172,10 +175,7 @@ export const createApi = (instance: AxiosInstance) => ({
     }
   },
 
-  put: async <T, Params>(
-    endpoint: string,
-    params: Params
-  ): Promise<ApiResponse<T> | AxiosError> => {
+  put: async <T, Params>(endpoint: string, params: Params) => {
     try {
       return await instance.put(endpoint, params);
     } catch (err: unknown) {
@@ -183,10 +183,7 @@ export const createApi = (instance: AxiosInstance) => ({
     }
   },
 
-  patch: async <T, Params>(
-    endpoint: string,
-    params: Params
-  ): Promise<ApiResponse<T> | AxiosError> => {
+  patch: async <T, Params>(endpoint: string, params: Params) => {
     try {
       return await instance.patch(endpoint, params);
     } catch (err: unknown) {
@@ -197,7 +194,7 @@ export const createApi = (instance: AxiosInstance) => ({
   delete: async <T, Params = Record<string, unknown>>(
     endpoint: string,
     params?: Params
-  ): Promise<ApiResponse<T> | AxiosError> => {
+  ) => {
     try {
       return await instance.delete(endpoint, { data: params });
     } catch (err: unknown) {
@@ -206,23 +203,25 @@ export const createApi = (instance: AxiosInstance) => ({
   },
 });
 
+// --- Refresh access token ---
 export const refreshAccessToken = async () => {
-  const res = await fetch(REFRESH_TOKEN_URL, {
-    method: "POST",
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to refresh token");
-  }
-  console.log("response", res);
-  return res.json();
+  const res = await nextApiNoToken.post(REFRESH_TOKEN_URL, {});
+  if (!res) throw new Error("Failed to refresh token");
+  console.log("refresh token response", res);
 };
 
+// --- Tạo instance ---
 const instance = createInstance(BASE_URL);
 const nextApiInstance = createInstance(DOMAIN);
 
-const api = createApi(instance);
-export const nextApi = createApi(nextApiInstance);
+const instanceNoToken = createInstance(BASE_URL, {}, false);
+const instanceNextApiNoToken = createInstance(DOMAIN, {}, false);
 
-export { api };
+// --- Tạo API ---
+const api = createApi(instance);
+const nextApi = createApi(nextApiInstance);
+
+const apiNoToken = createApi(instanceNoToken);
+const nextApiNoToken = createApi(instanceNextApiNoToken);
+
+export { api, nextApi, apiNoToken, nextApiNoToken };

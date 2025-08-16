@@ -23,7 +23,6 @@ export default function Header() {
   const [navigation, setNavigation] = useState<
     { name: string; href: string }[]
   >([]);
-  const [isMounted, setIsMounted] = useState(false);
 
   const pathname = usePathname();
   const t = useTranslations("Navigation");
@@ -37,8 +36,6 @@ export default function Header() {
   ];
 
   useEffect(() => {
-    console.log("isLoggedIn", isLoggedIn);
-
     if (!isLoggedIn) {
       baseNav.push({ name: t("login"), href: "/login" });
       baseNav.push({ name: t("register"), href: "/register" });
@@ -46,16 +43,6 @@ export default function Header() {
 
     setNavigation(baseNav);
   }, [isLoggedIn, t]);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
-  console.log("navigation", navigation);
 
   return (
     <header

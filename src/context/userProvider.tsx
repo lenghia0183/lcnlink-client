@@ -89,8 +89,7 @@ export function UserProvider({
 
   useEffect(() => {
     eventEmitter.once(EVENT_EMITTER.LOGOUT, () => {
-      console.log("logout");
-      // logoutUser();
+      logoutUser();
     });
     return () => {
       eventEmitter.removeAllListeners(EVENT_EMITTER.LOGOUT);

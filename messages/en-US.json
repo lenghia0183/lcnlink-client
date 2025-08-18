@@ -20,6 +20,35 @@
       "noAccount": "Don't have an account?",
       "signUp": "Sign Up"
     },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Reset your password to regain access",
+      "resetPassword": "Reset Password",
+      "description": "Enter your email address and we'll send you a link to reset your password",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "sendEmail": "Send Reset Link",
+      "backToLogin": "Back to Login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password",
+      "newPassword": "Set New Password",
+      "description": "Please enter your new password below",
+      "password": "New Password",
+      "passwordPlaceholder": "Enter your new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your new password",
+      "passwordMin": "Password must be at least 6 characters long",
+      "passwordMax": "Password must be at most 100 characters long",
+      "confirmPasswordMin": "Confirm password must be at least 6 characters long",
+      "confirmPasswordMax": "Confirm password must be at most 100 characters long",
+      "passwordsNotMatch": "Passwords do not match",
+      "resetPassword": "Reset Password",
+      "backToLogin": "Back to Login"
+    },
     "register": {
       "title": "Join ShortLink",
       "subtitle": "Create an account to start shortening URLs",
@@ -220,6 +249,17 @@
         "description": "Automatically generate QR codes for easy mobile sharing"
       }
     }
+  },
+  "Unlock": {
+    "title": "Protected Link",
+    "subtitle": "This link is password protected",
+    "protectedLink": "Enter Password",
+    "description": "Please enter the password to access this link",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "passwordRequired": "Password is required",
+    "unlock": "Unlock Link",
+    "backToHome": "Back to Home"
   },
   "url": {
     "originInvalid": "Please enter a valid URL (e.g., https://example.com)",

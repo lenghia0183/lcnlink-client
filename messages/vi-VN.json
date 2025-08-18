@@ -20,6 +20,35 @@
       "noAccount": "Chưa có tài khoản?",
       "signUp": "Đăng ký"
     },
+    "forgotPassword": {
+      "title": "Quên Mật Khẩu",
+      "subtitle": "Đặt lại mật khẩu để khôi phục truy cập",
+      "resetPassword": "Đặt Lại Mật Khẩu",
+      "description": "Nhập địa chỉ email và chúng tôi sẽ gửi cho bạn liên kết đặt lại mật khẩu",
+      "email": "Email",
+      "emailPlaceholder": "Nhập địa chỉ email của bạn",
+      "emailRequired": "Email là bắt buộc",
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "sendEmail": "Gửi Liên Kết Đặt Lại",
+      "backToLogin": "Quay Lại Đăng Nhập"
+    },
+    "resetPassword": {
+      "title": "Đặt Lại Mật Khẩu",
+      "subtitle": "Nhập mật khẩu mới của bạn",
+      "newPassword": "Đặt Mật Khẩu Mới",
+      "description": "Vui lòng nhập mật khẩu mới của bạn bên dưới",
+      "password": "Mật Khẩu Mới",
+      "passwordPlaceholder": "Nhập mật khẩu mới",
+      "confirmPassword": "Xác Nhận Mật Khẩu",
+      "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "passwordMax": "Mật khẩu không được quá 100 ký tự",
+      "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
+      "confirmPasswordMax": "Xác nhận mật khẩu không được quá 100 ký tự",
+      "passwordsNotMatch": "Mật khẩu không khớp",
+      "resetPassword": "Đặt Lại Mật Khẩu",
+      "backToLogin": "Quay Lại Đăng Nhập"
+    },
     "register": {
       "title": "Tham gia ShortLink",
       "subtitle": "Tạo tài khoản để bắt đầu rút gọn URL",
@@ -148,6 +177,17 @@
     "error": "Lỗi",
     "success": "Thành công",
     "logoutSuccessful": "Bạn đã đăng xuất"
+  },
+  "Unlock": {
+    "title": "Liên Kết Được Bảo Vệ",
+    "subtitle": "Liên kết này được bảo vệ bằng mật khẩu",
+    "protectedLink": "Nhập Mật Khẩu",
+    "description": "Vui lòng nhập mật khẩu để truy cập liên kết này",
+    "password": "Mật Khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu",
+    "passwordRequired": "Mật khẩu là bắt buộc",
+    "unlock": "Mở Khóa Liên Kết",
+    "backToHome": "Về Trang Chủ"
   },
   "UrlShortener": {
     "title": "Công cụ rút gọn URL thông minh",

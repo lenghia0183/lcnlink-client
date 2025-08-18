@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -21,7 +20,7 @@ export default function ResetPasswordPage() {
   const schema = getResetPasswordSchema(t);
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
@@ -37,20 +36,17 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       console.log("Reset password request:", { ...data, token });
       setIsSuccess(true);
-      toast.success(
-        "Mật khẩu đã được đặt lại!",
-        "Bạn có thể đăng nhập với mật khẩu mới"
-      );
+      toast.success(tCommon("success"), t("resetPassword.successDescription"));
     } catch (error) {
       console.error("Reset password error:", error);
-      toast.error("Có lỗi xảy ra", "Vui lòng thử lại sau");
+      toast.error(tCommon("error"), tCommon("tryAgainLater"));
     } finally {
       setIsSubmitting(false);
     }
@@ -61,15 +57,14 @@ export default function ResetPasswordPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
           <AppCard className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-center">
-            <h1 className="text-2xl font-bold mb-4 text-red-600">Liên kết không hợp lệ</h1>
+            <h1 className="text-2xl font-bold mb-4 text-red-600">
+              {t("resetPassword.invalidLinkTitle")}
+            </h1>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.
+              {t("resetPassword.invalidLinkDescription")}
             </p>
-            <AppButton
-              href="/forgot-password"
-              className="w-full"
-            >
-              Yêu cầu liên kết mới
+            <AppButton href="/forgot-password" className="w-full">
+              {t("resetPassword.requestNewLink")}
             </AppButton>
           </AppCard>
         </div>
@@ -86,18 +81,17 @@ export default function ResetPasswordPage() {
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-2xl font-bold mb-2">Thành công!</h1>
+              <h1 className="text-2xl font-bold mb-2">{tCommon("success")}</h1>
               <p className="text-gray-600 dark:text-gray-300">
-                Mật khẩu của bạn đã được đặt lại thành công.
-                Bạn có thể đăng nhập với mật khẩu mới.
+                {t("resetPassword.successDescription")}
               </p>
             </div>
-            
+
             <AppButton
               href="/login"
               className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
             >
-              Đến trang đăng nhập
+              {t("resetPassword.backToLogin")}
             </AppButton>
           </AppCard>
         </div>
@@ -158,7 +152,9 @@ export default function ResetPasswordPage() {
                     <Eye className="h-4 w-4" />
                   )
                 }
-                rightIconOnClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+                rightIconOnClick={() =>
+                  setIsShowConfirmPassword(!isShowConfirmPassword)
+                }
                 disabled={isSubmitting}
               />
 
@@ -167,7 +163,9 @@ export default function ResetPasswordPage() {
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? tCommon("loading") : t("resetPassword.resetPassword")}
+                {isSubmitting
+                  ? tCommon("loading")
+                  : t("resetPassword.resetPassword")}
               </AppButton>
             </form>
           </FormProvider>

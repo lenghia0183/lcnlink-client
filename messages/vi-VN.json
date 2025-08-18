@@ -30,7 +30,9 @@
       "emailRequired": "Email là bắt buộc",
       "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
       "sendEmail": "Gửi Liên Kết Đặt Lại",
-      "backToLogin": "Quay Lại Đăng Nhập"
+      "backToLogin": "Quay Lại Đăng Nhập",
+      "emailSentDescription": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.",
+      "resendEmail": "Gửi lại email"
     },
     "resetPassword": {
       "title": "Đặt Lại Mật Khẩu",
@@ -47,7 +49,11 @@
       "confirmPasswordMax": "Xác nhận mật khẩu không được quá 100 ký tự",
       "passwordsNotMatch": "Mật khẩu không khớp",
       "resetPassword": "Đặt Lại Mật Khẩu",
-      "backToLogin": "Quay Lại Đăng Nhập"
+      "backToLogin": "Quay Lại Đăng Nhập",
+      "successDescription": "Mật khẩu của bạn đã được đặt lại thành công. Bạn có thể đăng nhập với mật khẩu mới.",
+      "invalidLinkTitle": "Liên kết không hợp lệ",
+      "invalidLinkDescription": "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.",
+      "requestNewLink": "Yêu cầu liên kết mới"
     },
     "register": {
       "title": "Tham gia ShortLink",
@@ -170,7 +176,9 @@
   "Common": {
     "loading": "Đang tải...",
     "error": "Lỗi",
-    "success": "Thành công"
+    "success": "Thành công",
+    "tryAgainLater": "Vui lòng thử lại sau",
+    "redirecting": "Đang chuyển hướng..."
   },
   "common": {
     "loading": "Đang tải...",
@@ -187,7 +195,11 @@
     "passwordPlaceholder": "Nhập mật khẩu",
     "passwordRequired": "Mật khẩu là bắt buộc",
     "unlock": "Mở Khóa Liên Kết",
-    "backToHome": "Về Trang Chủ"
+    "backToHome": "Về Trang Chủ",
+    "invalidPassword": "Mật khẩu không đúng",
+    "invalidLinkTitle": "Liên kết không hợp lệ",
+    "invalidLinkDescription": "Không tìm thấy thông tin liên kết cần mở khóa.",
+    "protectedLinkLabel": "Liên kết được bảo vệ:"
   },
   "UrlShortener": {
     "title": "Công cụ rút gọn URL thông minh",

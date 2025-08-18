@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -23,7 +22,7 @@ export default function UnlockPage() {
   const router = useRouter();
   const shortUrl = searchParams.get("url");
   const redirectUrl = searchParams.get("redirect");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -36,15 +35,15 @@ export default function UnlockPage() {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call to verify password
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      
+
       console.log("Unlock request:", { shortUrl, password: data.password });
-      
-      toast.success("Xác thực thành công!", "Đang chuyển hướng...");
-      
+
+      toast.success(tCommon("success"), tCommon("redirecting"));
+
       // Redirect to original URL or provided redirect URL
       setTimeout(() => {
         if (redirectUrl) {
@@ -54,10 +53,9 @@ export default function UnlockPage() {
           router.push("/");
         }
       }, 1000);
-      
     } catch (error) {
       console.error("Unlock error:", error);
-      toast.error("Mật khẩu không đúng", "Vui lòng thử lại");
+      toast.error(tCommon("error"), t("invalidPassword"));
     } finally {
       setIsSubmitting(false);
     }
@@ -68,15 +66,14 @@ export default function UnlockPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
           <AppCard className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-center">
-            <h1 className="text-2xl font-bold mb-4 text-red-600">Liên kết không hợp lệ</h1>
+            <h1 className="text-2xl font-bold mb-4 text-red-600">
+              {t("invalidLinkTitle")}
+            </h1>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Không tìm thấy thông tin liên kết cần mở khóa.
+              {t("invalidLinkDescription")}
             </p>
-            <AppButton
-              href="/"
-              className="w-full"
-            >
-              Về trang chủ
+            <AppButton href="/" className="w-full">
+              {t("backToHome")}
             </AppButton>
           </AppCard>
         </div>
@@ -112,7 +109,9 @@ export default function UnlockPage() {
           <div className="mb-6 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
             <div className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
               <Shield className="h-4 w-4" />
-              <span className="text-sm font-medium">Liên kết được bảo vệ:</span>
+              <span className="text-sm font-medium">
+                {t("protectedLinkLabel")}
+              </span>
             </div>
             <code className="text-sm text-orange-800 dark:text-orange-200 break-all">
               {shortUrl}

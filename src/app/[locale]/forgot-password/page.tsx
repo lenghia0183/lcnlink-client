@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,7 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { AppButton } from "@/components/AppButton";
 import { toast } from "@/components/AppToast";
-import { getForgotPasswordSchema, ForgotPasswordFormValues } from "./validation";
+import {
+  getForgotPasswordSchema,
+  ForgotPasswordFormValues,
+} from "./validation";
 
 type FormValues = ForgotPasswordFormValues;
 
@@ -30,20 +32,20 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       console.log("Forgot password request:", data);
       setEmailSent(true);
       toast.success(
-        "Email đã được gửi!",
-        "Vui lòng kiểm tra email để đặt lại mật khẩu"
+        tCommon("success"),
+        t("forgotPassword.emailSentDescription")
       );
     } catch (error) {
       console.error("Forgot password error:", error);
-      toast.error("Có lỗi xảy ra", "Vui lòng thử lại sau");
+      toast.error(tCommon("error"), tCommon("tryAgainLater"));
     } finally {
       setIsSubmitting(false);
     }
@@ -58,13 +60,12 @@ export default function ForgotPasswordPage() {
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail className="h-8 w-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-2xl font-bold mb-2">Email đã được gửi!</h1>
+              <h1 className="text-2xl font-bold mb-2">{tCommon("success")}</h1>
               <p className="text-gray-600 dark:text-gray-300">
-                Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn.
-                Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.
+                {t("forgotPassword.emailSentDescription")}
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <AppButton
                 href="/login"
@@ -72,9 +73,9 @@ export default function ForgotPasswordPage() {
                 className="w-full"
                 iconLeft={<ArrowLeft className="h-4 w-4" />}
               >
-                Quay lại đăng nhập
+                {t("forgotPassword.backToLogin")}
               </AppButton>
-              
+
               <AppButton
                 onClick={() => {
                   setEmailSent(false);
@@ -83,7 +84,7 @@ export default function ForgotPasswordPage() {
                 variant="link"
                 className="w-full"
               >
-                Gửi lại email
+                {t("forgotPassword.resendEmail")}
               </AppButton>
             </div>
           </AppCard>
@@ -129,7 +130,9 @@ export default function ForgotPasswordPage() {
                 disabled={isSubmitting}
                 iconLeft={<Send className="h-4 w-4" />}
               >
-                {isSubmitting ? tCommon("loading") : t("forgotPassword.sendEmail")}
+                {isSubmitting
+                  ? tCommon("loading")
+                  : t("forgotPassword.sendEmail")}
               </AppButton>
             </form>
           </FormProvider>

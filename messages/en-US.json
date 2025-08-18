@@ -30,7 +30,9 @@
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email address",
       "sendEmail": "Send Reset Link",
-      "backToLogin": "Back to Login"
+      "backToLogin": "Back to Login",
+      "emailSentDescription": "We've sent a password reset link to your email. Please check your inbox and follow the instructions.",
+      "resendEmail": "Resend Email"
     },
     "resetPassword": {
       "title": "Reset Password",
@@ -47,7 +49,11 @@
       "confirmPasswordMax": "Confirm password must be at most 100 characters long",
       "passwordsNotMatch": "Passwords do not match",
       "resetPassword": "Reset Password",
-      "backToLogin": "Back to Login"
+      "backToLogin": "Back to Login",
+      "successDescription": "Your password has been reset. You can now sign in with your new password.",
+      "invalidLinkTitle": "Invalid link",
+      "invalidLinkDescription": "The password reset link is invalid or has expired.",
+      "requestNewLink": "Request a new link"
     },
     "register": {
       "title": "Join ShortLink",
@@ -173,7 +179,9 @@
   "Common": {
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "tryAgainLater": "Please try again later",
+    "redirecting": "Redirecting..."
   },
   "common": {
     "loading": "Loading...",
@@ -259,7 +267,11 @@
     "passwordPlaceholder": "Enter password",
     "passwordRequired": "Password is required",
     "unlock": "Unlock Link",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "invalidPassword": "Incorrect password",
+    "invalidLinkTitle": "Invalid link",
+    "invalidLinkDescription": "We couldn't find the link information to unlock.",
+    "protectedLinkLabel": "Protected link:"
   },
   "url": {
     "originInvalid": "Please enter a valid URL (e.g., https://example.com)",

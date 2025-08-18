@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type AppButtonProps = ComponentPropsWithoutRef<typeof Button> & {

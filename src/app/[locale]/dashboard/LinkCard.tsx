@@ -30,11 +30,11 @@ import { LinkData } from "@/types/Link";
 import { useTranslations } from "next-intl";
 
 interface LinkCardProps {
-  link: LinkData;
+  link?: LinkData;
   onEdit: (link: LinkData) => void;
   onDelete: (id: string) => void;
   onCopy: (text: string, id: string) => void;
-  copiedId: string;
+  copiedId?: string;
 }
 
 export const LinkCard = ({
@@ -45,6 +45,8 @@ export const LinkCard = ({
   copiedId,
 }: LinkCardProps) => {
   const t = useTranslations("Dashboard");
+
+  if (!link) return null; // fallback khi không có dữ liệu
 
   const getStatusBadge = () => {
     const statusConfig = {
@@ -70,7 +72,10 @@ export const LinkCard = ({
       },
     };
 
-    const config = statusConfig[link.status];
+    const config = statusConfig[link?.status as keyof typeof statusConfig];
+
+    if (!config) return null;
+
     return (
       <Badge variant={config.variant} className="flex items-center gap-1">
         {config.icon}
@@ -79,8 +84,8 @@ export const LinkCard = ({
     );
   };
 
-  const getProgressPercentage = (clicks: number, maxClicks?: number) => {
-    if (!maxClicks) return 0;
+  const getProgressPercentage = (clicks?: number, maxClicks?: number) => {
+    if (!maxClicks || !clicks) return 0;
     return Math.min((clicks / maxClicks) * 100, 100);
   };
 
@@ -94,14 +99,14 @@ export const LinkCard = ({
           <div className="flex items-center gap-3 mb-3">
             <code className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
               <Globe className="h-4 w-4" />
-              {link.shortUrl}
+              {link?.shortedUrl ?? ""}
             </code>
             <AppButton
               variant="ghost"
               size="icon"
-              onClick={() => onCopy(link.shortUrl, link.id)}
+              onClick={() => onCopy(link?.shortedUrl ?? "", link?.id ?? "")}
               iconLeft={
-                copiedId === link.id ? (
+                copiedId === link?.id ? (
                   <CheckCircle className="h-4 w-4 text-green-500" />
                 ) : (
                   <Copy className="h-4 w-4" />
@@ -109,7 +114,7 @@ export const LinkCard = ({
               }
             />
             {getStatusBadge()}
-            {link.isPasswordProtected && (
+            {link?.isPasswordProtected && (
               <Badge variant="outline" className="flex items-center gap-1">
                 <Shield className="h-3 w-3" />
                 {t("protected")}
@@ -119,40 +124,39 @@ export const LinkCard = ({
           <div className="flex items-center gap-2 mb-3">
             <ExternalLink className="h-4 w-4 text-gray-400" />
             <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-              {link.originalUrl}
+              {link?.originalUrl ?? ""}
             </p>
           </div>
-          {link.description && (
+          {link?.description && (
             <p className="text-sm text-gray-500 mb-3 italic">
               {link.description}
             </p>
           )}
-          {link.maxClicks && (
+          {link?.maxClicks && (
             <AppProgress
-              leftLabel={`
-                  ${t("clicks")}: ${link.clicks}/${link.maxClicks}
-                `}
-              rightLabel={`
-                  ${getProgressPercentage(link.clicks, link.maxClicks).toFixed(
-                    1
-                  )}%
-                `}
-              value={getProgressPercentage(link.clicks, link.maxClicks)}
+              leftLabel={`${t("clicks")}: ${link?.clicks ?? 0}/${
+                link.maxClicks
+              }`}
+              rightLabel={`${getProgressPercentage(
+                link?.clicks,
+                link.maxClicks
+              ).toFixed(1)}%`}
+              value={getProgressPercentage(link?.clicks, link.maxClicks)}
               indicatorClassName={
-                link.status === "limit_reached" ? "bg-red-500" : "bg-blue-500"
+                link?.status === "limit_reached" ? "bg-red-500" : "bg-blue-500"
               }
             />
           )}
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <span className="flex items-center gap-1">
               <MousePointer className="h-3 w-3" />
-              {link.clicks} {t("clicks")}
+              {link?.clicks ?? 0} {t("clicks")}
             </span>
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {format(link.createdAt, "dd/MM/yyyy")}
+              {link?.createdAt ? format(link.createdAt, "dd/MM/yyyy") : "--"}
             </span>
-            {link.expiresAt && (
+            {link?.expiresAt && (
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 {t("expires")} {format(link.expiresAt, "dd/MM/yyyy")}
@@ -167,14 +171,14 @@ export const LinkCard = ({
             variant="outline"
             size="icon"
             iconLeft={<Settings />}
-            onClick={() => onEdit(link)}
+            onClick={() => link && onEdit(link)}
           />
           <AppDropdown
             items={[
               {
                 label: t("edit"),
                 icon: <Edit className="h-4 w-4" />,
-                onClick: () => onEdit(link),
+                onClick: () => link && onEdit(link),
               },
               {
                 label: "Share",
@@ -183,7 +187,9 @@ export const LinkCard = ({
                   {
                     label: "Copy link",
                     icon: <Copy className="h-4 w-4" />,
-                    onClick: () => console.log("Copy link clicked"),
+                    onClick: () =>
+                      link?.shortedUrl &&
+                      onCopy(link.shortedUrl, link?.id ?? ""),
                   },
                   {
                     label: "Share via email",
@@ -210,7 +216,7 @@ export const LinkCard = ({
               {
                 label: t("delete"),
                 icon: <Trash2 className="h-4 w-4" />,
-                onClick: () => onDelete(link.id),
+                onClick: () => link?.id && onDelete(link.id),
                 className:
                   "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20",
               },

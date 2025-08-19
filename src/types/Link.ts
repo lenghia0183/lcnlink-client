@@ -1,14 +1,21 @@
+import { Meta } from "./ApiResponse";
+
 export interface LinkData {
   id: string;
   originalUrl: string;
-  shortUrl: string;
-  customAlias?: string;
-  clicks: number;
+  shortedUrl: string;
+  alias?: string;
+  clicksCount: number;
+  successfulAccessCount: number;
   maxClicks?: number;
-  createdAt: Date;
-  expiresAt?: Date;
+  isActive: boolean;
+  expireAt?: string;
+  createdAt: string;
   description?: string;
   password?: string;
-  isPasswordProtected: boolean;
   status: "active" | "expired" | "disabled" | "limit_reached";
+}
+
+export interface GetLinkResponse extends Meta {
+  items: LinkData[];
 }

@@ -155,13 +155,16 @@ export const createApi = (instance: AxiosInstance) => ({
     }
   },
 
-  get: async <T, Params = Record<string, unknown>>(
+  get: async <T, Params = unknown>(
     endpoint: string,
     params?: Params,
     options: Record<string, string> = {}
   ): Promise<ApiResponse<T>> => {
     try {
-      return await instance.get(endpoint, { ...options, ...params });
+      return await instance.get(endpoint, {
+        params,
+        ...options,
+      });
     } catch (err: unknown) {
       return handleAxiosError(err);
     }

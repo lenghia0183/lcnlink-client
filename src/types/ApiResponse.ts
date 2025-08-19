@@ -1,12 +1,12 @@
 import { ResponseCodeEnum } from "@/constants/reponse-code";
 import { AxiosError } from "axios";
 
-export interface Pagination {
-  currentPage: number;
-  currentResult: number;
-  limit: number;
-  totalPage: number;
-  totalResult: number;
+export interface Meta {
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+  };
 }
 
 export interface ApiResponse<T> {

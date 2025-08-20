@@ -17,6 +17,7 @@ import {
   useCreateLink,
   useDeleteLink,
   useGetLinks,
+  useGetTotalLinkPerStatus,
   useUpdateLink,
 } from "@/services/api/links";
 import { buildFilterFromObject } from "@/utils/buildFilterFromObject";
@@ -27,9 +28,8 @@ import { CreateLinkFormValues } from "./validation";
 import { format } from "date-fns";
 
 export type TotalLinksPerStatus = {
-  [key in LinkStatus]: number;
-} & {
-  all: number;
+  status: LinkStatus | "all";
+  count: number;
 };
 
 export default function DashboardPage() {
@@ -48,12 +48,17 @@ export default function DashboardPage() {
     filter: buildFilterFromObject({ status: tab }),
   });
 
+  const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus } =
+    useGetTotalLinkPerStatus();
+  console.log(" dataTotalLinkPerStatus", dataTotalLinkPerStatus);
+
   const { trigger: deleteLinkTrigger } = useDeleteLink();
   const { trigger: createLinkTrigger } = useCreateLink();
   const { trigger: updateLinkTrigger } = useUpdateLink();
 
   useEffect(() => {
     mutate();
+    mutateTotalLinkPerStatus();
   }, [page, keyword, tab]);
 
   const [copiedId, setCopiedId] = useState<string>("");
@@ -213,9 +218,13 @@ export default function DashboardPage() {
           copiedId={copiedId}
           page={page}
           setPage={setPage}
-          totalLinksPerStatus={{
-            all: data?.meta?.total ?? 0,
-          }}
+          totalLinksPerStatus={[
+            {
+              status: "all",
+              count: data?.meta?.total ?? 0,
+            },
+            ...(dataTotalLinkPerStatus || []),
+          ]}
           totalPages={Math.ceil(
             (data?.meta?.total ?? 1) / (data?.meta?.limit ?? 1)
           )}

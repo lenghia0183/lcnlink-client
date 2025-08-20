@@ -4,6 +4,7 @@ import { api } from "@/services/axios";
 import {
   CreateLinkBody,
   GetLinkResponse,
+  GetTotalLinkPerStatusResponse,
   LinkData,
   UpdateLinkBody,
 } from "@/types/Link";
@@ -68,4 +69,15 @@ export const useUpdateLink = () => {
   };
 
   return useSWRMutation(url, fetcher);
+};
+
+export const useGetTotalLinkPerStatus = () => {
+  const url = "v1/links/total-link-per-status";
+
+  const fetcher = async (url: string) => {
+    const response = await api.get<GetTotalLinkPerStatusResponse[]>(url);
+    return response.data;
+  };
+
+  return useSWR(url, fetcher);
 };

@@ -1,6 +1,5 @@
 import { LinkStatus } from "@/constants/common";
 import { Meta } from "./ApiResponse";
-import { Link } from "@/i18n/routing";
 
 export interface LinkData {
   id: string;
@@ -38,4 +37,9 @@ export interface UpdateLinkBody {
   password?: string;
   description?: string;
   maxClicks?: number;
+}
+
+export interface GetTotalLinkPerStatusResponse {
+  status: LinkStatus;
+  count: number;
 }

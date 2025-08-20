@@ -5,8 +5,9 @@ import { LinkCard } from "./LinkCard";
 import { AppCard } from "@/components/AppCard";
 import { Link2 } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
-import { LINK_STATUS } from "@/constants/common";
+import { LINK_STATUS, LinkStatus } from "@/constants/common";
 import { TotalLinksPerStatus } from "./page";
+import { get } from "http";
 
 interface LinkManagementCardProps {
   links?: LinkData[];
@@ -17,7 +18,7 @@ interface LinkManagementCardProps {
   onDelete: (id: LinkData) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
-  totalLinksPerStatus?: TotalLinksPerStatus;
+  totalLinksPerStatus?: TotalLinksPerStatus[];
   page: number;
   totalPages: number;
   setPage: (value: number) => void;
@@ -38,34 +39,38 @@ export const LinkManagementCard = ({
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
 
+  const getCountByStatus = (status: LinkStatus) => {
+    return totalLinksPerStatus?.find((l) => l.status === status)?.count || 0;
+  };
+
   const tabConfig = [
     {
       value: "",
       labelKey: "allLinks",
-      count: totalLinksPerStatus?.all || 0,
+      count: getCountByStatus("all"),
     },
     {
       value: LINK_STATUS.ACTIVE,
       labelKey: "activeLinks",
-      count: links?.filter((l) => l?.status === "active")?.length ?? 0,
+      count: getCountByStatus(LINK_STATUS.ACTIVE),
       status: LINK_STATUS.ACTIVE,
     },
     {
       value: LINK_STATUS.EXPIRED,
       labelKey: "expiredLinks",
-      count: links?.filter((l) => l?.status === "expired")?.length ?? 0,
+      count: getCountByStatus(LINK_STATUS.EXPIRED),
       status: LINK_STATUS.EXPIRED,
     },
     {
       value: LINK_STATUS.LIMIT_REACHED,
       labelKey: "limitReachedLinks",
-      count: links?.filter((l) => l?.status === "limit_reached")?.length ?? 0,
+      count: getCountByStatus(LINK_STATUS.LIMIT_REACHED),
       status: LINK_STATUS.LIMIT_REACHED,
     },
     {
       value: LINK_STATUS.DISABLED,
       labelKey: "disabledLinks",
-      count: links?.filter((l) => l?.status === "disabled")?.length ?? 0,
+      count: getCountByStatus(LINK_STATUS.DISABLED),
       status: LINK_STATUS.DISABLED,
     },
   ];

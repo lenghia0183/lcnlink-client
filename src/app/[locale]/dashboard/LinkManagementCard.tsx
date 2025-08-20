@@ -5,6 +5,8 @@ import { LinkCard } from "./LinkCard";
 import { AppCard } from "@/components/AppCard";
 import { Link2 } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
+import { LINK_STATUS } from "@/constants/common";
+import { TotalLinksPerStatus } from "./page";
 
 interface LinkManagementCardProps {
   links?: LinkData[];
@@ -15,13 +17,14 @@ interface LinkManagementCardProps {
   onDelete: (id: string) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
+  totalLinksPerStatus?: TotalLinksPerStatus;
   page: number;
+  totalPages: number;
   setPage: (value: number) => void;
 }
 
 export const LinkManagementCard = ({
   links = [],
-  searchTerm = "",
   activeTab,
   onTabChange,
   onEdit,
@@ -29,59 +32,41 @@ export const LinkManagementCard = ({
   onCopy,
   copiedId,
   page,
+  totalLinksPerStatus,
+  totalPages,
   setPage,
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
 
-  const filterLinks = (status: string) => {
-    let filtered = links ?? [];
-
-    if (status !== "all") {
-      filtered = filtered.filter((link) => link?.status === status);
-    }
-
-    if (searchTerm) {
-      const lower = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (link) =>
-          link?.originalUrl?.toLowerCase().includes(lower) ||
-          link?.shortedUrl?.toLowerCase().includes(lower) ||
-          link?.description?.toLowerCase().includes(lower)
-      );
-    }
-
-    return filtered ?? [];
-  };
-
   const tabConfig = [
     {
-      value: "all",
+      value: "",
       labelKey: "allLinks",
-      count: links?.length ?? 0,
+      count: totalLinksPerStatus?.all || 0,
     },
     {
-      value: "active",
+      value: LINK_STATUS.ACTIVE,
       labelKey: "activeLinks",
       count: links?.filter((l) => l?.status === "active")?.length ?? 0,
-      status: "active",
+      status: LINK_STATUS.ACTIVE,
     },
     {
-      value: "expired",
+      value: LINK_STATUS.EXPIRED,
       labelKey: "expiredLinks",
       count: links?.filter((l) => l?.status === "expired")?.length ?? 0,
-      status: "expired",
+      status: LINK_STATUS.EXPIRED,
     },
     {
-      value: "limit_reached",
+      value: LINK_STATUS.LIMIT_REACHED,
       labelKey: "limitReachedLinks",
       count: links?.filter((l) => l?.status === "limit_reached")?.length ?? 0,
-      status: "limit_reached",
+      status: LINK_STATUS.LIMIT_REACHED,
     },
     {
-      value: "disabled",
+      value: LINK_STATUS.DISABLED,
       labelKey: "disabledLinks",
       count: links?.filter((l) => l?.status === "disabled")?.length ?? 0,
-      status: "disabled",
+      status: LINK_STATUS.DISABLED,
     },
   ];
 
@@ -90,7 +75,7 @@ export const LinkManagementCard = ({
     label: `${t(config.labelKey)} (${config.count ?? 0})`,
     content: (
       <div className="space-y-4">
-        {filterLinks(config.status || "all")?.map((link) => (
+        {links?.map((link) => (
           <LinkCard
             key={link?.id ?? Math.random().toString()}
             link={link}
@@ -126,7 +111,7 @@ export const LinkManagementCard = ({
         className="mt-10"
         currentPage={page ?? 1}
         onPageChange={setPage}
-        totalPages={10}
+        totalPages={totalPages ?? 1}
       />
     </AppCard>
   );

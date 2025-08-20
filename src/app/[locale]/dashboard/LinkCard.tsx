@@ -28,6 +28,7 @@ import { AppDropdown } from "@/components/AppDropDown";
 import { AppCard } from "@/components/AppCard";
 import { LinkData } from "@/types/Link";
 import { useTranslations } from "next-intl";
+import { LINK_STATUS } from "@/constants/common";
 
 interface LinkCardProps {
   link?: LinkData;
@@ -46,33 +47,33 @@ export const LinkCard = ({
 }: LinkCardProps) => {
   const t = useTranslations("Dashboard");
 
-  if (!link) return null; // fallback khi không có dữ liệu
+  if (!link) return null;
 
   const getStatusBadge = () => {
     const statusConfig = {
-      active: {
+      [LINK_STATUS.ACTIVE]: {
         variant: "default" as const,
         label: t("active"),
         icon: <CheckCircle className="h-3 w-3" />,
       },
-      expired: {
+      [LINK_STATUS.EXPIRED]: {
         variant: "destructive" as const,
         label: t("expired"),
         icon: <Clock className="h-3 w-3" />,
       },
-      disabled: {
+      [LINK_STATUS.DISABLED]: {
         variant: "secondary" as const,
         label: t("disabled"),
         icon: <AlertCircle className="h-3 w-3" />,
       },
-      limit_reached: {
+      [LINK_STATUS.LIMIT_REACHED]: {
         variant: "outline" as const,
         label: t("limitReached"),
         icon: <MousePointer className="h-3 w-3" />,
       },
     };
 
-    const config = statusConfig[link?.status as keyof typeof statusConfig];
+    const config = statusConfig[link?.status];
 
     if (!config) return null;
 
@@ -114,7 +115,7 @@ export const LinkCard = ({
               }
             />
             {getStatusBadge()}
-            {link?.isPasswordProtected && (
+            {link?.isUsePassword && (
               <Badge variant="outline" className="flex items-center gap-1">
                 <Shield className="h-3 w-3" />
                 {t("protected")}
@@ -134,32 +135,34 @@ export const LinkCard = ({
           )}
           {link?.maxClicks && (
             <AppProgress
-              leftLabel={`${t("clicks")}: ${link?.clicks ?? 0}/${
+              leftLabel={`${t("clicks")}: ${link?.clicksCount ?? 0}/${
                 link.maxClicks
               }`}
               rightLabel={`${getProgressPercentage(
-                link?.clicks,
+                link?.clicksCount,
                 link.maxClicks
               ).toFixed(1)}%`}
-              value={getProgressPercentage(link?.clicks, link.maxClicks)}
+              value={getProgressPercentage(link?.clicksCount, link.maxClicks)}
               indicatorClassName={
-                link?.status === "limit_reached" ? "bg-red-500" : "bg-blue-500"
+                link?.status === LINK_STATUS.LIMIT_REACHED
+                  ? "bg-red-500"
+                  : "bg-blue-500"
               }
             />
           )}
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <span className="flex items-center gap-1">
               <MousePointer className="h-3 w-3" />
-              {link?.clicks ?? 0} {t("clicks")}
+              {link?.clicksCount ?? 0} {t("clicks")}
             </span>
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {link?.createdAt ? format(link.createdAt, "dd/MM/yyyy") : "--"}
             </span>
-            {link?.expiresAt && (
+            {link?.expireAt && (
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {t("expires")} {format(link.expiresAt, "dd/MM/yyyy")}
+                {t("expires")} {format(link.expireAt, "dd/MM/yyyy")}
               </span>
             )}
           </div>

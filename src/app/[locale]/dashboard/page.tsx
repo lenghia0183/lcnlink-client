@@ -1,7 +1,6 @@
-// app/dashboard/page.tsx
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
@@ -16,6 +15,13 @@ import { DeleteLinkDialog } from "./DeleteLinkDialog";
 import { AppButton } from "@/components/AppButton";
 import { useGetLinks } from "@/services/api/links";
 import { buildFilterFromObject } from "@/utils/buildFilterFromObject";
+import { LinkStatus } from "@/constants/common";
+
+export type TotalLinksPerStatus = {
+  [key in LinkStatus]: number;
+} & {
+  all: number;
+};
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
@@ -23,19 +29,20 @@ export default function DashboardPage() {
   const { tab, setTab, keyword, setKeyword, page, setPage } = useQueryState<{
     tab: string;
   }>({
-    tab: "all",
+    tab: "",
   });
 
   const { data, mutate } = useGetLinks({
     page: page,
     limit: 10,
     keyword: keyword,
+    filter: buildFilterFromObject({ status: tab }),
   });
   console.log("data", data);
 
   useEffect(() => {
     mutate();
-  }, [page]);
+  }, [page, keyword, tab]);
 
   const [copiedId, setCopiedId] = useState<string>("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -44,9 +51,8 @@ export default function DashboardPage() {
   const [selectedLink, setSelectedLink] = useState<LinkData | undefined>(
     undefined
   );
-
-  // Mock data
   const [links, setLinks] = useState<LinkData[]>();
+  console.log("data", data);
 
   useEffect(() => {
     if (data) {
@@ -93,7 +99,7 @@ export default function DashboardPage() {
           </AppButton>
         </div>
 
-        <StatsCards links={links} />
+        <StatsCards links={links} total={data?.meta?.total} />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
 
@@ -108,6 +114,12 @@ export default function DashboardPage() {
           copiedId={copiedId}
           page={page}
           setPage={setPage}
+          totalLinksPerStatus={{
+            all: data?.meta?.total ?? 0,
+          }}
+          totalPages={Math.ceil(
+            (data?.meta?.total ?? 1) / (data?.meta?.limit ?? 1)
+          )}
         />
 
         <EditLinkDialog

@@ -31,3 +31,12 @@ export enum USER_ROLE_ENUM {
   ADMIN,
   GUEST,
 }
+
+export const LINK_STATUS = {
+  ACTIVE: "active",
+  EXPIRED: "expired",
+  DISABLED: "disabled",
+  LIMIT_REACHED: "limit_reached",
+};
+
+export type LinkStatus = (typeof LINK_STATUS)[keyof typeof LINK_STATUS];

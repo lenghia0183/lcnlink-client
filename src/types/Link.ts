@@ -1,3 +1,4 @@
+import { LinkStatus } from "@/constants/common";
 import { Meta } from "./ApiResponse";
 
 export interface LinkData {
@@ -13,7 +14,8 @@ export interface LinkData {
   createdAt: string;
   description?: string;
   password?: string;
-  status: "active" | "expired" | "disabled" | "limit_reached";
+  isUsePassword: boolean;
+  status: LinkStatus;
 }
 
 export interface GetLinkResponse extends Meta {

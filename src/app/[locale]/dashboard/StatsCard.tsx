@@ -7,9 +7,10 @@ import { useTranslations } from "next-intl";
 
 interface StatsCardsProps {
   links?: LinkData[];
+  total?: number;
 }
 
-export const StatsCards = ({ links }: StatsCardsProps) => {
+export const StatsCards = ({ links = [], total }: StatsCardsProps) => {
   const t = useTranslations("Dashboard");
 
   const totalClicks =
@@ -28,7 +29,7 @@ export const StatsCards = ({ links }: StatsCardsProps) => {
   const stats = [
     {
       title: t("totalLinks"),
-      value: links?.length ?? 0,
+      value: total ?? 0,
       description: `${activeLinks ?? 0} ${t("active")}`,
       icon: <Link2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />,
       iconBg: "bg-blue-50 dark:bg-blue-900/20",

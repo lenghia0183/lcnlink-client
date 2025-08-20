@@ -9,7 +9,7 @@ import { CreateLinkDialog } from "./CreateLinkDialog";
 import { StatsCards } from "./StatsCard";
 import { SearchAndFilters } from "./SearchAndFilters";
 import { LinkManagementCard } from "./LinkManagementCard";
-import { EditLinkDialog } from "./EditLinkDialog";
+import { EditFormValues, EditLinkDialog } from "./EditLinkDialog";
 import { useQueryState } from "@/hooks/useQueryState";
 import { DeleteLinkDialog } from "./DeleteLinkDialog";
 import { AppButton } from "@/components/AppButton";
@@ -17,12 +17,14 @@ import {
   useCreateLink,
   useDeleteLink,
   useGetLinks,
+  useUpdateLink,
 } from "@/services/api/links";
 import { buildFilterFromObject } from "@/utils/buildFilterFromObject";
 import { LinkStatus } from "@/constants/common";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { toast } from "@/components/AppToast";
 import { CreateLinkFormValues } from "./validation";
+import { format } from "date-fns";
 
 export type TotalLinksPerStatus = {
   [key in LinkStatus]: number;
@@ -48,6 +50,7 @@ export default function DashboardPage() {
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
   const { trigger: createLinkTrigger } = useCreateLink();
+  const { trigger: updateLinkTrigger } = useUpdateLink();
 
   useEffect(() => {
     mutate();
@@ -65,6 +68,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (data) {
       setLinks(data.items);
+      setSelectedLink(undefined);
     }
   }, [data]);
 
@@ -84,7 +88,7 @@ export default function DashboardPage() {
     setSelectedLink(link);
   };
 
-  const handleCreateLink = (formValue: CreateLinkFormValues) => {
+  const handleConfirmCreateLink = (formValue: CreateLinkFormValues) => {
     createLinkTrigger(
       {
         body: {
@@ -131,6 +135,43 @@ export default function DashboardPage() {
         }
       );
       setIsDeleteDialogOpen(false);
+    }
+  };
+
+  const handleConfirmEdit = (formValue: EditFormValues) => {
+    console.log("formValue", formValue);
+    if (selectedLink) {
+      const body = {
+        alias: formValue.alias,
+        maxClicks: Number(formValue?.maxClicks) || 0,
+        expireAt: formValue.expirationDate
+          ? format(new Date(formValue.expirationDate), "yyyy-MM-dd HH:mm")
+          : "",
+
+        description: formValue.description,
+        password: formValue.password ?? undefined,
+      };
+      console.log("body", body);
+      updateLinkTrigger(
+        {
+          id: selectedLink?.id || "",
+          body,
+        },
+        {
+          onSuccess: (response) => {
+            if (validateResponseCode(response.statusCode)) {
+              toast.success(response.message);
+              mutate();
+            } else {
+              toast.error(response.message);
+            }
+          },
+          onError: (response) => {
+            toast.error(response.message);
+          },
+        }
+      );
+      setIsEditDialogOpen(false);
     }
   };
 
@@ -184,12 +225,13 @@ export default function DashboardPage() {
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           selectedLink={selectedLink}
+          handleConfirmEdit={handleConfirmEdit}
         />
 
         <CreateLinkDialog
           open={isCreateDialogOpen}
           onOpenChange={setIsCreateDialogOpen}
-          handleConfirmCreate={handleCreateLink}
+          handleConfirmCreate={handleConfirmCreateLink}
         />
 
         <DeleteLinkDialog

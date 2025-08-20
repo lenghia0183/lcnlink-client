@@ -170,7 +170,10 @@ export const createApi = (instance: AxiosInstance) => ({
     }
   },
 
-  put: async <T, Params>(endpoint: string, params: Params) => {
+  put: async <T, Params>(
+    endpoint: string,
+    params: Params
+  ): Promise<ApiResponse<T>> => {
     try {
       return await instance.put(endpoint, params);
     } catch (err: unknown) {

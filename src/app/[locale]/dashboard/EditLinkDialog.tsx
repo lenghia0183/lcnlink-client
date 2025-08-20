@@ -10,32 +10,39 @@ import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 import { AppDialog } from "@/components/AppDialog";
 import { LinkData } from "@/types/Link";
+import { DatePickerField } from "@/components/FormFields/DatePickerField";
+import { useEffect } from "react";
 
 const editSchema = z.object({
   description: z.string().optional(),
   password: z.string().optional(),
   maxClicks: z.string().optional(),
+  expirationDate: z.date().nullable().optional(),
+  alias: z.string().optional(),
 });
 
-type EditFormValues = z.infer<typeof editSchema>;
+export type EditFormValues = z.infer<typeof editSchema>;
 
 interface EditLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedLink?: LinkData;
+  handleConfirmEdit: (formValue: EditFormValues) => void;
 }
 
 export const EditLinkDialog = ({
   open,
   onOpenChange,
   selectedLink,
+  handleConfirmEdit,
 }: EditLinkDialogProps) => {
   const t = useTranslations("Dashboard");
-  console.log("selectedLink", selectedLink);
 
   const initialData: EditFormValues = {
-    description: selectedLink?.description,
-    password: selectedLink?.password,
+    description: "",
+    alias: "",
+    expirationDate: null,
+    password: "",
     maxClicks: "",
   };
 
@@ -45,10 +52,21 @@ export const EditLinkDialog = ({
     mode: "onChange",
   });
 
-  const handleSubmit = (data: EditFormValues) => {
-    console.log("data", data);
+  useEffect(() => {
+    console.log("selectedLink", selectedLink);
+    methods.reset({
+      description: selectedLink?.description,
+      alias: selectedLink?.alias,
+      expirationDate: new Date(selectedLink?.expireAt || ""),
+      password: selectedLink?.password,
+      maxClicks: selectedLink?.maxClicks?.toString(),
+    });
+  }, [selectedLink, methods]);
 
+  const handleSubmit = (data: EditFormValues) => {
+    handleConfirmEdit(data);
     onOpenChange(false);
+    methods.reset();
   };
 
   const footerActions = [
@@ -81,6 +99,11 @@ export const EditLinkDialog = ({
           noValidate
         >
           <TextAreaField
+            name="alias"
+            label={t("customAlias")}
+            placeholder={t("aliasPlaceholder")}
+          />
+          <TextAreaField
             name="description"
             label={t("description")}
             placeholder={t("descriptionPlaceholder")}
@@ -96,6 +119,12 @@ export const EditLinkDialog = ({
             label={t("maxClicks")}
             placeholder={t("maxClicksPlaceholder")}
             allow={TEXTFIELD_ALLOW.POSITIVE_DECIMAL}
+          />
+          <DatePickerField
+            name="expirationDate"
+            label={t("expirationDate")}
+            placeholder={t("expirationDate")}
+            disabled={{ before: new Date() }}
           />
         </form>
       </FormProvider>

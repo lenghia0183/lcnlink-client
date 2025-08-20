@@ -31,3 +31,11 @@ export interface CreateLinkBody {
   description?: string;
   maxClicks?: number;
 }
+
+export interface UpdateLinkBody {
+  alias?: string;
+  expireAt?: string;
+  password?: string;
+  description?: string;
+  maxClicks?: number;
+}

@@ -1,7 +1,12 @@
 import useSWR from "swr";
 
 import { api } from "@/services/axios";
-import { CreateLinkBody, GetLinkResponse, LinkData } from "@/types/Link";
+import {
+  CreateLinkBody,
+  GetLinkResponse,
+  LinkData,
+  UpdateLinkBody,
+} from "@/types/Link";
 import useSWRMutation from "swr/mutation";
 
 interface GetLinksParams {
@@ -41,6 +46,24 @@ export const useCreateLink = () => {
     { arg }: { arg: { body: CreateLinkBody } }
   ) => {
     const response = await api.post<LinkData, CreateLinkBody>(key, arg.body);
+    return response;
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useUpdateLink = () => {
+  const url = "v1/links/:id";
+
+  const fetcher = async (
+    key: string,
+    { arg }: { arg: { id: string; body: UpdateLinkBody } }
+  ) => {
+    const finalUrl = key.replace(":id", arg.id);
+    const response = await api.put<LinkData, UpdateLinkBody>(
+      finalUrl,
+      arg.body
+    );
     return response;
   };
 

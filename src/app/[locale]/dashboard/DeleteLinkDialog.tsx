@@ -3,11 +3,11 @@
 import { AppAlertDialog } from "@/components/AppAlertDialog";
 import { LinkData } from "@/types/Link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 
 interface DeleteLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  handleConfirmDelete: () => void;
   selectedLink?: LinkData;
 }
 
@@ -15,19 +15,9 @@ export function DeleteLinkDialog({
   open,
   onOpenChange,
   selectedLink,
+  handleConfirmDelete,
 }: DeleteLinkDialogProps) {
   const t = useTranslations("Dashboard");
-  const [loading, setLoading] = useState(false);
-
-  const handleConfirm = async () => {
-    try {
-      console.log("selectedLink", selectedLink);
-      setLoading(true);
-      onOpenChange(false);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <AppAlertDialog
@@ -37,15 +27,14 @@ export function DeleteLinkDialog({
       description={
         selectedLink
           ? t("deleteLinkDescription", {
-              name: selectedLink?.customAlias || "",
+              name: selectedLink?.alias || "",
             })
           : t("deleteLinkDefaultDescription")
       }
       confirmText={t("delete")}
       cancelText={t("cancel")}
-      onConfirm={handleConfirm}
+      onConfirm={handleConfirmDelete}
       onCancel={() => onOpenChange(false)}
-      loading={loading}
     />
   );
 }

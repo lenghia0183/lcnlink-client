@@ -33,7 +33,7 @@ import { LINK_STATUS } from "@/constants/common";
 interface LinkCardProps {
   link?: LinkData;
   onEdit: (link: LinkData) => void;
-  onDelete: (id: string) => void;
+  onDelete: (link: LinkData) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
 }
@@ -219,7 +219,7 @@ export const LinkCard = ({
               {
                 label: t("delete"),
                 icon: <Trash2 className="h-4 w-4" />,
-                onClick: () => link?.id && onDelete(link.id),
+                onClick: () => link?.id && onDelete(link),
                 className:
                   "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20",
               },

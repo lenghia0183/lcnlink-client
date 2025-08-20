@@ -14,7 +14,7 @@ interface LinkManagementCardProps {
   activeTab: string;
   onTabChange: (value: string) => void;
   onEdit: (link: LinkData) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: LinkData) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
   totalLinksPerStatus?: TotalLinksPerStatus;

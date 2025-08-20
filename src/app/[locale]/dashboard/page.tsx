@@ -13,9 +13,11 @@ import { EditLinkDialog } from "./EditLinkDialog";
 import { useQueryState } from "@/hooks/useQueryState";
 import { DeleteLinkDialog } from "./DeleteLinkDialog";
 import { AppButton } from "@/components/AppButton";
-import { useGetLinks } from "@/services/api/links";
+import { useDeleteLink, useGetLinks } from "@/services/api/links";
 import { buildFilterFromObject } from "@/utils/buildFilterFromObject";
 import { LinkStatus } from "@/constants/common";
+import validateResponseCode from "@/utils/validateResponseCode";
+import { toast } from "@/components/AppToast";
 
 export type TotalLinksPerStatus = {
   [key in LinkStatus]: number;
@@ -38,6 +40,8 @@ export default function DashboardPage() {
     keyword: keyword,
     filter: buildFilterFromObject({ status: tab }),
   });
+
+  const { trigger: deleteLinkTrigger } = useDeleteLink();
   console.log("data", data);
 
   useEffect(() => {
@@ -71,9 +75,32 @@ export default function DashboardPage() {
     setIsEditDialogOpen(true);
   };
 
-  const handleDeleteLink = (id: string) => {
+  const handleDeleteLink = (link: LinkData) => {
     setIsDeleteDialogOpen(true);
-    setLinks((prev) => prev.filter((link) => link.id !== id));
+    setSelectedLink(link);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedLink) {
+      deleteLinkTrigger(
+        { id: selectedLink?.id || "" },
+        {
+          onSuccess: (response) => {
+            console.log("response", response);
+            if (validateResponseCode(response.statusCode)) {
+              toast.success(response.message);
+              mutate();
+            } else {
+              toast.error(response.message);
+            }
+          },
+          onError: (response) => {
+            toast.error(response.message);
+          },
+        }
+      );
+      setIsDeleteDialogOpen(false);
+    }
   };
 
   return (
@@ -137,6 +164,7 @@ export default function DashboardPage() {
           open={isDeleteDialogOpen}
           onOpenChange={setIsDeleteDialogOpen}
           selectedLink={selectedLink}
+          handleConfirmDelete={handleConfirmDelete}
         />
       </div>
     </div>

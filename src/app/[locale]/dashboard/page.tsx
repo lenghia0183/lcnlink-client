@@ -13,11 +13,16 @@ import { EditLinkDialog } from "./EditLinkDialog";
 import { useQueryState } from "@/hooks/useQueryState";
 import { DeleteLinkDialog } from "./DeleteLinkDialog";
 import { AppButton } from "@/components/AppButton";
-import { useDeleteLink, useGetLinks } from "@/services/api/links";
+import {
+  useCreateLink,
+  useDeleteLink,
+  useGetLinks,
+} from "@/services/api/links";
 import { buildFilterFromObject } from "@/utils/buildFilterFromObject";
 import { LinkStatus } from "@/constants/common";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { toast } from "@/components/AppToast";
+import { CreateLinkFormValues } from "./validation";
 
 export type TotalLinksPerStatus = {
   [key in LinkStatus]: number;
@@ -42,7 +47,7 @@ export default function DashboardPage() {
   });
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
-  console.log("data", data);
+  const { trigger: createLinkTrigger } = useCreateLink();
 
   useEffect(() => {
     mutate();
@@ -56,7 +61,6 @@ export default function DashboardPage() {
     undefined
   );
   const [links, setLinks] = useState<LinkData[]>();
-  console.log("data", data);
 
   useEffect(() => {
     if (data) {
@@ -80,13 +84,40 @@ export default function DashboardPage() {
     setSelectedLink(link);
   };
 
+  const handleCreateLink = (formValue: CreateLinkFormValues) => {
+    createLinkTrigger(
+      {
+        body: {
+          originalUrl: formValue?.originUrl || "",
+          alias: formValue.alias,
+          maxClicks: Number(formValue?.maxClicks) || 0,
+          expireAt: formValue.expirationDate?.toISOString(),
+          description: formValue.description,
+          password: formValue.password,
+        },
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            mutate();
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
+  };
+
   const handleConfirmDelete = () => {
     if (selectedLink) {
       deleteLinkTrigger(
         { id: selectedLink?.id || "" },
         {
           onSuccess: (response) => {
-            console.log("response", response);
             if (validateResponseCode(response.statusCode)) {
               toast.success(response.message);
               mutate();
@@ -158,6 +189,7 @@ export default function DashboardPage() {
         <CreateLinkDialog
           open={isCreateDialogOpen}
           onOpenChange={setIsCreateDialogOpen}
+          handleConfirmCreate={handleCreateLink}
         />
 
         <DeleteLinkDialog

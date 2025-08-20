@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 import { api } from "@/services/axios";
-import { GetLinkResponse } from "@/types/Link";
+import { CreateLinkBody, GetLinkResponse, LinkData } from "@/types/Link";
 import useSWRMutation from "swr/mutation";
 
 interface GetLinksParams {
@@ -27,6 +27,20 @@ export const useDeleteLink = () => {
   const fetcher = async (key: string, { arg }: { arg: { id: string } }) => {
     const finalUrl = key.replace(":id", arg.id);
     const response = await api.delete(finalUrl);
+    return response;
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useCreateLink = () => {
+  const url = "v1/links";
+
+  const fetcher = async (
+    key: string,
+    { arg }: { arg: { body: CreateLinkBody } }
+  ) => {
+    const response = await api.post<LinkData, CreateLinkBody>(key, arg.body);
     return response;
   };
 

@@ -18,11 +18,13 @@ type FormValues = CreateLinkFormValues;
 interface CreateLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  handleConfirmCreate: (formValue: CreateLinkFormValues) => void;
 }
 
 export const CreateLinkDialog = ({
   open,
   onOpenChange,
+  handleConfirmCreate,
 }: CreateLinkDialogProps) => {
   const t = useTranslations("Dashboard");
   const formRef = useRef<HTMLFormElement>(null);
@@ -42,7 +44,7 @@ export const CreateLinkDialog = ({
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log("Submited data:", data);
+    handleConfirmCreate(data);
     onOpenChange(false);
     methods.reset();
   };

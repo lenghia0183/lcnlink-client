@@ -41,7 +41,7 @@ export default function DashboardPage() {
     tab: "",
   });
 
-  const { data, mutate } = useGetLinks({
+  const { data: dataLinkList, mutate: mutateLinkList } = useGetLinks({
     page: page,
     limit: 10,
     keyword: keyword,
@@ -50,14 +50,13 @@ export default function DashboardPage() {
 
   const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus } =
     useGetTotalLinkPerStatus();
-  console.log(" dataTotalLinkPerStatus", dataTotalLinkPerStatus);
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
   const { trigger: createLinkTrigger } = useCreateLink();
   const { trigger: updateLinkTrigger } = useUpdateLink();
 
   useEffect(() => {
-    mutate();
+    mutateLinkList();
     mutateTotalLinkPerStatus();
   }, [page, keyword, tab]);
 
@@ -71,11 +70,11 @@ export default function DashboardPage() {
   const [links, setLinks] = useState<LinkData[]>();
 
   useEffect(() => {
-    if (data) {
-      setLinks(data.items);
+    if (dataLinkList) {
+      setLinks(dataLinkList.items);
       setSelectedLink(undefined);
     }
-  }, [data]);
+  }, [dataLinkList]);
 
   const copyToClipboard = async (text: string, id: string) => {
     await navigator.clipboard.writeText(text);
@@ -109,7 +108,7 @@ export default function DashboardPage() {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
             toast.success(response.message);
-            mutate();
+            mutateLinkList();
           } else {
             toast.error(response.message);
           }
@@ -129,7 +128,7 @@ export default function DashboardPage() {
           onSuccess: (response) => {
             if (validateResponseCode(response.statusCode)) {
               toast.success(response.message);
-              mutate();
+              mutateLinkList();
             } else {
               toast.error(response.message);
             }
@@ -166,7 +165,7 @@ export default function DashboardPage() {
           onSuccess: (response) => {
             if (validateResponseCode(response.statusCode)) {
               toast.success(response.message);
-              mutate();
+              mutateLinkList();
             } else {
               toast.error(response.message);
             }
@@ -203,7 +202,7 @@ export default function DashboardPage() {
           </AppButton>
         </div>
 
-        <StatsCards links={links} total={data?.meta?.total} />
+        <StatsCards links={links} total={dataLinkList?.meta?.total} />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
 
@@ -218,15 +217,9 @@ export default function DashboardPage() {
           copiedId={copiedId}
           page={page}
           setPage={setPage}
-          totalLinksPerStatus={[
-            {
-              status: "all",
-              count: data?.meta?.total ?? 0,
-            },
-            ...(dataTotalLinkPerStatus || []),
-          ]}
+          totalLinksPerStatus={dataTotalLinkPerStatus || []}
           totalPages={Math.ceil(
-            (data?.meta?.total ?? 1) / (data?.meta?.limit ?? 1)
+            (dataLinkList?.meta?.total ?? 1) / (dataLinkList?.meta?.limit ?? 1)
           )}
         />
 

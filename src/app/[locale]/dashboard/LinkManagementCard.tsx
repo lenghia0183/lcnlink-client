@@ -40,6 +40,11 @@ export const LinkManagementCard = ({
   const t = useTranslations("Dashboard");
 
   const getCountByStatus = (status: LinkStatus) => {
+    if (status === "all")
+      return totalLinksPerStatus?.reduce(
+        (total, link) => total + link.count,
+        0
+      );
     return totalLinksPerStatus?.find((l) => l.status === status)?.count || 0;
   };
 

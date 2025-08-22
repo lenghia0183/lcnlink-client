@@ -1,42 +1,32 @@
 // components/dashboard/StatsCards.tsx
 import { AppCard } from "@/components/AppCard";
-import { LinkData } from "@/types/Link";
+import {
+  GetLinkStatisticOverviewResponse,
+  GetTotalLinkPerStatusResponse,
+} from "@/types/Link";
 
 import { Link2, MousePointer, Shield, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface StatsCardsProps {
-  links?: LinkData[];
-  total?: number;
+  dataTotalLinkPerStatus?: GetTotalLinkPerStatusResponse;
+  linkStatisticOverview?: GetLinkStatisticOverviewResponse;
 }
 
-export const StatsCards = ({ links = [], total }: StatsCardsProps) => {
+export const StatsCards = ({ linkStatisticOverview }: StatsCardsProps) => {
   const t = useTranslations("Dashboard");
-
-  const totalClicks =
-    links?.reduce((sum, link) => sum + (link.clicksCount ?? 0), 0) ?? 0;
-
-  const activeLinks =
-    links?.filter((link) => link?.status === "active")?.length ?? 0;
-
-  const protectedLinks =
-    links?.filter((link) => link?.password && link?.status === "active")
-      ?.length ?? 0;
-
-  const limitedLinks =
-    links?.filter((link) => link?.maxClicks != null)?.length ?? 0;
 
   const stats = [
     {
       title: t("totalLinks"),
-      value: total ?? 0,
-      description: `${activeLinks ?? 0} ${t("active")}`,
+      value: linkStatisticOverview?.totalLink ?? 0,
+      description: `${""} ${t("active")}`,
       icon: <Link2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />,
       iconBg: "bg-blue-50 dark:bg-blue-900/20",
     },
     {
       title: t("totalClicks"),
-      value: totalClicks?.toLocaleString() ?? "0",
+      value: linkStatisticOverview?.totalClicks ?? "0",
       description: `+12.5% ${t("comparedToLastMonth")}`,
       icon: (
         <MousePointer className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -45,17 +35,14 @@ export const StatsCards = ({ links = [], total }: StatsCardsProps) => {
     },
     {
       title: t("protectedLinks"),
-      value: protectedLinks ?? 0,
-      description: `${(
-        ((protectedLinks ?? 0) / (links?.length || 1)) *
-        100
-      ).toFixed(1)}% ${t("ofTotalLinks")}`,
+      value: linkStatisticOverview?.totalProtectedLink ?? 0,
+      description: `${((1 / (1 || 1)) * 100).toFixed(1)}% ${t("ofTotalLinks")}`,
       icon: <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />,
       iconBg: "bg-purple-50 dark:bg-purple-900/20",
     },
     {
       title: t("limitedLinks"),
-      value: limitedLinks ?? 0,
+      value: linkStatisticOverview?.totalLimitedLink ?? 0,
       description: t("trackUsage"),
       icon: <Zap className="h-6 w-6 text-orange-600 dark:text-orange-400" />,
       iconBg: "bg-orange-50 dark:bg-orange-900/20",

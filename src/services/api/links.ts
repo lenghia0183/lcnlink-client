@@ -4,6 +4,7 @@ import { api } from "@/services/axios";
 import {
   CreateLinkBody,
   GetLinkResponse,
+  GetLinkStatisticOverviewResponse,
   GetTotalLinkPerStatusResponse,
   LinkData,
   UpdateLinkBody,
@@ -76,6 +77,17 @@ export const useGetTotalLinkPerStatus = () => {
 
   const fetcher = async (url: string) => {
     const response = await api.get<GetTotalLinkPerStatusResponse[]>(url);
+    return response.data;
+  };
+
+  return useSWR(url, fetcher);
+};
+
+export const useGetLinkStatisticOverview = () => {
+  const url = "v1/links/statistic-overview";
+
+  const fetcher = async (url: string) => {
+    const response = await api.get<GetLinkStatisticOverviewResponse>(url);
     return response.data;
   };
 

@@ -43,3 +43,10 @@ export interface GetTotalLinkPerStatusResponse {
   status: LinkStatus;
   count: number;
 }
+
+export interface GetLinkStatisticOverviewResponse {
+  totalLink: number;
+  totalClicks: number;
+  totalProtectedLink: number;
+  totalLimitedLink: number;
+}

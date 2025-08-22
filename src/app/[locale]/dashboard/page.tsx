@@ -17,6 +17,7 @@ import {
   useCreateLink,
   useDeleteLink,
   useGetLinks,
+  useGetLinkStatisticOverview,
   useGetTotalLinkPerStatus,
   useUpdateLink,
 } from "@/services/api/links";
@@ -50,7 +51,11 @@ export default function DashboardPage() {
 
   const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus } =
     useGetTotalLinkPerStatus();
-  console.log(" dataTotalLinkPerStatus", dataTotalLinkPerStatus);
+
+  const {
+    data: dataLinkStatisticOverview,
+    mutate: mutateLinkStatisticOverview,
+  } = useGetLinkStatisticOverview();
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
   const { trigger: createLinkTrigger } = useCreateLink();
@@ -59,6 +64,7 @@ export default function DashboardPage() {
   useEffect(() => {
     mutate();
     mutateTotalLinkPerStatus();
+    mutateLinkStatisticOverview();
   }, [page, keyword, tab]);
 
   const [copiedId, setCopiedId] = useState<string>("");
@@ -203,7 +209,7 @@ export default function DashboardPage() {
           </AppButton>
         </div>
 
-        <StatsCards links={links} total={data?.meta?.total} />
+        <StatsCards linkStatisticOverview={dataLinkStatisticOverview} />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
@@ -29,10 +29,10 @@ import { CreateLinkFormValues } from "./validation";
 import { format } from "date-fns";
 
 export type TotalLinksPerStatus = {
-  status: LinkStatus | "all";
-  count: number;
+  [key in LinkStatus]: number;
+} & {
+  all: number;
 };
-
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
 
@@ -209,7 +209,15 @@ export default function DashboardPage() {
           </AppButton>
         </div>
 
-        <StatsCards linkStatisticOverview={dataLinkStatisticOverview} />
+        <StatsCards
+          linkStatisticOverview={dataLinkStatisticOverview}
+          dataTotalLinkPerStatus={{
+            all: data?.meta?.total ?? 0,
+            active: dataTotalLinkPerStatus?.active ?? 0,
+            expired: dataTotalLinkPerStatus?.expired ?? 0,
+            disabled: dataTotalLinkPerStatus?.disabled ?? 0,
+          }}
+        />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
 
@@ -224,13 +232,13 @@ export default function DashboardPage() {
           copiedId={copiedId}
           page={page}
           setPage={setPage}
-          totalLinksPerStatus={[
-            {
-              status: "all",
-              count: data?.meta?.total ?? 0,
-            },
-            ...(dataTotalLinkPerStatus || []),
-          ]}
+          totalLinksPerStatus={{
+            all: data?.meta?.total ?? 0,
+            active: dataTotalLinkPerStatus?.active ?? 0,
+            expired: dataTotalLinkPerStatus?.expired ?? 0,
+            disabled: dataTotalLinkPerStatus?.disabled ?? 0,
+            limit_reached: dataTotalLinkPerStatus?.limit_reached ?? 0,
+          }}
           totalPages={Math.ceil(
             (data?.meta?.total ?? 1) / (data?.meta?.limit ?? 1)
           )}

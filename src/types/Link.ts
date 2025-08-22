@@ -1,5 +1,5 @@
-import { LinkStatus } from "@/constants/common";
 import { Meta } from "./ApiResponse";
+import { LinkStatus } from "@/constants/common";
 
 export interface LinkData {
   id: string;
@@ -39,10 +39,9 @@ export interface UpdateLinkBody {
   maxClicks?: number;
 }
 
-export interface GetTotalLinkPerStatusResponse {
-  status: LinkStatus;
-  count: number;
-}
+export type GetTotalLinkPerStatusResponse = {
+  [key in LinkStatus]: number;
+};
 
 export interface GetLinkStatisticOverviewResponse {
   totalLink: number;

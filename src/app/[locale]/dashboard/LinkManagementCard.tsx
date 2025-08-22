@@ -7,7 +7,6 @@ import { Link2 } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
 import { LINK_STATUS, LinkStatus } from "@/constants/common";
 import { TotalLinksPerStatus } from "./page";
-import { get } from "http";
 
 interface LinkManagementCardProps {
   links?: LinkData[];
@@ -18,7 +17,7 @@ interface LinkManagementCardProps {
   onDelete: (id: LinkData) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
-  totalLinksPerStatus?: TotalLinksPerStatus[];
+  totalLinksPerStatus?: TotalLinksPerStatus;
   page: number;
   totalPages: number;
   setPage: (value: number) => void;
@@ -39,38 +38,34 @@ export const LinkManagementCard = ({
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
 
-  const getCountByStatus = (status: LinkStatus) => {
-    return totalLinksPerStatus?.find((l) => l.status === status)?.count || 0;
-  };
-
   const tabConfig = [
     {
       value: "",
       labelKey: "allLinks",
-      count: getCountByStatus("all"),
+      count: totalLinksPerStatus?.all,
     },
     {
       value: LINK_STATUS.ACTIVE,
       labelKey: "activeLinks",
-      count: getCountByStatus(LINK_STATUS.ACTIVE),
+      count: totalLinksPerStatus?.active,
       status: LINK_STATUS.ACTIVE,
     },
     {
       value: LINK_STATUS.EXPIRED,
       labelKey: "expiredLinks",
-      count: getCountByStatus(LINK_STATUS.EXPIRED),
+      count: totalLinksPerStatus?.expired,
       status: LINK_STATUS.EXPIRED,
     },
     {
       value: LINK_STATUS.LIMIT_REACHED,
       labelKey: "limitReachedLinks",
-      count: getCountByStatus(LINK_STATUS.LIMIT_REACHED),
+      count: totalLinksPerStatus?.limitReached,
       status: LINK_STATUS.LIMIT_REACHED,
     },
     {
       value: LINK_STATUS.DISABLED,
       labelKey: "disabledLinks",
-      count: getCountByStatus(LINK_STATUS.DISABLED),
+      count: totalLinksPerStatus?.disabled,
       status: LINK_STATUS.DISABLED,
     },
   ];

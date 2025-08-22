@@ -212,7 +212,7 @@ export default function DashboardPage() {
         <StatsCards
           linkStatisticOverview={dataLinkStatisticOverview}
           dataTotalLinkPerStatus={{
-            all: data?.meta?.total ?? 0,
+            all: dataLinkList?.meta?.total ?? 0,
             active: dataTotalLinkPerStatus?.active ?? 0,
             expired: dataTotalLinkPerStatus?.expired ?? 0,
             disabled: dataTotalLinkPerStatus?.disabled ?? 0,
@@ -233,7 +233,7 @@ export default function DashboardPage() {
           page={page}
           setPage={setPage}
           totalLinksPerStatus={{
-            all: data?.meta?.total ?? 0,
+            all: dataLinkList?.meta?.total ?? 0,
             active: dataTotalLinkPerStatus?.active ?? 0,
             expired: dataTotalLinkPerStatus?.expired ?? 0,
             disabled: dataTotalLinkPerStatus?.disabled ?? 0,

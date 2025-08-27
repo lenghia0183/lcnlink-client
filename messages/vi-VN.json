@@ -194,6 +194,7 @@
     "loading": "Đang tải...",
     "error": "Lỗi",
     "success": "Thành công",
+    "cancel": "Hủy",
     "tryAgainLater": "Vui lòng thử lại sau",
     "redirecting": "Đang chuyển hướng..."
   },

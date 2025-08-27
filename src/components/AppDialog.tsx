@@ -22,7 +22,7 @@ type AppDialogProps = {
     label: string;
     onClick: () => void;
     variant?: ComponentProps<typeof Button>["variant"];
-    disabled: boolean;
+    disabled?: boolean;
   }[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;

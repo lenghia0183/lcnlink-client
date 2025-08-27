@@ -180,6 +180,7 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
+    "cancel": "Cancel",
     "tryAgainLater": "Please try again later",
     "redirecting": "Redirecting..."
   },

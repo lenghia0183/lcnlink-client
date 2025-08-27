@@ -1,20 +1,17 @@
-
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Shield, 
-  ShieldCheck, 
-  ShieldOff, 
-  Eye, 
-  EyeOff, 
+import {
+  User,
+  Mail,
+  Phone,
+  Shield,
+  ShieldCheck,
+  ShieldOff,
+  Eye,
+  EyeOff,
   Save,
-  Calendar,
-  QrCode
 } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
 import { FormProvider, useForm } from "react-hook-form";
@@ -22,21 +19,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { AppButton } from "@/components/AppButton";
 import { toast } from "@/components/AppToast";
-import { getProfileSchema, ProfileFormValues } from "./validation";
+import {
+  getProfileFormSchema,
+  getPasswordFormSchema,
+  getTwoFAFormSchema,
+} from "./validation";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
 import { USER_GENDER_ENUM } from "@/constants/common";
 import { AppTabs } from "@/components/AppTabs";
 import { AppDialog } from "@/components/AppDialog";
-import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
-
-type FormValues = ProfileFormValues;
+import Image from "@/components/Image";
+import { useUser } from "@/context/userProvider";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
   const tCommon = useTranslations("Common");
-  const schema = getProfileSchema(t);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
+  const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
   const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
@@ -45,23 +45,48 @@ export default function ProfilePage() {
   const [showDisable2FADialog, setShowDisable2FADialog] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
 
-  const methods = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const { userData } = useUser();
+
+  // Profile Form
+  const profileMethods = useForm({
+    resolver: zodResolver(getProfileFormSchema(t)),
     defaultValues: {
-      fullname: "John Doe",
-      email: "john@example.com",
-      phone: "+84987654321",
-      gender: USER_GENDER_ENUM.MALE.toString(),
-      dateOfBirth: new Date("1990-01-01"),
+      fullname: userData?.fullname,
+      email: userData?.email,
+      phone: userData?.phone,
+      gender: userData?.gender.toString(),
+      dateOfBirth: new Date(userData?.createdAt || 0),
+    },
+  });
+
+  // Password Form
+  const passwordMethods = useForm({
+    resolver: zodResolver(getPasswordFormSchema(t)),
+    defaultValues: {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
+    },
+  });
+
+  // 2FA Form
+  const twoFAMethods = useForm({
+    resolver: zodResolver(getTwoFAFormSchema(t)),
+    defaultValues: {
       twoFactorCode: "",
     },
   });
 
-  const onSubmitProfile = async (data: FormValues) => {
-    setIsSubmitting(true);
+  useEffect(() => {
+    profileMethods.setValue("fullname", userData?.fullname || "");
+    profileMethods.setValue("email", userData?.email || "");
+    profileMethods.setValue("phone", userData?.phone || "");
+    profileMethods.setValue("gender", userData?.gender.toString() || "");
+    profileMethods.setValue("dateOfBirth", new Date(userData?.createdAt || 0));
+  }, [userData, profileMethods]);
+
+  const onSubmitProfile = async (data) => {
+    setIsSubmittingProfile(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Profile update:", data);
@@ -70,32 +95,29 @@ export default function ProfilePage() {
       console.error("Profile update error:", error);
       toast.error(tCommon("error"), tCommon("tryAgainLater"));
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingProfile(false);
     }
   };
 
-  const onSubmitPassword = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const onSubmitPassword = async (data) => {
+    setIsSubmittingPassword(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Password change:", data);
       toast.success(tCommon("success"), t("passwordChanged"));
-      methods.setValue("currentPassword", "");
-      methods.setValue("newPassword", "");
-      methods.setValue("confirmPassword", "");
+      passwordMethods.reset();
     } catch (error) {
       console.error("Password change error:", error);
       toast.error(tCommon("error"), tCommon("tryAgainLater"));
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingPassword(false);
     }
   };
 
   const handleEnable2FA = async () => {
     try {
-      // Simulate API call to generate QR code
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setQrCodeUrl("https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/ShortLink:john@example.com?secret=JBSWY3DPEHPK3PXP&issuer=ShortLink");
+      setQrCodeUrl("");
       setShow2FADialog(true);
     } catch (error) {
       toast.error(tCommon("error"), t("failedToGenerate2FA"));
@@ -103,7 +125,7 @@ export default function ProfilePage() {
   };
 
   const handleConfirm2FA = async () => {
-    const code = methods.getValues("twoFactorCode");
+    const code = twoFAMethods.getValues("twoFactorCode");
     if (!code || code.length !== 6) {
       toast.error(tCommon("error"), t("invalidVerificationCode"));
       return;
@@ -113,7 +135,7 @@ export default function ProfilePage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIs2FAEnabled(true);
       setShow2FADialog(false);
-      methods.setValue("twoFactorCode", "");
+      twoFAMethods.setValue("twoFactorCode", "");
       toast.success(tCommon("success"), t("twoFactorEnabled"));
     } catch (error) {
       toast.error(tCommon("error"), t("failedToEnable2FA"));
@@ -138,9 +160,9 @@ export default function ProfilePage() {
         description={t("updatePersonalInfo")}
         padded
       >
-        <FormProvider {...methods}>
+        <FormProvider {...profileMethods}>
           <form
-            onSubmit={methods.handleSubmit(onSubmitProfile)}
+            onSubmit={profileMethods.handleSubmit(onSubmitProfile)}
             className="space-y-4"
             noValidate
           >
@@ -150,21 +172,18 @@ export default function ProfilePage() {
               placeholder={t("fullnamePlaceholder")}
               leftIcon={<User className="w-4 h-4" />}
             />
-
             <TextField
               name="email"
               label={t("email")}
               placeholder={t("emailPlaceholder")}
               leftIcon={<Mail className="w-4 h-4" />}
             />
-
             <TextField
               name="phone"
               label={t("phone")}
               placeholder={t("phonePlaceholder")}
               leftIcon={<Phone className="w-4 h-4" />}
             />
-
             <RadioGroupField
               name="gender"
               label={t("gender")}
@@ -183,20 +202,18 @@ export default function ProfilePage() {
                 },
               ]}
             />
-
             <DatePickerField
               name="dateOfBirth"
               label={t("dateOfBirth")}
               placeholder={t("selectDate")}
             />
-
             <AppButton
               type="submit"
               iconLeft={<Save className="h-4 w-4" />}
-              disabled={isSubmitting}
+              disabled={isSubmittingProfile}
               className="w-full"
             >
-              {isSubmitting ? tCommon("loading") : t("updateProfile")}
+              {isSubmittingProfile ? tCommon("loading") : t("updateProfile")}
             </AppButton>
           </form>
         </FormProvider>
@@ -206,15 +223,14 @@ export default function ProfilePage() {
 
   const securityTab = (
     <div className="space-y-6">
-      {/* Password Change */}
       <AppCard
         title={t("changePassword")}
         description={t("updatePassword")}
         padded
       >
-        <FormProvider {...methods}>
+        <FormProvider {...passwordMethods}>
           <form
-            onSubmit={methods.handleSubmit(onSubmitPassword)}
+            onSubmit={passwordMethods.handleSubmit(onSubmitPassword)}
             className="space-y-4"
             noValidate
           >
@@ -231,9 +247,10 @@ export default function ProfilePage() {
                   <Eye className="h-4 w-4" />
                 )
               }
-              rightIconOnClick={() => setIsShowCurrentPassword(!isShowCurrentPassword)}
+              rightIconOnClick={() =>
+                setIsShowCurrentPassword(!isShowCurrentPassword)
+              }
             />
-
             <TextField
               name="newPassword"
               label={t("newPassword")}
@@ -249,7 +266,6 @@ export default function ProfilePage() {
               }
               rightIconOnClick={() => setIsShowNewPassword(!isShowNewPassword)}
             />
-
             <TextField
               name="confirmPassword"
               label={t("confirmPassword")}
@@ -263,22 +279,22 @@ export default function ProfilePage() {
                   <Eye className="h-4 w-4" />
                 )
               }
-              rightIconOnClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+              rightIconOnClick={() =>
+                setIsShowConfirmPassword(!isShowConfirmPassword)
+              }
             />
-
             <AppButton
               type="submit"
               iconLeft={<Save className="h-4 w-4" />}
-              disabled={isSubmitting}
+              disabled={isSubmittingPassword}
               className="w-full"
             >
-              {isSubmitting ? tCommon("loading") : t("changePassword")}
+              {isSubmittingPassword ? tCommon("loading") : t("changePassword")}
             </AppButton>
           </form>
         </FormProvider>
       </AppCard>
 
-      {/* Two-Factor Authentication */}
       <AppCard
         title={t("twoFactorAuth")}
         description={t("twoFactorDescription")}
@@ -296,11 +312,12 @@ export default function ProfilePage() {
                 {is2FAEnabled ? t("twoFactorEnabled") : t("twoFactorDisabled")}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {is2FAEnabled ? t("twoFactorEnabledDesc") : t("twoFactorDisabledDesc")}
+                {is2FAEnabled
+                  ? t("twoFactorEnabledDesc")
+                  : t("twoFactorDisabledDesc")}
               </p>
             </div>
           </div>
-          
           {is2FAEnabled ? (
             <AppButton
               variant="destructive"
@@ -353,7 +370,6 @@ export default function ProfilePage() {
         />
       </div>
 
-      {/* Enable 2FA Dialog */}
       <AppDialog
         open={show2FADialog}
         onOpenChange={setShow2FADialog}
@@ -380,7 +396,13 @@ export default function ProfilePage() {
             </p>
             {qrCodeUrl && (
               <div className="flex justify-center mb-4">
-                <img src={qrCodeUrl} alt="QR Code" className="border rounded" />
+                <Image
+                  src={qrCodeUrl}
+                  alt="QR Code"
+                  className="border rounded"
+                  width={200}
+                  height={200}
+                />
               </div>
             )}
           </div>
@@ -389,7 +411,7 @@ export default function ProfilePage() {
             JBSWY3DPEHPK3PXP
           </div>
 
-          <FormProvider {...methods}>
+          <FormProvider {...twoFAMethods}>
             <TextField
               name="twoFactorCode"
               label={t("verificationCode")}
@@ -401,7 +423,6 @@ export default function ProfilePage() {
         </div>
       </AppDialog>
 
-      {/* Disable 2FA Dialog */}
       <AppDialog
         open={showDisable2FADialog}
         onOpenChange={setShowDisable2FADialog}

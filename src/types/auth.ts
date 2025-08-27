@@ -35,4 +35,9 @@ export interface ForgotPasswordBody {
   email: string;
 }
 
+export interface ResetPasswordBody {
+  newPassword: string;
+  token: string;
+}
+
 export type RegisterResponse = User;

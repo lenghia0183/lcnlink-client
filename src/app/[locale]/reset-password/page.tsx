@@ -11,6 +11,8 @@ import { AppButton } from "@/components/AppButton";
 import { toast } from "@/components/AppToast";
 import { getResetPasswordSchema, ResetPasswordFormValues } from "./validation";
 import { useSearchParams } from "next/navigation";
+import { useResetPassword } from "@/services/api/auth";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 type FormValues = ResetPasswordFormValues;
 
@@ -21,10 +23,12 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const { trigger: triggerResetPassword, isMutating: isResetPasswordMutating } =
+    useResetPassword();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -35,21 +39,27 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log("Reset password request:", { ...data, token });
-      setIsSuccess(true);
-      toast.success(tCommon("success"), t("resetPassword.successDescription"));
-    } catch (error) {
-      console.error("Reset password error:", error);
-      toast.error(tCommon("error"), tCommon("tryAgainLater"));
-    } finally {
-      setIsSubmitting(false);
-    }
+    triggerResetPassword(
+      {
+        token: token || "",
+        newPassword: data.password,
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            setIsSuccess(true);
+          } else {
+            setIsSuccess(false);
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+          setIsSuccess(false);
+        },
+      }
+    );
   };
 
   if (!token) {
@@ -136,7 +146,7 @@ export default function ResetPasswordPage() {
                   )
                 }
                 rightIconOnClick={() => setIsShowPassword(!isShowPassword)}
-                disabled={isSubmitting}
+                disabled={isResetPasswordMutating}
               />
 
               <TextField
@@ -155,15 +165,15 @@ export default function ResetPasswordPage() {
                 rightIconOnClick={() =>
                   setIsShowConfirmPassword(!isShowConfirmPassword)
                 }
-                disabled={isSubmitting}
+                disabled={isResetPasswordMutating}
               />
 
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                disabled={isSubmitting}
+                disabled={isResetPasswordMutating}
               >
-                {isSubmitting
+                {isResetPasswordMutating
                   ? tCommon("loading")
                   : t("resetPassword.resetPassword")}
               </AppButton>

@@ -13,42 +13,45 @@ import {
   getForgotPasswordSchema,
   ForgotPasswordFormValues,
 } from "./validation";
-
-type FormValues = ForgotPasswordFormValues;
+import { useForgotPassword } from "@/services/api/auth";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
   const schema = getForgotPasswordSchema(t);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [emailSent, setEmailSent] = useState(false);
 
-  const methods = useForm<FormValues>({
+  const {
+    trigger: triggerForgotPassword,
+    isMutating: isForgotPasswordMutating,
+  } = useForgotPassword();
+
+  const methods = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       email: "",
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log("Forgot password request:", data);
-      setEmailSent(true);
-      toast.success(
-        tCommon("success"),
-        t("forgotPassword.emailSentDescription")
-      );
-    } catch (error) {
-      console.error("Forgot password error:", error);
-      toast.error(tCommon("error"), tCommon("tryAgainLater"));
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = async (data: ForgotPasswordFormValues) => {
+    triggerForgotPassword(
+      { email: data.email },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            setEmailSent(true);
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
   if (emailSent) {
@@ -121,16 +124,16 @@ export default function ForgotPasswordPage() {
                 label={t("forgotPassword.email")}
                 placeholder={t("forgotPassword.emailPlaceholder")}
                 leftIcon={<Mail className="w-4 h-4" />}
-                disabled={isSubmitting}
+                disabled={isForgotPasswordMutating}
               />
 
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                disabled={isSubmitting}
+                disabled={isForgotPasswordMutating}
                 iconLeft={<Send className="h-4 w-4" />}
               >
-                {isSubmitting
+                {isForgotPasswordMutating
                   ? tCommon("loading")
                   : t("forgotPassword.sendEmail")}
               </AppButton>

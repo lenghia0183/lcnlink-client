@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { User } from "@/types/user";
 import { api, apiNoToken } from "@/services/axios";
 import {
+  ForgotPasswordBody,
   LoginBody,
   LoginResponse,
   RegisterBody,
@@ -35,6 +36,16 @@ export const useRegister = () => {
 
   const fetcher = async (key: string, { arg }: { arg: RegisterBody }) => {
     return apiNoToken.post<RegisterResponse, RegisterBody>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useForgotPassword = () => {
+  const url = "v1/auth/forgot-password";
+
+  const fetcher = async (key: string, { arg }: { arg: ForgotPasswordBody }) => {
+    return apiNoToken.post<RegisterResponse, ForgotPasswordBody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

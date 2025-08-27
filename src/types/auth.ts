@@ -31,4 +31,8 @@ export interface RegisterBody {
   dateOfBirth?: string;
 }
 
+export interface ForgotPasswordBody {
+  email: string;
+}
+
 export type RegisterResponse = User;

@@ -23,6 +23,7 @@ import {
   getProfileFormSchema,
   getPasswordFormSchema,
   getTwoFAFormSchema,
+  ProfileFormValues,
 } from "./validation";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
@@ -31,11 +32,13 @@ import { AppTabs } from "@/components/AppTabs";
 import { AppDialog } from "@/components/AppDialog";
 import Image from "@/components/Image";
 import { useUser } from "@/context/userProvider";
+import { useUpdateMe } from "@/services/api/auth";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
   const tCommon = useTranslations("Common");
-  const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
+
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
   const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
@@ -47,14 +50,17 @@ export default function ProfilePage() {
 
   const { userData } = useUser();
 
+  const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
+    useUpdateMe();
+
   // Profile Form
   const profileMethods = useForm({
     resolver: zodResolver(getProfileFormSchema(t)),
     defaultValues: {
-      fullname: userData?.fullname,
-      email: userData?.email,
-      phone: userData?.phone,
-      gender: userData?.gender.toString(),
+      fullname: userData?.fullname || "",
+      email: userData?.email || "",
+      phone: userData?.phone || "",
+      gender: userData?.gender.toString() || "",
       dateOfBirth: new Date(userData?.createdAt || 0),
     },
   });
@@ -85,18 +91,28 @@ export default function ProfilePage() {
     profileMethods.setValue("dateOfBirth", new Date(userData?.createdAt || 0));
   }, [userData, profileMethods]);
 
-  const onSubmitProfile = async (data) => {
-    setIsSubmittingProfile(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Profile update:", data);
-      toast.success(tCommon("success"), t("profileUpdated"));
-    } catch (error) {
-      console.error("Profile update error:", error);
-      toast.error(tCommon("error"), tCommon("tryAgainLater"));
-    } finally {
-      setIsSubmittingProfile(false);
-    }
+  const onSubmitProfile = async (formValue: ProfileFormValues) => {
+    triggerUpdateMe(
+      {
+        fullname: formValue.fullname,
+        email: formValue.email,
+        phone: formValue.phone,
+        gender: Number(formValue.gender),
+        dateOfBirth: formValue.dateOfBirth.toISOString().split("T")[0],
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
   const onSubmitPassword = async (data) => {
@@ -210,10 +226,10 @@ export default function ProfilePage() {
             <AppButton
               type="submit"
               iconLeft={<Save className="h-4 w-4" />}
-              disabled={isSubmittingProfile}
+              disabled={isUpdateMeMutating}
               className="w-full"
             >
-              {isSubmittingProfile ? tCommon("loading") : t("updateProfile")}
+              {isUpdateMeMutating ? tCommon("loading") : t("updateProfile")}
             </AppButton>
           </form>
         </FormProvider>

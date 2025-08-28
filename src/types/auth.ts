@@ -40,4 +40,12 @@ export interface ResetPasswordBody {
   token: string;
 }
 
+export interface UpdateMeBody {
+  fullname?: string;
+  email?: string;
+  phone?: string;
+  gender?: number;
+  dateOfBirth?: string;
+}
+
 export type RegisterResponse = User;

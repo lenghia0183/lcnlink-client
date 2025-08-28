@@ -8,6 +8,7 @@ import {
   RegisterBody,
   RegisterResponse,
   ResetPasswordBody,
+  UpdateMeBody,
 } from "@/types/auth";
 
 import useSWRMutation from "swr/mutation";
@@ -57,6 +58,16 @@ export const useResetPassword = () => {
 
   const fetcher = async (key: string, { arg }: { arg: ResetPasswordBody }) => {
     return apiNoToken.post<RegisterResponse, ResetPasswordBody>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useUpdateMe = () => {
+  const url = "v1/auth/me";
+
+  const fetcher = async (key: string, { arg }: { arg: UpdateMeBody }) => {
+    return api.put<RegisterResponse, UpdateMeBody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

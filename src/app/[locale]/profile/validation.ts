@@ -12,11 +12,7 @@ export const getProfileFormSchema = (t: (key: string) => string) =>
       .string()
       .min(1, t("phoneRequired"))
       .regex(/^[+]?[0-9\s-()]+$/, t("phoneInvalid")),
-    gender: z.enum([
-      USER_GENDER_ENUM.MALE.toString(),
-      USER_GENDER_ENUM.FEMALE.toString(),
-      USER_GENDER_ENUM.OTHER.toString(),
-    ]),
+    gender: z.string(t("register.genderInvalid")),
     dateOfBirth: z.date(t("dateOfBirthRequired")),
   });
 

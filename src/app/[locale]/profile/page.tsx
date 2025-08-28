@@ -25,6 +25,7 @@ import {
   getTwoFAFormSchema,
   ProfileFormValues,
   ChangePasswordFormValues,
+  TwoFAFormValues,
 } from "./validation";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
@@ -49,8 +50,6 @@ export default function ProfilePage() {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [show2FADialog, setShow2FADialog] = useState(false);
-  const [showDisable2FADialog, setShowDisable2FADialog] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   const { userData } = useUser();
 
@@ -147,43 +146,33 @@ export default function ProfilePage() {
     );
   };
 
-  const handleEnable2FA = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setQrCodeUrl("");
-      setShow2FADialog(true);
-    } catch (error) {
-      toast.error(tCommon("error"), t("failedToGenerate2FA"));
-    }
+  const onSubmitToggle2FA = async (formValue: TwoFAFormValues) => {
+    triggerToggle2FA(
+      { otp: formValue.twoFactorCode },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            const new2FAState = !is2FAEnabled;
+            setIs2FAEnabled(new2FAState);
+            setShow2FADialog(false);
+            twoFAMethods.reset();
+            toast.success(
+              tCommon("success"),
+              new2FAState ? t("twoFactorEnabled") : t("twoFactorDisabled")
+            );
+          } else {
+            toast.error(tCommon("error"), response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(tCommon("error"), response.message);
+        },
+      }
+    );
   };
 
-  const handleConfirm2FA = async () => {
-    const code = twoFAMethods.getValues("twoFactorCode");
-    if (!code || code.length !== 6) {
-      toast.error(tCommon("error"), t("invalidVerificationCode"));
-      return;
-    }
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIs2FAEnabled(true);
-      setShow2FADialog(false);
-      twoFAMethods.setValue("twoFactorCode", "");
-      toast.success(tCommon("success"), t("twoFactorEnabled"));
-    } catch (error) {
-      toast.error(tCommon("error"), t("failedToEnable2FA"));
-    }
-  };
-
-  const handleDisable2FA = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIs2FAEnabled(false);
-      setShowDisable2FADialog(false);
-      toast.success(tCommon("success"), t("twoFactorDisabled"));
-    } catch (error) {
-      toast.error(tCommon("error"), t("failedToDisable2FA"));
-    }
+  const handleToggle2FA = async () => {
+    setShow2FADialog(true);
   };
 
   const profileTab = (
@@ -353,22 +342,19 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
-          {is2FAEnabled ? (
-            <AppButton
-              variant="destructive"
-              onClick={() => setShowDisable2FADialog(true)}
-              iconLeft={<ShieldOff className="h-4 w-4" />}
-            >
-              {t("disable")}
-            </AppButton>
-          ) : (
-            <AppButton
-              onClick={handleEnable2FA}
-              iconLeft={<ShieldCheck className="h-4 w-4" />}
-            >
-              {t("enable")}
-            </AppButton>
-          )}
+          <AppButton
+            variant={is2FAEnabled ? "destructive" : "default"}
+            onClick={handleToggle2FA}
+            iconLeft={
+              is2FAEnabled ? (
+                <ShieldOff className="h-4 w-4" />
+              ) : (
+                <ShieldCheck className="h-4 w-4" />
+              )
+            }
+          >
+            {is2FAEnabled ? t("disable") : t("enable")}
+          </AppButton>
         </div>
       </AppCard>
     </div>
@@ -408,45 +394,58 @@ export default function ProfilePage() {
       <AppDialog
         open={show2FADialog}
         onOpenChange={setShow2FADialog}
-        title={t("setupTwoFactor")}
-        description={t("setupTwoFactorDesc")}
+        title={is2FAEnabled ? t("disableTwoFactor") : t("setupTwoFactor")}
+        description={
+          is2FAEnabled ? t("disableTwoFactorDesc") : t("setupTwoFactorDesc")
+        }
         footerActions={[
           {
             label: tCommon("cancel"),
-            onClick: () => setShow2FADialog(false),
+            onClick: () => {
+              setShow2FADialog(false);
+              twoFAMethods.reset();
+            },
             variant: "outline",
           },
           {
-            label: t("verify"),
-            onClick: handleConfirm2FA,
-            variant: "default",
+            label: is2FAEnabled ? t("disable") : t("verify"),
+            onClick: twoFAMethods.handleSubmit(onSubmitToggle2FA),
+            variant: is2FAEnabled ? "destructive" : "default",
+            disabled: isToggle2FAMutating,
           },
         ]}
       >
-        <div className="space-y-6">
-          <div className="text-center">
-            <h3 className="font-medium mb-2">{t("scanQRCode")}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              {t("scanQRCodeDesc")}
-            </p>
-            {qrCodeUrl && (
-              <div className="flex justify-center mb-4">
-                <Image
-                  src={qrCodeUrl}
-                  alt="QR Code"
-                  className="border rounded"
-                  width={200}
-                  height={200}
-                />
+        <FormProvider {...twoFAMethods}>
+          <form
+            onSubmit={twoFAMethods.handleSubmit(onSubmitToggle2FA)}
+            className="space-y-6"
+            noValidate
+          >
+            {!is2FAEnabled && (
+              <div className="text-center">
+                <h3 className="font-medium mb-2">{t("scanQRCode")}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  {t("scanQRCodeDesc")}
+                </p>
+                <div className="flex justify-center mb-4">
+                  <Image
+                    src={"121312131321"}
+                    alt="QR Code"
+                    className="border rounded"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-center text-sm">
+                  {userData?.twoFactorSecret}
+                </div>
               </div>
             )}
-          </div>
-
-          <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-center text-sm">
-            JBSWY3DPEHPK3PXP
-          </div>
-
-          <FormProvider {...twoFAMethods}>
+            {is2FAEnabled && (
+              <p className="text-center text-gray-600 dark:text-gray-400">
+                {t("disableTwoFactorWarning")}
+              </p>
+            )}
             <TextField
               name="twoFactorCode"
               label={t("verificationCode")}
@@ -454,31 +453,8 @@ export default function ProfilePage() {
               className="text-center"
               maxLength={6}
             />
-          </FormProvider>
-        </div>
-      </AppDialog>
-
-      <AppDialog
-        open={showDisable2FADialog}
-        onOpenChange={setShowDisable2FADialog}
-        title={t("disableTwoFactor")}
-        description={t("disableTwoFactorDesc")}
-        footerActions={[
-          {
-            label: tCommon("cancel"),
-            onClick: () => setShowDisable2FADialog(false),
-            variant: "outline",
-          },
-          {
-            label: t("disable"),
-            onClick: handleDisable2FA,
-            variant: "destructive",
-          },
-        ]}
-      >
-        <p className="text-center text-gray-600 dark:text-gray-400">
-          {t("disableTwoFactorWarning")}
-        </p>
+          </form>
+        </FormProvider>
       </AppDialog>
     </div>
   );

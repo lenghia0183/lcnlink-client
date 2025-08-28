@@ -24,6 +24,7 @@ import {
   getPasswordFormSchema,
   getTwoFAFormSchema,
   ProfileFormValues,
+  ChangePasswordFormValues,
 } from "./validation";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
@@ -32,14 +33,17 @@ import { AppTabs } from "@/components/AppTabs";
 import { AppDialog } from "@/components/AppDialog";
 import Image from "@/components/Image";
 import { useUser } from "@/context/userProvider";
-import { useUpdateMe } from "@/services/api/auth";
+import {
+  useChangePassword,
+  useToggle2FA,
+  useUpdateMe,
+} from "@/services/api/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
   const tCommon = useTranslations("Common");
 
-  const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
   const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
@@ -52,6 +56,14 @@ export default function ProfilePage() {
 
   const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
     useUpdateMe();
+
+  const {
+    trigger: triggerChangePassword,
+    isMutating: isChangePasswordMutating,
+  } = useChangePassword();
+
+  const { trigger: triggerToggle2FA, isMutating: isToggle2FAMutating } =
+    useToggle2FA();
 
   // Profile Form
   const profileMethods = useForm({
@@ -115,19 +127,24 @@ export default function ProfilePage() {
     );
   };
 
-  const onSubmitPassword = async (data) => {
-    setIsSubmittingPassword(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Password change:", data);
-      toast.success(tCommon("success"), t("passwordChanged"));
-      passwordMethods.reset();
-    } catch (error) {
-      console.error("Password change error:", error);
-      toast.error(tCommon("error"), tCommon("tryAgainLater"));
-    } finally {
-      setIsSubmittingPassword(false);
-    }
+  const onSubmitPassword = async (formValue: ChangePasswordFormValues) => {
+    triggerChangePassword(
+      {
+        newPassword: formValue?.newPassword || "",
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
   const handleEnable2FA = async () => {
@@ -302,10 +319,12 @@ export default function ProfilePage() {
             <AppButton
               type="submit"
               iconLeft={<Save className="h-4 w-4" />}
-              disabled={isSubmittingPassword}
+              disabled={isChangePasswordMutating}
               className="w-full"
             >
-              {isSubmittingPassword ? tCommon("loading") : t("changePassword")}
+              {isChangePasswordMutating
+                ? tCommon("loading")
+                : t("changePassword")}
             </AppButton>
           </form>
         </FormProvider>

@@ -39,7 +39,7 @@ export const getTwoFAFormSchema = (t: (key: string) => string) =>
 export type ProfileFormValues = z.infer<
   ReturnType<typeof getProfileFormSchema>
 >;
-export type PasswordFormValues = z.infer<
+export type ChangePasswordFormValues = z.infer<
   ReturnType<typeof getPasswordFormSchema>
 >;
 export type TwoFAFormValues = z.infer<ReturnType<typeof getTwoFAFormSchema>>;

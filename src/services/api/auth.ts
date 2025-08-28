@@ -2,12 +2,14 @@ import useSWR from "swr";
 import { User } from "@/types/user";
 import { api, apiNoToken } from "@/services/axios";
 import {
+  ChangePasswordBody,
   ForgotPasswordBody,
   LoginBody,
   LoginResponse,
   RegisterBody,
   RegisterResponse,
   ResetPasswordBody,
+  Toggle2FABody,
   UpdateMeBody,
 } from "@/types/auth";
 
@@ -68,6 +70,26 @@ export const useUpdateMe = () => {
 
   const fetcher = async (key: string, { arg }: { arg: UpdateMeBody }) => {
     return api.put<RegisterResponse, UpdateMeBody>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useChangePassword = () => {
+  const url = "v1/auth/change-password";
+
+  const fetcher = async (key: string, { arg }: { arg: ChangePasswordBody }) => {
+    return api.put<RegisterResponse, ChangePasswordBody>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useToggle2FA = () => {
+  const url = "v1/auth/toggle-2fa";
+
+  const fetcher = async (key: string, { arg }: { arg: Toggle2FABody }) => {
+    return api.put<RegisterResponse, Toggle2FABody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

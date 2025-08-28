@@ -48,4 +48,12 @@ export interface UpdateMeBody {
   dateOfBirth?: string;
 }
 
+export interface ChangePasswordBody {
+  newPassword: string;
+}
+
+export interface Toggle2FABody {
+  otp: string;
+}
+
 export type RegisterResponse = User;

@@ -97,11 +97,24 @@
     "auth": {
       "emailInvalid": "Please enter a valid email address",
       "passwordMin": "Password must be at least 6 characters long"
+    },
+    "verify2FA": {
+      "title": "Two-Factor Authentication",
+      "subtitle": "Verify your identity",
+      "enterCode": "Enter Verification Code",
+      "description": "Enter the 6-digit code from your authenticator app",
+      "instructionText": "Open your authenticator app and enter the 6-digit code",
+      "code": "Verification Code",
+      "codePlaceholder": "000000",
+      "codeRequired": "Verification code is required",
+      "codeLength": "Code must be exactly 6 digits",
+      "codeFormat": "Code must contain only numbers",
+      "verify": "Verify Code",
+      "resendCode": "Didn't receive the code?",
+      "backToLogin": "Back to Login",
+      "successMessage": "Verification successful",
+      "invalidCode": "Invalid verification code"
     }
-  },
-  "auth": {
-    "emailInvalid": "Please enter a valid email address",
-    "passwordMin": "Password must be at least 6 characters long"
   },
   "About": {
     "hero": {

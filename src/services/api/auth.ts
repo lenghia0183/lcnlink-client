@@ -4,6 +4,7 @@ import { api, apiNoToken } from "@/services/axios";
 import {
   ChangePasswordBody,
   ForgotPasswordBody,
+  Login2FABody,
   LoginBody,
   LoginResponse,
   RegisterBody,
@@ -30,6 +31,16 @@ export const useLogin = () => {
 
   const fetcher = async (key: string, { arg }: { arg: LoginBody }) => {
     return apiNoToken.post<LoginResponse, LoginBody>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useLogin2FA = () => {
+  const url = "v1/auth/login-2fa";
+
+  const fetcher = async (key: string, { arg }: { arg: Login2FABody }) => {
+    return apiNoToken.post<LoginResponse, Login2FABody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

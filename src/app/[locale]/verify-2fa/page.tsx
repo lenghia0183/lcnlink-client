@@ -1,7 +1,4 @@
-
 "use client";
-
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Shield, ArrowLeft, Smartphone } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
@@ -13,6 +10,12 @@ import { toast } from "@/components/AppToast";
 import { getVerify2FASchema, Verify2FAFormValues } from "./validation";
 import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
+import { useLogin2FA } from "@/services/api/auth";
+import validateResponseCode from "@/utils/validateResponseCode";
+import { useSearchParams } from "next/navigation";
+import { getCookieMaxAge } from "@/utils/cookies.";
+import { nextApi } from "@/services/axios";
+import { useUser } from "@/context/userProvider";
 
 type FormValues = Verify2FAFormValues;
 
@@ -21,7 +24,7 @@ export default function Verify2FAPage() {
   const tCommon = useTranslations("Common");
   const schema = getVerify2FASchema(t);
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { loginUser } = useUser();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -30,22 +33,66 @@ export default function Verify2FAPage() {
     },
   });
 
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  const { trigger: triggerLogin2FA, isMutating: isLogin2FAMutating } =
+    useLogin2FA();
+
   const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+    triggerLogin2FA(
+      {
+        otp: data?.code || "",
+        otpToken: token || "",
+      },
+      {
+        onSuccess: async (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            console.log("response", response);
+            // always set access/refresh tokens
+            const cookiesToSet: unknown[] = [
+              {
+                name: "accessToken",
+                value: response.data?.accessToken ?? "",
+                options: {
+                  httpOnly: false,
+                  path: "/",
+                  maxAge: getCookieMaxAge(
+                    process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
+                  ),
+                },
+              },
+              {
+                name: "refreshToken",
+                value: response.data?.refreshToken ?? "",
+                options: {
+                  httpOnly: false,
+                  path: "/",
+                  maxAge: getCookieMaxAge(
+                    process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
+                  ),
+                },
+              },
+            ];
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+            const res = await nextApi.post("/auth/set-cookie", {
+              cookies: cookiesToSet,
+            });
 
-      console.log("2FA verification:", data);
-      toast.success(tCommon("success"), t("verify2FA.successMessage"));
-      router.push(PATH.HOME);
-    } catch (error) {
-      console.error("2FA verification error:", error);
-      toast.error(tCommon("error"), t("verify2FA.invalidCode"));
-    } finally {
-      setIsSubmitting(false);
-    }
+            if (validateResponseCode(res.statusCode)) {
+              toast.success(response.message);
+              loginUser(response.data);
+              router.push(PATH.HOME);
+            }
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
   return (
@@ -101,10 +148,12 @@ export default function Verify2FAPage() {
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
-                disabled={isSubmitting}
+                disabled={isLogin2FAMutating}
                 iconLeft={<Shield className="h-4 w-4" />}
               >
-                {isSubmitting ? tCommon("loading") : t("verify2FA.verify")}
+                {isLogin2FAMutating
+                  ? tCommon("loading")
+                  : t("verify2FA.verify")}
               </AppButton>
             </form>
           </FormProvider>

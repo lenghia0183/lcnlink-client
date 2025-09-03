@@ -20,6 +20,8 @@ export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   userData: User;
+  requires2FA: boolean;
+  otpToken: string;
 }
 
 export interface RegisterBody {
@@ -54,6 +56,11 @@ export interface ChangePasswordBody {
 
 export interface Toggle2FABody {
   otp: string;
+}
+
+export interface Login2FABody {
+  otp: string;
+  otpToken: string;
 }
 
 export type RegisterResponse = User;

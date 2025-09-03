@@ -429,7 +429,6 @@ export default function ProfilePage() {
                 </p>
                 <div className="flex justify-center mb-4">
                   <Image
-                    src={"121312131321"}
                     alt="QR Code"
                     className="border rounded"
                     width={200}

@@ -55,6 +55,7 @@ export default function LoginPage() {
       {
         onSuccess: async (response) => {
           if (validateResponseCode(response.statusCode)) {
+            console.log("response", response);
             // always set access/refresh tokens
             const cookiesToSet: unknown[] = [
               {
@@ -133,7 +134,89 @@ export default function LoginPage() {
               router.push(PATH.HOME);
             }
           } else {
-            toast.error(response.message);
+            console.log("response", response);
+            if (response?.data?.requires2FA) {
+              // always set access/refresh tokens
+              const cookiesToSet: unknown[] = [
+                {
+                  name: "accessToken",
+                  value: response.data?.accessToken ?? "",
+                  options: {
+                    httpOnly: false,
+                    path: "/",
+                    maxAge: getCookieMaxAge(
+                      process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
+                    ),
+                  },
+                },
+                {
+                  name: "refreshToken",
+                  value: response.data?.refreshToken ?? "",
+                  options: {
+                    httpOnly: false,
+                    path: "/",
+                    maxAge: getCookieMaxAge(
+                      process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
+                    ),
+                  },
+                },
+              ];
+
+              // handle remember me
+              const remember = data.remember[0] == "true";
+              if (remember) {
+                // save email/password and remember flag in cookies (client-side)
+                cookiesToSet.push(
+                  {
+                    name: "remember",
+                    value: "true",
+                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                  },
+                  {
+                    name: "savedEmail",
+                    value: data.email,
+                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                  },
+                  {
+                    name: "savedPassword",
+                    value: data.password,
+                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
+                  }
+                );
+              } else {
+                // clear saved credentials
+                cookiesToSet.push(
+                  {
+                    name: "remember",
+                    value: "",
+                    options: { maxAge: 0, path: "/" },
+                  },
+                  {
+                    name: "savedEmail",
+                    value: "",
+                    options: { maxAge: 0, path: "/" },
+                  },
+                  {
+                    name: "savedPassword",
+                    value: "",
+                    options: { maxAge: 0, path: "/" },
+                  }
+                );
+              }
+
+              const res = await nextApi.post("/auth/set-cookie", {
+                cookies: cookiesToSet,
+              });
+
+              if (validateResponseCode(res.statusCode)) {
+                router.push(
+                  `${PATH.VERIFY_2FA}?token=${response.data.otpToken}`
+                );
+                toast.info(response.message);
+              }
+            } else {
+              toast.error(response.message);
+            }
           }
         },
         onError: (response) => {

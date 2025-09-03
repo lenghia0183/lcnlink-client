@@ -3,7 +3,6 @@
     "title": "Welcome to Next.js!",
     "description": "Get started by editing app/page.tsx"
   },
-
   "Auth": {
     "login": {
       "title": "Welcome to ShortLink",
@@ -93,7 +92,6 @@
       "passwordMax": "Password must be at most 100 characters long",
       "confirmPasswordMin": "Confirm password must be at least 6 characters long",
       "confirmPasswordMax": "Confirm password must be at most 100 characters long",
-
       "passwordsNotMatch": "Passwords do not match"
     },
     "auth": {
@@ -101,12 +99,10 @@
       "passwordMin": "Password must be at least 6 characters long"
     }
   },
-
   "auth": {
     "emailInvalid": "Please enter a valid email address",
     "passwordMin": "Password must be at least 6 characters long"
   },
-
   "About": {
     "hero": {
       "title": "About Us",
@@ -505,16 +501,24 @@
     "updatePassword": "Update your password for security",
     "currentPassword": "Current Password",
     "currentPasswordPlaceholder": "Enter your current password",
+    "currentPasswordRequired": "Current password is required",
+    "currentPasswordMin": "Current password must be at least 6 characters long",
     "newPassword": "New Password",
     "newPasswordPlaceholder": "Enter your new password",
+    "newPasswordRequired": "New password is required",
+    "newPasswordMin": "New password must be at least 6 characters long",
+    "newPasswordMax": "New password must be at most 100 characters long",
     "confirmPassword": "Confirm Password",
     "confirmPasswordPlaceholder": "Confirm your new password",
+    "confirmPasswordRequired": "Confirm password is required",
+    "confirmPasswordMin": "Confirm password must be at least 6 characters long",
+    "confirmPasswordMax": "Confirm password must be at most 100 characters long",
+    "passwordsNotMatch": "Passwords do not match",
     "passwordChanged": "Password changed successfully",
     "passwordValidationError": "Password validation failed",
+    "passwordMinLength": "Password must be at least 6 characters long",
     "twoFactorAuth": "Two-Factor Authentication",
     "twoFactorDescription": "Add an extra layer of security to your account",
-    "twoFactorEnabled": "Two-Factor Authentication Enabled",
-    "twoFactorDisabled": "Two-Factor Authentication Disabled",
     "twoFactorEnabledDesc": "Your account is protected with 2FA",
     "twoFactorDisabledDesc": "Enable 2FA for better security",
     "enable": "Enable",
@@ -534,6 +538,10 @@
     "failedToEnable2FA": "Failed to enable 2FA",
     "twoFactorEnabled": "Two-factor authentication enabled successfully",
     "failedToDisable2FA": "Failed to disable 2FA",
-    "twoFactorDisabled": "Two-factor authentication disabled successfully"
+    "twoFactorDisabled": "Two-factor authentication disabled successfully",
+    "twoFactorCodeInvalid": "Invalid two-factor authentication code",
+    "register": {
+      "genderInvalid": "Please select a valid gender"
+    }
   }
 }

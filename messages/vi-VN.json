@@ -3,7 +3,6 @@
     "title": "Chào mừng đến với Next.js!",
     "description": "Bắt đầu bằng cách chỉnh sửa app/page.tsx"
   },
-
   "Auth": {
     "login": {
       "title": "Chào mừng đến với ShortLink",
@@ -12,7 +11,7 @@
       "description": "Nhập thông tin đăng nhập để truy cập tài khoản của bạn",
       "email": "Email hoặc URL",
       "emailPlaceholder": "Nhập email hoặc URL của bạn",
-      "password": " Mật khẩu",
+      "password": "Mật khẩu",
       "passwordPlaceholder": "Nhập mật khẩu của bạn",
       "rememberMe": "Ghi nhớ tôi",
       "forgotPassword": "Quên mật khẩu?",
@@ -81,7 +80,7 @@
       "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
       "passwordMax": "Mật khẩu không được vượt quá 100 ký tự",
       "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
-      "confirmPasswordMax": "Xác nhận mật khẩu không được vượt quá 100 ký tự",
+      "confirmPasswordMax": "Xác nhận mật khẩu không được quá 100 ký tự",
       "phone": "Số điện thoại",
       "phonePlaceholder": "+84912345678",
       "phoneInvalid": "Vui lòng nhập số điện thoại hợp lệ (ví dụ +84912345678)",
@@ -98,10 +97,6 @@
       "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
       "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
     }
-  },
-  "auth": {
-    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
-    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
   },
   "verify2FA": {
     "title": "Xác Thực Hai Bước",
@@ -120,7 +115,6 @@
     "successMessage": "Xác minh thành công",
     "invalidCode": "Mã xác minh không hợp lệ"
   },
-
   "About": {
     "hero": {
       "title": "Về chúng tôi",
@@ -251,16 +245,25 @@
     "updatePassword": "Cập nhật mật khẩu của bạn để bảo mật",
     "currentPassword": "Mật Khẩu Hiện Tại",
     "currentPasswordPlaceholder": "Nhập mật khẩu hiện tại",
+    "currentPasswordRequired": "Mật khẩu hiện tại là bắt buộc",
+    "currentPasswordMin": "Mật khẩu hiện tại phải có ít nhất 6 ký tự",
     "newPassword": "Mật Khẩu Mới",
     "newPasswordPlaceholder": "Nhập mật khẩu mới",
+    "newPasswordRequired": "Mật khẩu mới là bắt buộc",
+    "newPasswordMin": "Mật khẩu mới phải có ít nhất 6 ký tự",
+    "newPasswordMax": "Mật khẩu mới không được vượt quá 100 ký tự",
     "confirmPassword": "Xác Nhận Mật Khẩu",
     "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
+    "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
+    "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
+    "confirmPasswordMax": "Xác nhận mật khẩu không được quá 100 ký tự",
+    "passwordsNotMatch": "Mật khẩu không khớp",
     "passwordChanged": "Đổi mật khẩu thành công",
     "passwordValidationError": "Xác thực mật khẩu thất bại",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
     "twoFactorAuth": "Xác Thực Hai Bước",
     "twoFactorDescription": "Thêm một lớp bảo mật bổ sung cho tài khoản của bạn",
-    "twoFactorEnabled": "Xác Thực Hai Bước Đã Bật",
-    "twoFactorDisabled": "Xác Thực Hai Bước Đã Tắt",
+
     "twoFactorEnabledDesc": "Tài khoản của bạn được bảo vệ bằng 2FA",
     "twoFactorDisabledDesc": "Bật 2FA để bảo mật tốt hơn",
     "enable": "Bật",
@@ -280,7 +283,11 @@
     "failedToEnable2FA": "Không thể bật 2FA",
     "twoFactorEnabled": "Bật xác thực hai bước thành công",
     "failedToDisable2FA": "Không thể tắt 2FA",
-    "twoFactorDisabled": "Tắt xác thực hai bước thành công"
+    "twoFactorDisabled": "Tắt xác thực hai bước thành công",
+    "twoFactorCodeInvalid": "Mã xác thực hai bước không hợp lệ",
+    "register": {
+      "genderInvalid": "Vui lòng chọn giới tính"
+    }
   },
   "UrlShortener": {
     "title": "Công cụ rút gọn URL thông minh",
@@ -361,7 +368,7 @@
     "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
     "passwordMax": "Mật khẩu không được vượt quá 100 ký tự",
     "confirmPasswordMin": "Xác nhận mật khẩu phải có ít nhất 6 ký tự",
-    "confirmPasswordMax": "Xác nhận mật khẩu không được vượt quá 100 ký tự",
+    "confirmPasswordMax": "Xác nhận mật khẩu không được quá 100 ký tự",
     "agreeTerms": "Bạn phải đồng ý với điều khoản và điều kiện",
     "passwordsNotMatch": "Mật khẩu không khớp"
   },

@@ -73,7 +73,7 @@ export default function ProfilePage() {
       fullname: userData?.fullname || "",
       email: userData?.email || "",
       phone: userData?.phone || "",
-      gender: userData?.gender.toString() || "",
+      gender: userData?.gender || USER_GENDER_ENUM.MALE,
       dateOfBirth: new Date(userData?.createdAt || 0),
     },
   });
@@ -100,8 +100,14 @@ export default function ProfilePage() {
     profileMethods.setValue("fullname", userData?.fullname || "");
     profileMethods.setValue("email", userData?.email || "");
     profileMethods.setValue("phone", userData?.phone || "");
-    profileMethods.setValue("gender", userData?.gender.toString() || "");
-    profileMethods.setValue("dateOfBirth", new Date(userData?.createdAt || 0));
+    profileMethods.setValue(
+      "gender",
+      userData?.gender || USER_GENDER_ENUM.MALE
+    );
+    profileMethods.setValue(
+      "dateOfBirth",
+      new Date(userData?.dateOfBirth || 0)
+    );
   }, [userData, profileMethods]);
 
   const onSubmitProfile = async (formValue: ProfileFormValues) => {
@@ -110,8 +116,8 @@ export default function ProfilePage() {
         fullname: formValue.fullname,
         email: formValue.email,
         phone: formValue.phone,
-        gender: Number(formValue.gender),
-        dateOfBirth: formValue.dateOfBirth.toISOString().split("T")[0],
+        gender: formValue.gender,
+        dateOfBirth: formValue.dateOfBirth.toISOString(),
       },
       {
         onSuccess: (response) => {
@@ -212,15 +218,15 @@ export default function ProfilePage() {
               options={[
                 {
                   label: t("male"),
-                  value: USER_GENDER_ENUM.MALE.toString(),
+                  value: USER_GENDER_ENUM.MALE,
                 },
                 {
                   label: t("female"),
-                  value: USER_GENDER_ENUM.FEMALE.toString(),
+                  value: USER_GENDER_ENUM.FEMALE,
                 },
                 {
                   label: t("other"),
-                  value: USER_GENDER_ENUM.OTHER.toString(),
+                  value: USER_GENDER_ENUM.OTHER,
                 },
               ]}
             />
@@ -228,6 +234,8 @@ export default function ProfilePage() {
               name="dateOfBirth"
               label={t("dateOfBirth")}
               placeholder={t("selectDate")}
+              hideNavigation
+              captionLayout="dropdown"
             />
             <AppButton
               type="submit"

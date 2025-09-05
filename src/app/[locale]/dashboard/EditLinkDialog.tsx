@@ -12,6 +12,7 @@ import { AppDialog } from "@/components/AppDialog";
 import { LinkData } from "@/types/Link";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { useEffect } from "react";
+import { addDays } from "date-fns";
 
 const editSchema = z.object({
   description: z.string().optional(),
@@ -53,7 +54,6 @@ export const EditLinkDialog = ({
   });
 
   useEffect(() => {
-    console.log("selectedLink", selectedLink);
     methods.reset({
       description: selectedLink?.description,
       alias: selectedLink?.alias,
@@ -124,7 +124,7 @@ export const EditLinkDialog = ({
             name="expirationDate"
             label={t("expirationDate")}
             placeholder={t("expirationDate")}
-            disabled={{ before: new Date() }}
+            disabled={{ before: addDays(new Date(), 1) }}
           />
         </form>
       </FormProvider>

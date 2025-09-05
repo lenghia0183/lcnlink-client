@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { USER_GENDER_ENUM } from "@/constants/common";
 
 export const getProfileFormSchema = (t: (key: string) => string) =>
   z.object({
@@ -12,7 +11,7 @@ export const getProfileFormSchema = (t: (key: string) => string) =>
       .string()
       .min(1, t("phoneRequired"))
       .regex(/^[+]?[0-9\s-()]+$/, t("phoneInvalid")),
-    gender: z.string(t("register.genderInvalid")),
+    gender: z.number(t("register.genderInvalid")),
     dateOfBirth: z.date(t("dateOfBirthRequired")),
   });
 

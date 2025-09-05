@@ -53,7 +53,7 @@ export default function RegisterPage() {
       password: "",
       confirmPassword: "",
       phone: "",
-      gender: USER_GENDER_ENUM.MALE.toString(),
+      gender: USER_GENDER_ENUM.MALE,
       dateOfBirth: undefined,
       agreeTerms: [],
     },
@@ -67,10 +67,7 @@ export default function RegisterPage() {
         password: data.password,
         phone: data.phone,
         gender: Number(data.gender),
-        dateOfBirth:
-          data.dateOfBirth instanceof Date
-            ? data.dateOfBirth.toISOString().split("T")[0]
-            : data.dateOfBirth,
+        dateOfBirth: data.dateOfBirth.toISOString(),
       },
       {
         onSuccess: async (response) => {
@@ -174,15 +171,15 @@ export default function RegisterPage() {
                 label={t("register.gender")}
                 options={[
                   {
-                    value: USER_GENDER_ENUM.MALE.toString(),
+                    value: USER_GENDER_ENUM.MALE,
                     label: t("register.genderMale"),
                   },
                   {
-                    value: USER_GENDER_ENUM.FEMALE.toString(),
+                    value: USER_GENDER_ENUM.FEMALE,
                     label: t("register.genderFemale"),
                   },
                   {
-                    value: USER_GENDER_ENUM.OTHER.toString(),
+                    value: USER_GENDER_ENUM.OTHER,
                     label: t("register.genderOther"),
                   },
                 ]}

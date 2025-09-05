@@ -11,6 +11,7 @@ export interface User {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
+  dateOfBirth: string;
   fullname: string;
   email: string;
   role: USER_ROLE_ENUM;

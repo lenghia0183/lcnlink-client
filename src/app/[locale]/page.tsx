@@ -31,6 +31,8 @@ import ShortLinkCard from "@/components/ShortLinkCard";
 import { useCreateLink } from "@/services/api/links";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { toast } from "@/components/AppToast";
+import { useEffect } from "react";
+import { addDays } from "date-fns";
 
 type FormValues = UrlFormValues;
 export default function HomePage() {
@@ -72,11 +74,22 @@ export default function HomePage() {
       expirationDate: null,
       password: "",
       description: "",
-      maxClicks: undefined,
+      maxClicks: "",
     },
   });
 
+  const allValues = methods.watch();
+
+  useEffect(() => {
+    console.log("Form values changed:", allValues);
+    console.log(
+      "allValues.expirationDate",
+      allValues.expirationDate?.toISOString()
+    );
+  }, [allValues]);
+
   const onSubmit = async (formValue: FormValues) => {
+    console.log("formValue", formValue);
     createLinkTrigger(
       {
         body: {
@@ -159,6 +172,7 @@ export default function HomePage() {
                               name="expirationDate"
                               label={t("expirationDate")}
                               placeholder="Pick a date"
+                              disabled={{ before: addDays(new Date(), 1) }}
                             />
                           </div>
 

@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 interface Option {
   label: React.ReactNode;
-  value: string;
+  value: string | number | boolean;
 }
 
 interface RadioGroupFieldProps {
@@ -65,7 +65,7 @@ export function RadioGroupField({
             >
               {options.map((opt) => (
                 <FormItem
-                  key={opt.value}
+                  key={opt.value.toString()}
                   className={cn("flex items-center gap-3", itemClassName)}
                 >
                   <FormControl>

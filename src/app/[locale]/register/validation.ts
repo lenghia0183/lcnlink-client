@@ -24,7 +24,7 @@ export const getRegisterSchema = (t: (key: string) => string) =>
         .min(9, t("register.phoneInvalid"))
         .max(16, t("register.phoneInvalid"))
         .regex(/^\+?\d{9,15}$/, t("register.phoneInvalid")),
-      gender: z.string(t("register.genderInvalid")),
+      gender: z.number(t("register.genderInvalid")),
       dateOfBirth: z.date(),
       agreeTerms: z.array(z.string()).nonempty({
         message: t("register.agreeTermsInvalid"),

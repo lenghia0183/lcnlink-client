@@ -12,6 +12,7 @@ import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 import { AppDialog } from "@/components/AppDialog";
 
 import { useRef } from "react";
+import { addDays } from "date-fns";
 
 type FormValues = CreateLinkFormValues;
 
@@ -115,6 +116,7 @@ export const CreateLinkDialog = ({
             name="expirationDate"
             label={t("expirationDate")}
             placeholder={t("expirationDate")}
+            disabled={{ before: addDays(new Date(), 1) }}
           />
         </form>
       </FormProvider>

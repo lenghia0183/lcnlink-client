@@ -6,20 +6,11 @@ export const getUrlSchema = (t: (key: string) => string) =>
       .string()
       .url(t("url.originInvalid"))
       .min(1, t("url.originRequired")),
-    alias: z
-      .string()
-      .optional()
-      .refine(
-        (val) => !val || /^[a-zA-Z0-9-]{3,20}$/.test(val),
-        t("url.aliasInvalid")
-      ),
+    alias: z.string().optional(),
     expirationDate: z.date().nullable().optional(),
-    password: z
-      .string()
-      .optional()
-      .refine((val) => !val || val.length >= 6, t("url.passwordMin")),
+    password: z.string().optional(),
     description: z.string().optional(),
-    maxClicks: z.number().nullable().optional(),
+    maxClicks: z.string().nullable().optional(),
   });
 
 export type UrlFormValues = z.infer<ReturnType<typeof getUrlSchema>>;

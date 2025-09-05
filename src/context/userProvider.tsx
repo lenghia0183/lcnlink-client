@@ -21,6 +21,7 @@ interface UserContextType {
   userData: User | null;
   isLoading: boolean;
   isLoggedIn: boolean;
+  refreshGetMe: () => void;
   loginUser: (loginData: LoginResponse | undefined) => void;
   logoutUser: () => void;
 }
@@ -30,6 +31,7 @@ const UserContext = createContext<UserContextType>({
   isLoading: true,
   isLoggedIn: false,
   loginUser: () => {},
+  refreshGetMe: () => {},
   logoutUser: () => {},
 });
 
@@ -113,6 +115,7 @@ export function UserProvider({
       value={{
         userData,
         isLoggedIn,
+        refreshGetMe,
         isLoading: initialUser
           ? isValidatingGetMe
           : isLoadingGetMe || isValidatingGetMe,

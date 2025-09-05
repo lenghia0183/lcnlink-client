@@ -17,7 +17,8 @@ export interface User {
   gender: USER_GENDER_ENUM;
   phone: string;
   avatar: string | null;
-  twoFactorSecret: string;
+  twoFactorSecret?: string;
+  twoFactorQr: string;
   isEnable2FA: IS_2FA_ENUM;
   isActive: IS_2FA_ENUM;
   isLocked: USER_LOCKED_ENUM;

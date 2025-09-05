@@ -48,10 +48,12 @@ export default function ProfilePage() {
   const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
-  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+
   const [show2FADialog, setShow2FADialog] = useState(false);
 
-  const { userData } = useUser();
+  const { userData, refreshGetMe } = useUser();
+
+  console.log("userData", userData);
 
   const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
     useUpdateMe();
@@ -114,6 +116,7 @@ export default function ProfilePage() {
       {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
+            refreshGetMe();
             toast.success(response.message);
           } else {
             toast.error(response.message);
@@ -134,6 +137,7 @@ export default function ProfilePage() {
       {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
+            refreshGetMe();
             toast.success(response.message);
           } else {
             toast.error(response.message);
@@ -152,14 +156,10 @@ export default function ProfilePage() {
       {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
-            const new2FAState = !is2FAEnabled;
-            setIs2FAEnabled(new2FAState);
             setShow2FADialog(false);
             twoFAMethods.reset();
-            toast.success(
-              tCommon("success"),
-              new2FAState ? t("twoFactorEnabled") : t("twoFactorDisabled")
-            );
+            refreshGetMe();
+            toast.success(tCommon("success"), response.message);
           } else {
             toast.error(tCommon("error"), response.message);
           }
@@ -326,34 +326,36 @@ export default function ProfilePage() {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            {is2FAEnabled ? (
+            {userData?.isEnable2FA ? (
               <ShieldCheck className="h-8 w-8 text-green-500" />
             ) : (
               <ShieldOff className="h-8 w-8 text-gray-400" />
             )}
             <div>
               <h3 className="font-medium">
-                {is2FAEnabled ? t("twoFactorEnabled") : t("twoFactorDisabled")}
+                {userData?.isEnable2FA
+                  ? t("twoFactorEnabled")
+                  : t("twoFactorDisabled")}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {is2FAEnabled
+                {userData?.isEnable2FA
                   ? t("twoFactorEnabledDesc")
                   : t("twoFactorDisabledDesc")}
               </p>
             </div>
           </div>
           <AppButton
-            variant={is2FAEnabled ? "destructive" : "default"}
+            variant={userData?.isEnable2FA ? "destructive" : "default"}
             onClick={handleToggle2FA}
             iconLeft={
-              is2FAEnabled ? (
+              userData?.isEnable2FA ? (
                 <ShieldOff className="h-4 w-4" />
               ) : (
                 <ShieldCheck className="h-4 w-4" />
               )
             }
           >
-            {is2FAEnabled ? t("disable") : t("enable")}
+            {userData?.isEnable2FA ? t("disable") : t("enable")}
           </AppButton>
         </div>
       </AppCard>
@@ -394,9 +396,13 @@ export default function ProfilePage() {
       <AppDialog
         open={show2FADialog}
         onOpenChange={setShow2FADialog}
-        title={is2FAEnabled ? t("disableTwoFactor") : t("setupTwoFactor")}
+        title={
+          userData?.isEnable2FA ? t("disableTwoFactor") : t("setupTwoFactor")
+        }
         description={
-          is2FAEnabled ? t("disableTwoFactorDesc") : t("setupTwoFactorDesc")
+          userData?.isEnable2FA
+            ? t("disableTwoFactorDesc")
+            : t("setupTwoFactorDesc")
         }
         footerActions={[
           {
@@ -408,9 +414,9 @@ export default function ProfilePage() {
             variant: "outline",
           },
           {
-            label: is2FAEnabled ? t("disable") : t("verify"),
+            label: userData?.isEnable2FA ? t("disable") : t("verify"),
             onClick: twoFAMethods.handleSubmit(onSubmitToggle2FA),
-            variant: is2FAEnabled ? "destructive" : "default",
+            variant: userData?.isEnable2FA ? "destructive" : "default",
             disabled: isToggle2FAMutating,
           },
         ]}
@@ -421,7 +427,7 @@ export default function ProfilePage() {
             className="space-y-6"
             noValidate
           >
-            {!is2FAEnabled && (
+            {!userData?.isEnable2FA && (
               <div className="text-center">
                 <h3 className="font-medium mb-2">{t("scanQRCode")}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -429,6 +435,7 @@ export default function ProfilePage() {
                 </p>
                 <div className="flex justify-center mb-4">
                   <Image
+                    src={userData?.twoFactorQr || ""}
                     alt="QR Code"
                     className="border rounded"
                     width={200}
@@ -440,7 +447,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             )}
-            {is2FAEnabled && (
+            {userData?.isEnable2FA && (
               <p className="text-center text-gray-600 dark:text-gray-400">
                 {t("disableTwoFactorWarning")}
               </p>

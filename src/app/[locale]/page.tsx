@@ -1,29 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/badge";
+
 import { AppAccordion } from "@/components/AppAccordion";
 
 import {
   Link2,
-  Copy,
   QrCode,
-  Calendar as CalendarIcon,
   Shield,
   BarChart3,
   Palette,
   Zap,
   Globe,
-  Share2,
   Eye,
-  Clock,
-  CheckCircle,
-  LinkIcon,
   Target,
   TrendingUp,
 } from "lucide-react";
-import { format } from "date-fns";
 
 import { AppCard } from "@/components/AppCard";
 import { TextField } from "@/components/FormFields/TextField";
@@ -36,36 +28,17 @@ import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { AppButton } from "@/components/AppButton";
 import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 import ShortLinkCard from "@/components/ShortLinkCard";
-
-interface ShortenedLink {
-  id: string;
-  originalUrl: string;
-  shortUrl: string;
-  customAlias?: string;
-  clicks: number;
-  maxClicks?: number;
-  createdAt: Date;
-  expiresAt?: Date;
-  description?: string;
-  password?: string;
-  isPasswordProtected: boolean;
-  status: "active" | "expired" | "disabled" | "limit_reached";
-}
+import { useCreateLink } from "@/services/api/links";
+import validateResponseCode from "@/utils/validateResponseCode";
+import { toast } from "@/components/AppToast";
 
 type FormValues = UrlFormValues;
 export default function HomePage() {
   const t = useTranslations("UrlShortener");
   const schema = getUrlSchema(t);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [shortenedLinks, setShortenedLinks] = useState<ShortenedLink[]>([]);
-  const [copiedId, setCopiedId] = useState<string>("");
-
-  const copyToClipboard = async (text: string, id: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(""), 2000);
-  };
+  const { trigger: createLinkTrigger, isMutating: isCreateLinkMutating } =
+    useCreateLink();
 
   const features = [
     {
@@ -103,36 +76,31 @@ export default function HomePage() {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-    try {
-      // Simulated API call
-      const newLink: ShortenedLink = {
-        id: Math.random().toString(36).substr(2, 9),
-        originalUrl: data.originUrl,
-        shortUrl: `https://short.ly/${
-          data.alias || Math.random().toString(36).substr(2, 6)
-        }`,
-        customAlias: data.alias || undefined,
-        clicks: 0,
-        maxClicks: data?.maxClicks || 0,
-        createdAt: new Date(),
-        expiresAt: data.expirationDate || undefined,
-        description: data.description || undefined,
-        password: data.password || undefined,
-        isPasswordProtected: !!data.password,
-        status: "active",
-      };
-      setShortenedLinks([newLink, ...shortenedLinks]);
-      methods.reset();
-    } catch (error) {
-      console.error("Submission error:", error);
-      methods.setError("root", {
-        message: "Failed to shorten URL. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = async (formValue: FormValues) => {
+    createLinkTrigger(
+      {
+        body: {
+          originalUrl: formValue?.originUrl || "",
+          alias: formValue.alias,
+          maxClicks: Number(formValue?.maxClicks) || 0,
+          expireAt: formValue.expirationDate?.toISOString(),
+          description: formValue.description,
+          password: formValue.password,
+        },
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
   return (
@@ -221,7 +189,7 @@ export default function HomePage() {
                 <AppButton
                   type="submit"
                   iconLeft={<Zap className="h-5 w-5" />}
-                  loading={isSubmitting}
+                  loading={isCreateLinkMutating}
                   className="w-full h-12 text-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg"
                 >
                   {t("shortenButton")}
@@ -230,109 +198,6 @@ export default function HomePage() {
             </FormProvider>
           </AppCard>
         </div>
-
-        {/* Recent Links */}
-        {shortenedLinks.length > 0 && (
-          <div className="max-w-4xl mx-auto mb-16">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Clock className="h-6 w-6 text-blue-500" />
-              {t("recentLinks")}
-            </h2>
-
-            <div className="space-y-4">
-              {shortenedLinks.map((link) => (
-                <AppCard
-                  key={link.id}
-                  className="hover:shadow-lg transition-shadow border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <LinkIcon className=" text-green-500" />
-                        <code className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded text-sm font-medium">
-                          {link.shortUrl}
-                        </code>
-
-                        <AppButton
-                          variant="ghost"
-                          size="icon"
-                          iconLeft={
-                            copiedId === link.id ? (
-                              <CheckCircle className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )
-                          }
-                          onClick={() =>
-                            copyToClipboard(link.shortUrl, link.id)
-                          }
-                        ></AppButton>
-                      </div>
-
-                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                        {link.originalUrl}
-                      </p>
-
-                      {link.description && (
-                        <p className="text-sm text-gray-500 mt-1">
-                          {link.description}
-                        </p>
-                      )}
-
-                      <div className="flex items-center gap-4 mt-3">
-                        <Badge
-                          variant="secondary"
-                          className="flex items-center gap-1"
-                        >
-                          <Eye className="h-3 w-3" />
-                          {link.clicks} {t("clicks")}
-                        </Badge>
-
-                        <Badge
-                          variant="outline"
-                          className="flex items-center gap-1"
-                        >
-                          <CalendarIcon className="h-3 w-3" />
-                          {format(link.createdAt, "MMM dd, yyyy")}
-                        </Badge>
-
-                        {link.expiresAt && (
-                          <Badge
-                            variant="destructive"
-                            className="flex items-center gap-1"
-                          >
-                            <Clock className="h-3 w-3" />
-                            {format(link.expiresAt, "MMM dd, yyyy")}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 ml-4">
-                      <AppButton
-                        variant="outline"
-                        size="icon"
-                        iconLeft={<QrCode />}
-                      />
-
-                      <AppButton
-                        variant="outline"
-                        size="icon"
-                        iconLeft={<BarChart3 className="h-4 w-4" />}
-                      />
-
-                      <AppButton
-                        variant="outline"
-                        size="icon"
-                        iconLeft={<Share2 className="h-4 w-4" />}
-                      />
-                    </div>
-                  </div>
-                </AppCard>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Features Section */}
         <div className="max-w-6xl mx-auto">

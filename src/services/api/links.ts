@@ -8,8 +8,10 @@ import {
   GetTotalLinkPerStatusResponse,
   LinkData,
   UpdateLinkBody,
+  VerifyPasswordLinkResponse,
 } from "@/types/Link";
 import useSWRMutation from "swr/mutation";
+import { VerifyPasswordLinkBody } from "./../../types/Link";
 
 interface GetLinksParams {
   page?: number;
@@ -92,4 +94,28 @@ export const useGetLinkStatisticOverview = () => {
   };
 
   return useSWR(url, fetcher);
+};
+
+export const useVerifyPasswordLink = () => {
+  const url = "v1/links/:alias/verify-password";
+
+  const fetcher = async (
+    key: string,
+    {
+      arg,
+    }: {
+      arg: {
+        alias: string;
+        body: VerifyPasswordLinkBody;
+      };
+    }
+  ) => {
+    key = key.replace(":alias", arg.alias);
+    return api.post<VerifyPasswordLinkResponse, VerifyPasswordLinkBody>(
+      key,
+      arg.body
+    );
+  };
+
+  return useSWRMutation(url, fetcher);
 };

@@ -49,3 +49,11 @@ export interface GetLinkStatisticOverviewResponse {
   totalProtectedLink: number;
   totalLimitedLink: number;
 }
+
+export interface VerifyPasswordLinkBody {
+  password: string;
+}
+
+export interface VerifyPasswordLinkResponse {
+  originalUrl: string;
+}

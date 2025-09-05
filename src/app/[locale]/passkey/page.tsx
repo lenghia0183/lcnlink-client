@@ -11,20 +11,26 @@ import { AppButton } from "@/components/AppButton";
 import { toast } from "@/components/AppToast";
 import { getUnlockSchema, UnlockFormValues } from "./validation";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useVerifyPasswordLink } from "@/services/api/links";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 type FormValues = UnlockFormValues;
 
-export default function UnlockPage() {
+export default function PasskeyPage() {
   const t = useTranslations("Unlock");
   const tCommon = useTranslations("Common");
   const schema = getUnlockSchema(t);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const shortUrl = searchParams.get("url");
-  const redirectUrl = searchParams.get("redirect");
+  const alias = searchParams.get("alias");
+  const shortedUrl = searchParams.get("shortedUrl");
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
+
+  const {
+    trigger: verifyPasswordLinkTrigger,
+    isMutating: isVerifyPasswordLinkMutating,
+  } = useVerifyPasswordLink();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -33,35 +39,34 @@ export default function UnlockPage() {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-
-    try {
-      // Simulate API call to verify password
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Unlock request:", { shortUrl, password: data.password });
-
-      toast.success(tCommon("success"), tCommon("redirecting"));
-
-      // Redirect to original URL or provided redirect URL
-      setTimeout(() => {
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-        } else {
-          // Default redirect to a success page or home
-          router.push("/");
-        }
-      }, 1000);
-    } catch (error) {
-      console.error("Unlock error:", error);
-      toast.error(tCommon("error"), t("invalidPassword"));
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = async (formValues: FormValues) => {
+    verifyPasswordLinkTrigger(
+      {
+        alias: alias || "",
+        body: { password: formValues?.password || "" },
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            console.log("response", response);
+            if (response.data?.originalUrl) {
+              window.location.href = response.data?.originalUrl;
+            } else {
+              toast.error(response.message);
+            }
+          } else {
+            toast.error(response.message);
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message);
+        },
+      }
+    );
   };
 
-  if (!shortUrl) {
+  if (!alias) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
@@ -114,7 +119,7 @@ export default function UnlockPage() {
               </span>
             </div>
             <code className="text-sm text-orange-800 dark:text-orange-200 break-all">
-              {shortUrl}
+              {shortedUrl}
             </code>
           </div>
 
@@ -138,15 +143,17 @@ export default function UnlockPage() {
                   )
                 }
                 rightIconOnClick={() => setIsShowPassword(!isShowPassword)}
-                disabled={isSubmitting}
+                disabled={isVerifyPasswordLinkMutating}
               />
 
               <AppButton
                 type="submit"
                 className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
-                disabled={isSubmitting}
+                disabled={isVerifyPasswordLinkMutating}
               >
-                {isSubmitting ? tCommon("loading") : t("unlock")}
+                {isVerifyPasswordLinkMutating
+                  ? tCommon("loading")
+                  : t("unlock")}
               </AppButton>
             </form>
           </FormProvider>

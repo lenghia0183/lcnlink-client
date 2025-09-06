@@ -537,6 +537,7 @@
     "twoFactorDisabledDesc": "Enable 2FA for better security",
     "enable": "Enable",
     "disable": "Disable",
+    "manage2FA": "Manage 2FA",
     "setupTwoFactor": "Setup Two-Factor Authentication",
     "setupTwoFactorDesc": "Scan the QR code with your authenticator app",
     "scanQRCode": "Scan QR Code",

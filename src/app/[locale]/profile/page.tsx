@@ -32,6 +32,7 @@ import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
 import { USER_GENDER_ENUM } from "@/constants/common";
 import { AppTabs } from "@/components/AppTabs";
 import { AppDialog } from "@/components/AppDialog";
+import TwoFAManagementModal from "@/components/TwoFAManagementModal";
 import Image from "@/components/Image";
 import { useUser } from "@/context/userProvider";
 import {
@@ -50,6 +51,7 @@ export default function ProfilePage() {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
   const [show2FADialog, setShow2FADialog] = useState(false);
+  const [show2FAManagementModal, setShow2FAManagementModal] = useState(false);
 
   const { userData, refreshGetMe } = useUser();
 
@@ -179,6 +181,10 @@ export default function ProfilePage() {
 
   const handleToggle2FA = async () => {
     setShow2FADialog(true);
+  };
+
+  const handleManage2FA = async () => {
+    setShow2FAManagementModal(true);
   };
 
   const profileTab = (
@@ -352,19 +358,29 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
-          <AppButton
-            variant={userData?.isEnable2FA ? "destructive" : "default"}
-            onClick={handleToggle2FA}
-            iconLeft={
-              userData?.isEnable2FA ? (
-                <ShieldOff className="h-4 w-4" />
-              ) : (
-                <ShieldCheck className="h-4 w-4" />
-              )
-            }
-          >
-            {userData?.isEnable2FA ? t("disable") : t("enable")}
-          </AppButton>
+          <div className="flex space-x-2">
+            <AppButton
+              onClick={handleManage2FA}
+              iconLeft={<Shield className="h-4 w-4" />}
+              className="flex-1"
+            >
+              {t("manage2FA")}
+            </AppButton>
+            <AppButton
+              variant={userData?.isEnable2FA ? "destructive" : "outline"}
+              onClick={handleToggle2FA}
+              iconLeft={
+                userData?.isEnable2FA ? (
+                  <ShieldOff className="h-4 w-4" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4" />
+                )
+              }
+              size="sm"
+            >
+              {userData?.isEnable2FA ? t("disable") : t("enable")}
+            </AppButton>
+          </div>
         </div>
       </AppCard>
     </div>
@@ -470,6 +486,14 @@ export default function ProfilePage() {
           </form>
         </FormProvider>
       </AppDialog>
+
+      <TwoFAManagementModal
+        open={show2FAManagementModal}
+        onOpenChange={setShow2FAManagementModal}
+        userIsEnable2FA={userData?.isEnable2FA || false}
+        onToggle2FA={onSubmitToggle2FA}
+        isToggling={isToggle2FAMutating}
+      />
     </div>
   );
 }

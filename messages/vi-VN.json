@@ -272,6 +272,7 @@
     "twoFactorDisabledDesc": "Bật 2FA để bảo mật tốt hơn",
     "enable": "Bật",
     "disable": "Tắt",
+    "manage2FA": "Quản lý 2FA",
     "setupTwoFactor": "Thiết Lập Xác Thực Hai Bước",
     "setupTwoFactorDesc": "Quét mã QR bằng ứng dụng xác thực của bạn",
     "scanQRCode": "Quét Mã QR",

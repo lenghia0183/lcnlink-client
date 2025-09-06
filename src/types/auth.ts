@@ -63,4 +63,14 @@ export interface Login2FABody {
   otpToken: string;
 }
 
+export interface Generate2FAResponse {
+  qrCodeUrl: string;
+  secret: string;
+}
+
+export interface Change2FABody {
+  otp: string;
+  newTwoFactorSecret: string;
+}
+
 export type RegisterResponse = User;

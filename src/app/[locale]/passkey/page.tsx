@@ -10,7 +10,7 @@ import { TextField } from "@/components/FormFields/TextField";
 import { AppButton } from "@/components/AppButton";
 import { toast } from "@/components/AppToast";
 import { getUnlockSchema, UnlockFormValues } from "./validation";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useVerifyPasswordLink } from "@/services/api/links";
 import validateResponseCode from "@/utils/validateResponseCode";
 
@@ -21,7 +21,7 @@ export default function PasskeyPage() {
   const tCommon = useTranslations("Common");
   const schema = getUnlockSchema(t);
   const searchParams = useSearchParams();
-  const router = useRouter();
+
   const alias = searchParams.get("alias");
   const shortedUrl = searchParams.get("shortedUrl");
 

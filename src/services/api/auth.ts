@@ -2,8 +2,10 @@ import useSWR from "swr";
 import { User } from "@/types/user";
 import { api, apiNoToken } from "@/services/axios";
 import {
+  Change2FABody,
   ChangePasswordBody,
   ForgotPasswordBody,
+  Generate2FAResponse,
   Login2FABody,
   LoginBody,
   LoginResponse,
@@ -107,20 +109,20 @@ export const useToggle2FA = () => {
 };
 
 export const useGenerate2FA = () => {
-  const url = "v1/auth/2fa/generate";
+  const url = "v1/auth/generate-2fa";
 
-  const fetcher = async (key: string, { arg }: { arg?: any }) => {
-    return api.post<{ qrCode: string; secret: string }>(key, arg || {});
+  const fetcher = async (key: string) => {
+    return api.get<Generate2FAResponse>(key);
   };
 
-  return useSWRMutation(url, fetcher);
+  return useSWR(url, fetcher);
 };
 
-export const useUpdate2FA = () => {
-  const url = "v1/auth/2fa/update";
+export const useChange2FA = () => {
+  const url = "v1/auth/change-2fa";
 
-  const fetcher = async (key: string, { arg }: { arg: { code: string; secret: string } }) => {
-    return api.put<RegisterResponse, { code: string; secret: string }>(key, arg);
+  const fetcher = async (key: string, { arg }: { arg: Change2FABody }) => {
+    return api.put<RegisterResponse, Change2FABody>(key, arg);
   };
 
   return useSWRMutation(url, fetcher);

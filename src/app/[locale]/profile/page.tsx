@@ -29,7 +29,7 @@ import {
 } from "./validation";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
-import { USER_GENDER_ENUM } from "@/constants/common";
+import { IS_2FA_ENUM, USER_GENDER_ENUM } from "@/constants/common";
 import { AppTabs } from "@/components/AppTabs";
 import { AppDialog } from "@/components/AppDialog";
 import TwoFAManagementModal from "@/components/TwoFAManagementModal";
@@ -471,7 +471,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             )}
-            {userData?.isEnable2FA && (
+            {Boolean(userData?.isEnable2FA) && (
               <p className="text-center text-gray-600 dark:text-gray-400">
                 {t("disableTwoFactorWarning")}
               </p>
@@ -490,7 +490,7 @@ export default function ProfilePage() {
       <TwoFAManagementModal
         open={show2FAManagementModal}
         onOpenChange={setShow2FAManagementModal}
-        userIsEnable2FA={userData?.isEnable2FA || false}
+        userIsEnable2FA={userData?.isEnable2FA || IS_2FA_ENUM.DISABLED}
         onToggle2FA={onSubmitToggle2FA}
         isToggling={isToggle2FAMutating}
       />

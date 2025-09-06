@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     // ignoreBuildErrors: true,
   },
   images: {
-    domains: ["jsonplaceholder.org"],
+    domains: ["jsonplaceholder.org", "chart.googleapis.com"],
   },
   // Fix cross-origin requests in development
   allowedDevOrigins: ["127.0.0.1"],

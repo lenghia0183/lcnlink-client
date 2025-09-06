@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { 
-  Shield, 
-  RefreshCw, 
-  Eye, 
-  EyeOff, 
-  Copy, 
-  Check, 
+import {
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
   QrCode,
-  ShieldCheck,
-  ShieldOff 
+  ShieldOff,
 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,22 +20,27 @@ import { AppButton } from "@/components/AppButton";
 import { AppCard } from "@/components/AppCard";
 import Image from "next/image";
 import { z } from "zod";
+import { useChange2FA, useGenerate2FA } from "@/services/api/auth";
+import { IS_2FA_ENUM } from "@/constants/common";
+import validateResponseCode from "@/utils/validateResponseCode";
 
-// Validation schema for 2FA management
-const getTwoFAManagementSchema = (t: any) =>
+const getTwoFAManagementSchema = (t: (key: string) => string) =>
   z.object({
-    code: z.string()
+    code: z
+      .string()
       .min(1, t("codeRequired"))
       .length(6, t("codeLength"))
       .regex(/^\d+$/, t("codeFormat")),
   });
 
-type TwoFAManagementFormValues = z.infer<ReturnType<typeof getTwoFAManagementSchema>>;
+type TwoFAManagementFormValues = z.infer<
+  ReturnType<typeof getTwoFAManagementSchema>
+>;
 
 interface TwoFAManagementModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  userIsEnable2FA: boolean;
+  userIsEnable2FA: IS_2FA_ENUM;
   onToggle2FA: (formValues: { twoFactorCode: string }) => void;
   isToggling: boolean;
 }
@@ -54,12 +57,32 @@ export default function TwoFAManagementModal({
   const tProfile = useTranslations("Profile");
   const schema = getTwoFAManagementSchema(t);
 
-  const [qrCode, setQrCode] = useState<string>("");
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [secret, setSecret] = useState<string>("");
   const [isShowSecret, setIsShowSecret] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+
+  const {
+    data: generate2FAResponse,
+    mutate: mutateGenerate2FA,
+    isLoading: isLoadingGenerate2FA,
+  } = useGenerate2FA();
+
+  const { trigger: triggerChange2FA, isMutating: isMutatingChange2FA } =
+    useChange2FA();
+
+  useEffect(() => {
+    if (open) {
+      mutateGenerate2FA();
+    }
+  }, [open, mutateGenerate2FA]);
+
+  useEffect(() => {
+    if (generate2FAResponse) {
+      setQrCodeUrl(generate2FAResponse?.data?.qrCodeUrl || "");
+      setSecret(generate2FAResponse?.data?.secret || "");
+    }
+  }, [generate2FAResponse]);
 
   const methods = useForm<TwoFAManagementFormValues>({
     resolver: zodResolver(schema),
@@ -69,68 +92,29 @@ export default function TwoFAManagementModal({
   });
 
   const generateNew2FA = async () => {
-    setIsGenerating(true);
-    try {
-      // Call the API to generate new 2FA
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/2fa/generate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        setQrCode(data.data.qrCode || data.qrCode);
-        setSecret(data.data.secret || data.secret);
-        toast.success(t("generateSuccess"));
-      } else {
-        toast.error(data.message || t("generateError"));
-      }
-    } catch (error) {
-      console.error("Generate 2FA error:", error);
-      toast.error(t("generateError"));
-    } finally {
-      setIsGenerating(false);
-    }
+    mutateGenerate2FA();
   };
 
   const onSubmitUpdate2FA = async (formValues: TwoFAManagementFormValues) => {
-    setIsUpdating(true);
-    try {
-      // Call the API to update 2FA with the new secret
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/2fa/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+    triggerChange2FA(
+      {
+        newTwoFactorSecret: secret,
+        otp: formValues.code,
+      },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(response.message);
+            onOpenChange(false);
+          } else {
+            toast.error(response.message);
+          }
         },
-        body: JSON.stringify({
-          code: formValues.code,
-          secret: secret,
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        toast.success(t("updateSuccess"));
-        // Reset form and close modal
-        methods.reset();
-        setQrCode("");
-        setSecret("");
-        onOpenChange(false);
-      } else {
-        toast.error(data.message || t("updateError"));
+        onError: (response) => {
+          toast.error(response.message);
+        },
       }
-    } catch (error) {
-      console.error("Update 2FA error:", error);
-      toast.error(t("updateError"));
-    } finally {
-      setIsUpdating(false);
-    }
+    );
   };
 
   const copySecret = async () => {
@@ -139,6 +123,7 @@ export default function TwoFAManagementModal({
       setIsCopied(true);
       toast.success(t("secretCopied"));
       setTimeout(() => setIsCopied(false), 2000);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error(t("copyError"));
     }
@@ -146,13 +131,13 @@ export default function TwoFAManagementModal({
 
   const handleClose = () => {
     methods.reset();
-    setQrCode("");
+    setQrCodeUrl("");
     setSecret("");
     onOpenChange(false);
   };
 
   const handleSubmitToggle = () => {
-    if (!userIsEnable2FA && qrCode && secret) {
+    if (!userIsEnable2FA && qrCodeUrl && secret) {
       // If enabling 2FA and we have generated codes, use update API
       methods.handleSubmit(onSubmitUpdate2FA)();
     } else {
@@ -167,18 +152,18 @@ export default function TwoFAManagementModal({
       open={open}
       onOpenChange={handleClose}
       title={
-        userIsEnable2FA 
-          ? tProfile("disableTwoFactor") 
-          : qrCode && secret 
-            ? t("updateButton")
-            : tProfile("setupTwoFactor")
+        userIsEnable2FA
+          ? tProfile("disableTwoFactor")
+          : qrCodeUrl && secret
+          ? t("updateButton")
+          : tProfile("setupTwoFactor")
       }
       description={
         userIsEnable2FA
           ? tProfile("disableTwoFactorDesc")
-          : qrCode && secret
-            ? t("newCodeDescription")
-            : tProfile("setupTwoFactorDesc")
+          : qrCodeUrl && secret
+          ? t("newCodeDescription")
+          : tProfile("setupTwoFactorDesc")
       }
       footerActions={[
         {
@@ -187,17 +172,17 @@ export default function TwoFAManagementModal({
           variant: "outline",
         },
         {
-          label: userIsEnable2FA 
-            ? tProfile("disable") 
-            : qrCode && secret 
-              ? t("updateButton")
-              : tProfile("verify"),
+          label: userIsEnable2FA
+            ? tProfile("disable")
+            : qrCodeUrl && secret
+            ? t("updateButton")
+            : tProfile("verify"),
           onClick: handleSubmitToggle,
           variant: userIsEnable2FA ? "destructive" : "default",
-          disabled: isToggling || isUpdating,
+          disabled: isToggling || isMutatingChange2FA,
         },
       ]}
-      classNameContent="max-w-2xl"
+      classNameContent="max-w-2xl max-h-[80vh] overflow-y-auto"
     >
       <div className="space-y-6">
         {!userIsEnable2FA && (
@@ -212,17 +197,25 @@ export default function TwoFAManagementModal({
               <div className="text-center">
                 <AppButton
                   onClick={generateNew2FA}
-                  disabled={isGenerating}
-                  iconLeft={<RefreshCw className={`h-4 w-4 ${isGenerating ? "animate-spin" : ""}`} />}
+                  disabled={isLoadingGenerate2FA}
+                  iconLeft={
+                    <RefreshCw
+                      className={`h-4 w-4 ${
+                        isLoadingGenerate2FA ? "animate-spin" : ""
+                      }`}
+                    />
+                  }
                   className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
                 >
-                  {isGenerating ? tCommon("loading") : t("generateButton")}
+                  {isLoadingGenerate2FA
+                    ? tCommon("loading")
+                    : t("generateButton")}
                 </AppButton>
               </div>
             </AppCard>
 
             {/* QR Code and Secret Display */}
-            {qrCode && secret && (
+            {qrCodeUrl && secret && (
               <AppCard
                 className="border-0 bg-blue-50/50 dark:bg-blue-900/10"
                 title={t("newCode")}
@@ -239,7 +232,7 @@ export default function TwoFAManagementModal({
                     </div>
                     <div className="flex justify-center mb-4">
                       <Image
-                        src={qrCode}
+                        src={qrCodeUrl || ""}
                         alt="QR Code"
                         width={180}
                         height={180}
@@ -257,7 +250,7 @@ export default function TwoFAManagementModal({
                       {t("secretKey")}
                     </label>
                     <div className="flex items-center space-x-2">
-                      <div className="flex-1 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border font-mono text-sm">
+                      <div className="flex-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg border font-mono text-sm">
                         {isShowSecret ? secret : "•".repeat(secret.length)}
                       </div>
                       <AppButton
@@ -265,14 +258,22 @@ export default function TwoFAManagementModal({
                         size="icon"
                         onClick={() => setIsShowSecret(!isShowSecret)}
                       >
-                        {isShowSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {isShowSecret ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </AppButton>
                       <AppButton
                         variant="outline"
                         size="icon"
                         onClick={copySecret}
                       >
-                        {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                        {isCopied ? (
+                          <Check className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
                       </AppButton>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -285,7 +286,7 @@ export default function TwoFAManagementModal({
           </>
         )}
 
-        {userIsEnable2FA && (
+        {Boolean(userIsEnable2FA) && (
           <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
             <ShieldOff className="h-12 w-12 text-yellow-600 dark:text-yellow-400 mx-auto mb-2" />
             <p className="text-yellow-800 dark:text-yellow-200">
@@ -294,13 +295,13 @@ export default function TwoFAManagementModal({
           </div>
         )}
 
-        {/* Verification Form */}
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(
-              qrCode && secret && !userIsEnable2FA 
-                ? onSubmitUpdate2FA 
-                : (formValues) => onToggle2FA({ twoFactorCode: formValues.code })
+              qrCodeUrl && secret && !userIsEnable2FA
+                ? onSubmitUpdate2FA
+                : (formValues) =>
+                    onToggle2FA({ twoFactorCode: formValues.code })
             )}
             noValidate
             className="space-y-4"

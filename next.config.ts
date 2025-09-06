@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["jsonplaceholder.org"],
   },
+  // Fix cross-origin requests in development
+  allowedDevOrigins: ["127.0.0.1"],
 
   webpack(config) {
     config.module.rules.push({

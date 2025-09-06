@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { User, Settings, Shield, LogOut, ChevronDown } from "lucide-react";
-import { AppButton } from "./AppButton";
 import { AppDropdown } from "./AppDropDown";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
@@ -68,14 +67,16 @@ export function ProfileDropdown() {
   return (
     <AppDropdown
       trigger={
-        <AppButton
-          variant="ghost"
-          className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        <div
           onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer select-none"
         >
+          {/* Avatar */}
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium">
             {getInitials(userData.fullname || "User")}
           </div>
+
+          {/* Tên + Email */}
           <div className="hidden md:block text-left">
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {userData.fullname}
@@ -84,8 +85,14 @@ export function ProfileDropdown() {
               {userData.email}
             </p>
           </div>
-          <ChevronDown className="w-4 h-4 text-gray-400" />
-        </AppButton>
+
+          {/* Mũi tên */}
+          <ChevronDown
+            className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
       }
       items={menuItems}
       align="end"

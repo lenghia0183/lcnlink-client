@@ -6,6 +6,9 @@ import {
   GetLinkResponse,
   GetLinkStatisticOverviewResponse,
   GetTotalLinkPerStatusResponse,
+  LinkAnalyticsBrowserBreakdownResponse,
+  LinkAnalyticsCountryBreakdownResponse,
+  LinkAnalyticsDeviceBreakdownResponse,
   LinkData,
   UpdateLinkBody,
   VerifyPasswordLinkResponse,
@@ -118,4 +121,41 @@ export const useVerifyPasswordLink = () => {
   };
 
   return useSWRMutation(url, fetcher);
+};
+
+export const useDeviceBreakdown = () => {
+  const url = "v1/links/analytics/devices";
+
+  const fetcher = async (url: string) => {
+    const response = await api.get<LinkAnalyticsDeviceBreakdownResponse[]>(url);
+    return response.data;
+  };
+
+  return useSWR(url, fetcher);
+};
+
+export const useGetBrowserBreakdown = () => {
+  const url = "v1/links/analytics/browsers";
+
+  const fetcher = async (url: string) => {
+    const response = await api.get<LinkAnalyticsBrowserBreakdownResponse[]>(
+      url
+    );
+    return response.data;
+  };
+
+  return useSWR(url, fetcher);
+};
+
+export const useGetCountryBreakdown = () => {
+  const url = "v1/links/analytics/countries";
+
+  const fetcher = async (url: string) => {
+    const response = await api.get<LinkAnalyticsCountryBreakdownResponse[]>(
+      url
+    );
+    return response.data;
+  };
+
+  return useSWR(url, fetcher);
 };

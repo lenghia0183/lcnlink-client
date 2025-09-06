@@ -458,9 +458,9 @@
     "refresh": "Làm mới",
     "export": "Xuất dữ liệu",
     "totalClicks": "Tổng số lượt nhấp",
+    "totalSuccessfulAccess": "Tổng số truy cập thành công",
     "uniqueVisitors": "Khách truy cập duy nhất",
-    "avgSessionDuration": "Thời lượng phiên trung bình",
-    "clickThroughRate": "Tỷ lệ nhấp qua",
+    "returningVisitorRate": "Tỷ lệ người dùng tái truy cập",
     "clickTrends": {
       "title": "Xu hướng lượt nhấp",
       "description": "Biểu đồ hiển thị lượt nhấp theo thời gian"

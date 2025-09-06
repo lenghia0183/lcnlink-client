@@ -48,6 +48,9 @@ export interface GetLinkStatisticOverviewResponse {
   totalClicks: number;
   totalProtectedLink: number;
   totalLimitedLink: number;
+  totalUniqueVisitors: number;
+  totalSuccessfulAccess: number;
+  returningVisitorRate: number;
 }
 
 export interface VerifyPasswordLinkBody {
@@ -56,4 +59,22 @@ export interface VerifyPasswordLinkBody {
 
 export interface VerifyPasswordLinkResponse {
   originalUrl: string;
+}
+
+export interface LinkAnalyticsDeviceBreakdownResponse {
+  device: string;
+  count: number;
+  percentage: number;
+}
+
+export interface LinkAnalyticsBrowserBreakdownResponse {
+  browser: string;
+  count: number;
+  percentage: number;
+}
+
+export interface LinkAnalyticsCountryBreakdownResponse {
+  country: string;
+  count: number;
+  percentage: number;
 }

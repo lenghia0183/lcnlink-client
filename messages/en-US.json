@@ -389,7 +389,9 @@
     "refresh": "Refresh",
     "export": "Export Data",
     "totalClicks": "Total Clicks",
+    "totalSuccessfulAccess": "Total Successful Access",
     "uniqueVisitors": "Unique Visitors",
+    "returningVisitorRate": "Returning Users Rate",
     "avgSessionDuration": "Average Session Duration",
     "clickThroughRate": "Click-Through Rate",
     "clickTrends": {

@@ -1,13 +1,12 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-
 import { Badge } from "@/components/ui/badge";
-
 import {
   TrendingUp,
   Eye,
-  Clock,
+  CheckCircle,
+  Users,
   Globe,
   Smartphone,
   Monitor,
@@ -17,58 +16,53 @@ import {
 } from "lucide-react";
 import { AppButton } from "@/components/AppButton";
 import { AppCard } from "@/components/AppCard";
+import {
+  useDeviceBreakdown,
+  useGetBrowserBreakdown,
+  useGetCountryBreakdown,
+  useGetLinkStatisticOverview,
+} from "@/services/api/links";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
 
+  // Hooks
+  const { data: devices, mutate: refreshDevices } = useDeviceBreakdown();
+  const { data: browsers, mutate: refreshBrowsers } = useGetBrowserBreakdown();
+  const { data: countries, mutate: refreshCountries } =
+    useGetCountryBreakdown();
+
+  const { data: linkStatisticOverview } = useGetLinkStatisticOverview();
+
+  // Stats
   const stats = [
     {
-      icon: <Eye className="h-5 w-5" />,
+      icon: <Eye className="h-6 w-6 text-blue-500" />,
       label: t("totalClicks"),
-      value: "12,547",
-      change: "+15.3%",
+      value: linkStatisticOverview?.totalClicks ?? "0",
     },
     {
-      icon: <Globe className="h-5 w-5" />,
+      icon: <CheckCircle className="h-6 w-6 text-green-500" />,
+      label: t("totalSuccessfulAccess"),
+      value: linkStatisticOverview?.totalSuccessfulAccess ?? "0",
+    },
+    {
+      icon: <Users className="h-6 w-6 text-purple-500" />,
       label: t("uniqueVisitors"),
-      value: "8,432",
-      change: "+12.1%",
+      value: linkStatisticOverview?.totalUniqueVisitors ?? "0",
     },
     {
-      icon: <Clock className="h-5 w-5" />,
-      label: t("avgSessionDuration"),
-      value: "2m 34s",
-      change: "+5.7%",
-    },
-    {
-      icon: <TrendingUp className="h-5 w-5" />,
-      label: t("clickThroughRate"),
-      value: "3.2%",
-      change: "+8.9%",
+      icon: <TrendingUp className="h-6 w-6 text-orange-500" />,
+      label: t("returningVisitorRate"),
+      value: `${linkStatisticOverview?.returningVisitorRate ?? 0}%`,
     },
   ];
 
-  const topCountries = [
-    { country: "United States", clicks: 4521, percentage: 36.1 },
-    { country: "United Kingdom", clicks: 2134, percentage: 17.0 },
-    { country: "Germany", clicks: 1876, percentage: 15.0 },
-    { country: "Canada", clicks: 1234, percentage: 9.8 },
-    { country: "France", clicks: 987, percentage: 7.9 },
-  ];
-
-  const devices = [
-    { type: "Desktop", clicks: 6234, percentage: 49.7 },
-    { type: "Mobile", clicks: 4987, percentage: 39.7 },
-    { type: "Tablet", clicks: 1326, percentage: 10.6 },
-  ];
-
-  const browsers = [
-    { name: "Chrome", clicks: 7234, percentage: 57.7 },
-    { name: "Safari", clicks: 2345, percentage: 18.7 },
-    { name: "Firefox", clicks: 1567, percentage: 12.5 },
-    { name: "Edge", clicks: 987, percentage: 7.9 },
-    { name: "Other", clicks: 414, percentage: 3.2 },
-  ];
+  const handleRefresh = () => {
+    refreshDevices();
+    refreshBrowsers();
+    refreshCountries();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -82,7 +76,11 @@ export default function AnalyticsPage() {
             <p className="text-gray-600 dark:text-gray-300">{t("subtitle")}</p>
           </div>
           <div className="flex gap-2 mt-4 lg:mt-0">
-            <AppButton iconLeft={<RefreshCw />} variant="outline">
+            <AppButton
+              iconLeft={<RefreshCw />}
+              variant="outline"
+              onClick={handleRefresh}
+            >
               {t("refresh")}
             </AppButton>
             <AppButton variant="outline" iconLeft={<Download />}>
@@ -96,21 +94,20 @@ export default function AnalyticsPage() {
           {stats.map((stat, index) => (
             <AppCard
               key={index}
-              className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+              className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all hover:shadow-lg"
               contentClassName="p-6"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
                   {stat.icon}
                 </div>
-                <Badge variant="secondary" className="text-green-600">
-                  {stat.change}
-                </Badge>
+                <div>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {stat.label}
+                  </p>
+                </div>
               </div>
-              <p className="text-2xl font-bold mb-1">{stat.value}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {stat.label}
-              </p>
             </AppCard>
           ))}
         </div>
@@ -145,7 +142,7 @@ export default function AnalyticsPage() {
             description={t("geographic.description")}
             contentClassName="space-y-3"
           >
-            {topCountries.map((country, index) => (
+            {countries?.map((country, index) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded-sm"></div>
@@ -153,7 +150,7 @@ export default function AnalyticsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {country.clicks.toLocaleString()}
+                    {country.count.toLocaleString()}
                   </span>
                   <Badge variant="outline">{country.percentage}%</Badge>
                 </div>
@@ -176,24 +173,24 @@ export default function AnalyticsPage() {
             description={t("devices.description")}
             contentClassName="space-y-4"
           >
-            {devices.map((device, index) => (
+            {devices?.map((device, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {device.type === "Desktop" && (
+                    {device.device === "Desktop" && (
                       <Monitor className="h-4 w-4" />
                     )}
-                    {device.type === "Mobile" && (
+                    {device.device === "Mobile" && (
                       <Smartphone className="h-4 w-4" />
                     )}
-                    {device.type === "Tablet" && (
+                    {device.device === "Tablet" && (
                       <Monitor className="h-4 w-4" />
                     )}
-                    <span className="font-medium">{device.type}</span>
+                    <span className="font-medium">{device.device}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {device.clicks.toLocaleString()}
+                      {device.count.toLocaleString()}
                     </span>
                     <Badge variant="outline">{device.percentage}%</Badge>
                   </div>
@@ -218,16 +215,24 @@ export default function AnalyticsPage() {
               </div>
             }
             description={t("browsers.description")}
-            contentClassName="space-y-3"
+            contentClassName="space-y-4"
           >
-            {browsers.map((browser, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span className="font-medium">{browser.name}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {browser.clicks.toLocaleString()}
-                  </span>
-                  <Badge variant="outline">{browser.percentage}%</Badge>
+            {browsers?.map((browser, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">{browser.browser}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {browser.count.toLocaleString()}
+                    </span>
+                    <Badge variant="outline">{browser.percentage}%</Badge>
+                  </div>
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${browser.percentage}%` }}
+                  ></div>
                 </div>
               </div>
             ))}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Lock, Eye, EyeOff, Shield, ArrowLeft } from "lucide-react";
+import { Lock, Eye, EyeOff, Shield, ArrowLeft, Home } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -89,22 +89,33 @@ export default function PasskeyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg">
-                <Shield className="h-8 w-8 text-orange-500" />
+        {/* Enhanced Navigation Card */}
+        <AppCard className="shadow-lg border-0 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm mb-6">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <p className="font-medium text-sm text-gray-900 dark:text-gray-100">
+                  {t("protectedContent")}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {t("authenticationRequired")}
+                </p>
               </div>
             </div>
+            <AppButton
+              href="/"
+              variant="outline"
+              size="sm"
+              iconLeft={<ArrowLeft className="h-4 w-4" />}
+              className="text-xs"
+            >
+              {t("home")}
+            </AppButton>
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-            {t("title")}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            {t("subtitle")}
-          </p>
-        </div>
+        </AppCard>
 
         <AppCard
           className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
@@ -158,15 +169,24 @@ export default function PasskeyPage() {
             </form>
           </FormProvider>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 space-y-3">
             <AppButton
               href="/"
-              variant="link"
-              className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
-              iconLeft={<ArrowLeft className="h-4 w-4" />}
+              variant="outline"
+              className="w-full"
+              iconLeft={<Home className="h-4 w-4" />}
             >
               {t("backToHome")}
             </AppButton>
+            <div className="text-center">
+              <AppButton
+                variant="link"
+                className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                onClick={() => window.history.back()}
+              >
+                {t("goBack")}
+              </AppButton>
+            </div>
           </div>
         </AppCard>
       </div>

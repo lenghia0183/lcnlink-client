@@ -556,5 +556,48 @@
     "register": {
       "genderInvalid": "Please select a valid gender"
     }
+  },
+  "NotFound": {
+    "title": "Not Found",
+    "subtitle": "The link you are looking for does not exist",
+    "linkNotFound": "Link Not Found",
+    "description": "The link you accessed may have expired, been deleted, or does not exist. Please check the URL again or return to the homepage.",
+    "backToHome": "Back to Home",
+    "goBack": "Go Back"
+  },
+  "Manage2FA": {
+    "title": "Manage Two-Factor Authentication",
+    "subtitle": "Generate new 2FA codes for your account",
+    "generateNew": "Generate New 2FA Code",
+    "generateDescription": "Create new QR code and secret key to set up on your Authenticator app",
+    "generateButton": "Generate New Code",
+    "generateSuccess": "New 2FA code generated successfully",
+    "generateError": "Error occurred while generating 2FA code",
+    "newCode": "New 2FA Code",
+    "newCodeDescription": "Scan the QR code or enter the secret key into your Authenticator app",
+    "scanQRInstruction": "Scan this QR code using Google Authenticator or similar app",
+    "secretKey": "Secret Key",
+    "secretInstruction": "Or manually enter this secret key into your app",
+    "secretCopied": "Secret key copied",
+    "copyError": "Cannot copy",
+    "verificationCode": "Verification Code",
+    "codePlaceholder": "Enter 6-digit code",
+    "updateButton": "Update 2FA Code",
+    "updateSuccess": "2FA code updated successfully",
+    "updateError": "Error occurred while updating 2FA code",
+    "instructions": "Instructions",
+    "step1": "Click 'Generate New Code' to create new QR code and secret key",
+    "step2": "Scan QR code with Google Authenticator app or manually enter secret key",
+    "step3": "Enter the 6-digit code from Authenticator app into verification field",
+    "step4": "Click 'Update 2FA Code' to apply the new code to your account",
+    "codeRequired": "Verification code is required",
+    "codeLength": "Code must be exactly 6 digits",
+    "codeFormat": "Code must contain only numbers"
+  },
+  "Unlock": {
+    "protectedContent": "Protected Content",
+    "authenticationRequired": "Authentication Required",
+    "home": "Home",
+    "goBack": "Go Back"
   }
 }

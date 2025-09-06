@@ -211,7 +211,11 @@
     "invalidPassword": "Mật khẩu không đúng",
     "invalidLinkTitle": "Liên kết không hợp lệ",
     "invalidLinkDescription": "Không tìm thấy thông tin liên kết cần mở khóa.",
-    "protectedLinkLabel": "Liên kết được bảo vệ:"
+    "protectedLinkLabel": "Liên kết được bảo vệ:",
+    "protectedContent": "Nội dung được bảo vệ",
+    "authenticationRequired": "Yêu cầu xác thực",
+    "home": "Trang chủ",
+    "goBack": "Quay lại"
   },
   "Profile": {
     "title": "Cài Đặt Hồ Sơ",
@@ -545,5 +549,42 @@
     "privacyPolicy": "Chính sách bảo mật",
     "termsOfService": "Điều khoản dịch vụ",
     "cookiePolicy": "Chính sách cookie"
+  },
+  "NotFound": {
+    "title": "Không Tìm Thấy",
+    "subtitle": "Liên kết bạn đang tìm kiếm không tồn tại",
+    "linkNotFound": "Liên kết không tìm thấy",
+    "description": "Liên kết bạn truy cập có thể đã hết hạn, bị xóa hoặc không tồn tại. Vui lòng kiểm tra lại đường dẫn hoặc quay về trang chủ.",
+    "backToHome": "Về Trang Chủ",
+    "goBack": "Quay Lại"
+  },
+  "Manage2FA": {
+    "title": "Quản Lý Bảo Mật 2 Lớp",
+    "subtitle": "Tạo mã bảo mật 2 lớp mới cho tài khoản của bạn",
+    "generateNew": "Tạo Mã 2FA Mới",
+    "generateDescription": "Tạo mã QR và secret key mới để cài đặt trên ứng dụng Authenticator",
+    "generateButton": "Tạo Mã Mới",
+    "generateSuccess": "Tạo mã 2FA mới thành công",
+    "generateError": "Có lỗi xảy ra khi tạo mã 2FA",
+    "newCode": "Mã 2FA Mới",
+    "newCodeDescription": "Quét mã QR hoặc nhập secret key vào ứng dụng Authenticator của bạn",
+    "scanQRInstruction": "Quét mã QR này bằng ứng dụng Google Authenticator hoặc ứng dụng tương tự",
+    "secretKey": "Secret Key",
+    "secretInstruction": "Hoặc nhập thủ công secret key này vào ứng dụng của bạn",
+    "secretCopied": "Đã sao chép secret key",
+    "copyError": "Không thể sao chép",
+    "verificationCode": "Mã Xác Thực",
+    "codePlaceholder": "Nhập mã 6 chữ số",
+    "updateButton": "Cập Nhật Mã 2FA",
+    "updateSuccess": "Cập nhật mã 2FA thành công",
+    "updateError": "Có lỗi xảy ra khi cập nhật mã 2FA",
+    "instructions": "Hướng Dẫn",
+    "step1": "Nhấn nút 'Tạo Mã Mới' để tạo mã QR và secret key mới",
+    "step2": "Quét mã QR bằng ứng dụng Google Authenticator hoặc nhập secret key thủ công",
+    "step3": "Nhập mã 6 chữ số từ ứng dụng Authenticator vào ô xác thực",
+    "step4": "Nhấn 'Cập Nhật Mã 2FA' để áp dụng mã mới cho tài khoản",
+    "codeRequired": "Mã xác thực là bắt buộc",
+    "codeLength": "Mã phải có đúng 6 chữ số",
+    "codeFormat": "Mã chỉ được chứa số"
   }
 }

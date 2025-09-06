@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { AppButton } from "@/components/AppButton";
+import { OAuthButtons } from "@/components/OAuthButtons";
 import { getAuthSchema, AuthFormValues } from "./validation";
 
 import { toast } from "@/components/AppToast";
@@ -327,6 +328,10 @@ export default function LoginPage() {
               </AppButton>
             </form>
           </FormProvider>
+
+          <div className="mt-6">
+            <OAuthButtons mode="login" />
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-300">

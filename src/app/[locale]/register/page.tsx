@@ -13,6 +13,7 @@ import { CheckboxGroupField } from "@/components/FormFields/CheckboxGroupField";
 import { RadioGroupField } from "@/components/FormFields/RadioGroupField";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { AppButton } from "@/components/AppButton";
+import { OAuthButtons } from "@/components/OAuthButtons";
 import { useRegister } from "@/services/api/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
 
@@ -222,6 +223,10 @@ export default function RegisterPage() {
               </AppButton>
             </form>
           </FormProvider>
+
+          <div className="mt-6">
+            <OAuthButtons mode="register" />
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-300">

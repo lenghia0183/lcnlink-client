@@ -16,6 +16,7 @@ import { AppDrawer } from "./AppDrawer";
 import { usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/context/userProvider";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { useEffect, useState } from "react";
 
 export default function Header() {
@@ -110,9 +111,7 @@ export default function Header() {
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
-                <AppButton variant="ghost" onClick={logoutUser}>
-                  {t("logout")}
-                </AppButton>
+                <ProfileDropdown />
               </div>
             )}
             <LanguageSwitcher />

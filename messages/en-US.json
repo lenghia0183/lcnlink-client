@@ -114,6 +114,14 @@
       "backToLogin": "Back to Login",
       "successMessage": "Verification successful",
       "invalidCode": "Invalid verification code"
+    },
+    "oauth": {
+      "orContinueWith": "Or continue with",
+      "googleComingSoon": "Google login coming soon!",
+      "facebookComingSoon": "Facebook login coming soon!",
+      "error": "OAuth authentication failed",
+      "loginTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
+      "registerTerms": "By creating an account, you agree to our Terms of Service and Privacy Policy"
     }
   },
   "About": {
@@ -184,7 +192,9 @@
     "pricing": "Pricing",
     "login": "Login",
     "register": "Register",
-    "profile": "Profile"
+    "profile": "Profile",
+    "settings": "Settings",
+    "security": "Security"
   },
   "Common": {
     "loading": "Loading...",

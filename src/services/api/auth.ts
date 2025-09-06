@@ -105,3 +105,23 @@ export const useToggle2FA = () => {
 
   return useSWRMutation(url, fetcher);
 };
+
+export const useGenerate2FA = () => {
+  const url = "v1/auth/2fa/generate";
+
+  const fetcher = async (key: string) => {
+    return api.post<{ qrCode: string; secret: string }>(key);
+  };
+
+  return useSWRMutation(url, fetcher);
+};
+
+export const useUpdate2FA = () => {
+  const url = "v1/auth/2fa/update";
+
+  const fetcher = async (key: string, { arg }: { arg: { code: string; secret: string } }) => {
+    return api.put<RegisterResponse, { code: string; secret: string }>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};

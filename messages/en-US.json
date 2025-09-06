@@ -183,7 +183,8 @@
     "logout": "Logout",
     "pricing": "Pricing",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "profile": "Profile"
   },
   "Common": {
     "loading": "Loading...",

@@ -182,7 +182,8 @@
     "pricing": "Giá cả",
     "logout": "Đăng xuất",
     "login": "Đăng nhập",
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "profile": "Hồ sơ"
   },
   "Common": {
     "loading": "Đang tải...",

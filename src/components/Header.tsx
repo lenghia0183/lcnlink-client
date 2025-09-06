@@ -35,13 +35,21 @@ export default function Header() {
     { name: t("pricing"), href: "/pricing" },
   ];
 
+  // Profile navigation for logged in users
+  const profileNav = { name: t("profile"), href: "/profile" };
+
   useEffect(() => {
-    if (!isLoggedIn) {
-      baseNav.push({ name: t("login"), href: "/login" });
-      baseNav.push({ name: t("register"), href: "/register" });
+    const currentNav = [...baseNav];
+    
+    if (isLoggedIn) {
+      // Add profile link for logged in users
+      currentNav.push(profileNav);
+    } else {
+      currentNav.push({ name: t("login"), href: "/login" });
+      currentNav.push({ name: t("register"), href: "/register" });
     }
 
-    setNavigation(baseNav);
+    setNavigation(currentNav);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, t]);
 

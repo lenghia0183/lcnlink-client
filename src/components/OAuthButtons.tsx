@@ -3,6 +3,12 @@
 import { useTranslations } from "next-intl";
 import { AppButton } from "./AppButton";
 import { toast } from "./AppToast";
+import { use, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { getCookieMaxAge } from "@/utils/cookies.";
+import { nextApi } from "@/services/axios";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 interface OAuthButtonsProps {
   mode?: "login" | "register";
@@ -14,14 +20,55 @@ export function OAuthButtons({
   className = "",
 }: OAuthButtonsProps) {
   const t = useTranslations("Auth");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const setTokens = async () => {
+      const accessToken = searchParams.get("access_token");
+      const refreshToken = searchParams.get("refresh_token");
+      const isEnable2FA = searchParams.get("isEnable2FA") === "true";
+      console.log("accessToken", accessToken, "refreshToken", refreshToken);
+
+      if (accessToken && refreshToken) {
+        const cookiesToSet = [
+          {
+            name: "accessToken",
+            value: accessToken,
+            options: {
+              httpOnly: false,
+              path: "/",
+              maxAge: getCookieMaxAge(
+                process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || "3600"
+              ),
+            },
+          },
+          {
+            name: "refreshToken",
+            value: refreshToken,
+            options: {
+              httpOnly: false,
+              path: "/",
+              maxAge: getCookieMaxAge(
+                process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || "604800"
+              ),
+            },
+          },
+        ];
+
+        await nextApi.post("/auth/set-cookie", { cookies: cookiesToSet });
+
+        router.replace("/dashboard");
+      }
+    };
+
+    setTokens();
+  }, [searchParams, router]);
 
   const handleGoogleAuth = async () => {
-    try {
-      toast.info(t("oauth.googleComingSoon"));
-    } catch (error) {
-      console.error("Google OAuth error:", error);
-      toast.error(t("oauth.error"));
-    }
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001";
+    window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
   const handleFacebookAuth = async () => {

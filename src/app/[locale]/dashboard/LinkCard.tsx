@@ -133,7 +133,7 @@ export const LinkCard = ({
               {link.description}
             </p>
           )}
-          {link?.maxClicks && (
+          {Boolean(link?.maxClicks) && (
             <AppProgress
               leftLabel={`${t("clicks")}: ${link?.clicksCount ?? 0}/${
                 link.maxClicks

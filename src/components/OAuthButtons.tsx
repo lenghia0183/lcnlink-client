@@ -8,7 +8,6 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
 import { getCookieMaxAge } from "@/utils/cookies.";
 import { nextApi } from "@/services/axios";
-import validateResponseCode from "@/utils/validateResponseCode";
 
 interface OAuthButtonsProps {
   mode?: "login" | "register";
@@ -27,7 +26,7 @@ export function OAuthButtons({
     const setTokens = async () => {
       const accessToken = searchParams.get("access_token");
       const refreshToken = searchParams.get("refresh_token");
-      const isEnable2FA = searchParams.get("isEnable2FA") === "true";
+
       console.log("accessToken", accessToken, "refreshToken", refreshToken);
 
       if (accessToken && refreshToken) {

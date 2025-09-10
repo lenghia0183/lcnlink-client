@@ -22,6 +22,8 @@ import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
 import { useLogin } from "@/services/api/auth";
 import { getCookieMaxAge } from "@/utils/cookies.";
+import { useSearchParams } from "next/navigation";
+import { AUTH_FLOW } from "@/constants/common";
 
 type FormValues = AuthFormValues;
 
@@ -30,6 +32,11 @@ export default function LoginPage() {
   const tCommon = useTranslations("Common");
   const schema = getAuthSchema(t);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const flow = searchParams.get("flow");
+  const success = searchParams.get("success");
+  const message = searchParams.get("message");
 
   const { loginUser } = useUser();
 
@@ -244,6 +251,11 @@ export default function LoginPage() {
       // ignore
     }
   }, [methods]);
+
+  useEffect(() => {
+    if (flow === AUTH_FLOW.VERIFY_EMAIL && success === "true")
+      toast.success(message);
+  }, [flow, success, message]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">

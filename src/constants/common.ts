@@ -39,4 +39,12 @@ export const LINK_STATUS = {
   LIMIT_REACHED: "limit_reached",
 };
 
+export const AUTH_FLOW = {
+  VERIFY_EMAIL: "verify-email",
+  RESET_PASSWORD: "reset-password",
+  TWO_FACTOR: "2fa",
+} as const;
+
+export type AuthFlow = (typeof AUTH_FLOW)[keyof typeof AUTH_FLOW];
+
 export type LinkStatus = (typeof LINK_STATUS)[keyof typeof LINK_STATUS];

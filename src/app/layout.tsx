@@ -57,6 +57,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -70,7 +71,6 @@ export default async function RootLayout({
                   <Header />
                   <main className="relative flex-1">{children}</main>
                   <Footer />
-                  <Toaster />
                 </div>
               </UserProvider>
             </LanguageProvider>

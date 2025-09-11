@@ -13,9 +13,8 @@ import { PATH } from "@/constants/path";
 import { useLogin2FA } from "@/services/api/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { useSearchParams } from "next/navigation";
-import { getCookieMaxAge } from "@/utils/cookies.";
-import { nextApi } from "@/services/axios";
 import { useUser } from "@/context/userProvider";
+import { handleSuccessfulAuth } from "@/services/auth-flow";
 
 type FormValues = Verify2FAFormValues;
 
@@ -49,40 +48,21 @@ export default function Verify2FAPage() {
         onSuccess: async (response) => {
           if (validateResponseCode(response.statusCode)) {
             console.log("response", response);
-            // always set access/refresh tokens
-            const cookiesToSet: unknown[] = [
-              {
-                name: "accessToken",
-                value: response.data?.accessToken ?? "",
-                options: {
-                  httpOnly: false,
-                  path: "/",
-                  maxAge: getCookieMaxAge(
-                    process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
-                  ),
-                },
-              },
-              {
-                name: "refreshToken",
-                value: response.data?.refreshToken ?? "",
-                options: {
-                  httpOnly: false,
-                  path: "/",
-                  maxAge: getCookieMaxAge(
-                    process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
-                  ),
-                },
-              },
-            ];
 
-            const res = await nextApi.post("/auth/set-cookie", {
-              cookies: cookiesToSet,
-            });
+            // Handle successful 2FA verification
+            const success = await handleSuccessfulAuth(
+              response,
+              undefined, // No remember me data for 2FA
+              {
+                onSuccess: () => {
+                  loginUser(response.data);
+                  router.push(PATH.HOME);
+                },
+              }
+            );
 
-            if (validateResponseCode(res.statusCode)) {
-              toast.success(response.message);
-              loginUser(response.data);
-              router.push(PATH.HOME);
+            if (!success) {
+              toast.error("Failed to set authentication cookies");
             }
           } else {
             toast.error(response.message);

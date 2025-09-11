@@ -4,6 +4,8 @@ export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   userData: User;
+  requires2FA?: boolean;
+  otpToken?: string;
 }
 
 export interface LoginBody {
@@ -14,14 +16,6 @@ export interface LoginBody {
 export interface RefreshTokenResponse {
   accessToken: string;
   refreshToken: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  userData: User;
-  requires2FA: boolean;
-  otpToken: string;
 }
 
 export interface RegisterBody {

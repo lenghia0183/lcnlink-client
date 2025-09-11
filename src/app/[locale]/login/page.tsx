@@ -15,16 +15,13 @@ import { getAuthSchema, AuthFormValues } from "./validation";
 
 import { toast } from "@/components/AppToast";
 import validateResponseCode from "@/utils/validateResponseCode";
-import { nextApi } from "@/services/axios";
 import { getCookie } from "cookies-next";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
-import { PATH } from "@/constants/path";
 import { useLogin, useResendEmailVerification } from "@/services/api/auth";
-import { getCookieMaxAge } from "@/utils/cookies.";
 import { useSearchParams } from "next/navigation";
 import { AUTH_FLOW } from "@/constants/common";
-import { ErrorCodeEnum } from "@/constants/reponse-code";
+import { createAuthFlowHandler } from "@/services/auth-flow";
 
 type FormValues = AuthFormValues;
 
@@ -84,12 +81,27 @@ export default function LoginPage() {
     );
   };
 
+  // Create auth flow handler
+  const authFlow = createAuthFlowHandler(
+    loginUser,
+    router,
+    handleResendEmail,
+    isResendingEmail,
+    tEmailVerify
+  );
+
   const onSubmit = async (data: FormValues) => {
     // Clear any existing email not verified toast
     if (emailNotVerifiedToastId) {
       toast.dismiss(emailNotVerifiedToastId);
       setEmailNotVerifiedToastId(null);
     }
+
+    const rememberMeData = {
+      email: data.email,
+      password: data.password || "",
+      remember: data.remember[0] === "true",
+    };
 
     trigger(
       {
@@ -100,208 +112,27 @@ export default function LoginPage() {
         onSuccess: async (response) => {
           console.log("response", response);
           if (validateResponseCode(response.statusCode)) {
-            console.log("response", response);
-            // always set access/refresh tokens
-            const cookiesToSet: unknown[] = [
-              {
-                name: "accessToken",
-                value: response.data?.accessToken ?? "",
-                options: {
-                  httpOnly: false,
-                  path: "/",
-                  maxAge: getCookieMaxAge(
-                    process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
-                  ),
-                },
-              },
-              {
-                name: "refreshToken",
-                value: response.data?.refreshToken ?? "",
-                options: {
-                  httpOnly: false,
-                  path: "/",
-                  maxAge: getCookieMaxAge(
-                    process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
-                  ),
-                },
-              },
-            ];
-
-            // handle remember me
-            const remember = data.remember[0] == "true";
-            if (remember) {
-              // save email/password and remember flag in cookies (client-side)
-              cookiesToSet.push(
-                {
-                  name: "remember",
-                  value: "true",
-                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                },
-                {
-                  name: "savedEmail",
-                  value: data.email,
-                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                },
-                {
-                  name: "savedPassword",
-                  value: data.password,
-                  options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                }
-              );
-            } else {
-              // clear saved credentials
-              cookiesToSet.push(
-                {
-                  name: "remember",
-                  value: "",
-                  options: { maxAge: 0, path: "/" },
-                },
-                {
-                  name: "savedEmail",
-                  value: "",
-                  options: { maxAge: 0, path: "/" },
-                },
-                {
-                  name: "savedPassword",
-                  value: "",
-                  options: { maxAge: 0, path: "/" },
-                }
-              );
-            }
-
-            const res = await nextApi.post("/auth/set-cookie", {
-              cookies: cookiesToSet,
-            });
-
-            if (validateResponseCode(res.statusCode)) {
-              toast.success(response.message);
-              loginUser(response.data);
-              router.push(PATH.HOME);
-            }
+            // Handle successful login
+            await authFlow.handleSuccess(response, rememberMeData);
           } else {
             console.log("response", response);
             if (response?.data?.requires2FA) {
-              // always set access/refresh tokens
-              const cookiesToSet: unknown[] = [
-                {
-                  name: "accessToken",
-                  value: response.data?.accessToken ?? "",
-                  options: {
-                    httpOnly: false,
-                    path: "/",
-                    maxAge: getCookieMaxAge(
-                      process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || ""
-                    ),
-                  },
-                },
-                {
-                  name: "refreshToken",
-                  value: response.data?.refreshToken ?? "",
-                  options: {
-                    httpOnly: false,
-                    path: "/",
-                    maxAge: getCookieMaxAge(
-                      process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || ""
-                    ),
-                  },
-                },
-              ];
-
-              // handle remember me
-              const remember = data.remember[0] == "true";
-              if (remember) {
-                // save email/password and remember flag in cookies (client-side)
-                cookiesToSet.push(
-                  {
-                    name: "remember",
-                    value: "true",
-                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                  },
-                  {
-                    name: "savedEmail",
-                    value: data.email,
-                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                  },
-                  {
-                    name: "savedPassword",
-                    value: data.password,
-                    options: { path: "/", maxAge: getCookieMaxAge("30d") },
-                  }
-                );
-              } else {
-                // clear saved credentials
-                cookiesToSet.push(
-                  {
-                    name: "remember",
-                    value: "",
-                    options: { maxAge: 0, path: "/" },
-                  },
-                  {
-                    name: "savedEmail",
-                    value: "",
-                    options: { maxAge: 0, path: "/" },
-                  },
-                  {
-                    name: "savedPassword",
-                    value: "",
-                    options: { maxAge: 0, path: "/" },
-                  }
-                );
-              }
-
-              const res = await nextApi.post("/auth/set-cookie", {
-                cookies: cookiesToSet,
-              });
-
-              if (validateResponseCode(res.statusCode)) {
-                router.push(
-                  `${PATH.VERIFY_2FA}?token=${response.data.otpToken}`
-                );
-                toast.info(response.message);
-              }
+              // Handle 2FA required
+              await authFlow.handle2FA(response, rememberMeData);
             } else {
-              // Check if it's EMAIL_NOT_VERIFIED error
-              if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
-                const toastId = toast.error(
-                  tEmailVerify("title"),
-                  tEmailVerify("description"),
-                  {
-                    action: {
-                      label: isResendingEmail
-                        ? tEmailVerify("resending")
-                        : tEmailVerify("resendEmail"),
-                      onClick: () => handleResendEmail(data.email),
-                    },
-                    duration: 10000,
-                  }
-                );
+              // Handle other errors
+              const toastId = authFlow.handleError(response, data.email);
+              if (toastId) {
                 setEmailNotVerifiedToastId(toastId);
-              } else {
-                toast.error(response.message);
               }
             }
           }
         },
         onError: (response) => {
-          // Check if it's EMAIL_NOT_VERIFIED error
-          if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
-            const email = methods.getValues("email");
-            const toastId = toast.error(
-              tEmailVerify("title"),
-              tEmailVerify("description"),
-              {
-                action: {
-                  label: isResendingEmail
-                    ? tEmailVerify("resending")
-                    : tEmailVerify("resendEmail"),
-                  onClick: () => handleResendEmail(email),
-                },
-                duration: 10000, // Show longer for email verification
-              }
-            );
+          // Handle error responses
+          const toastId = authFlow.handleError(response, data.email);
+          if (toastId) {
             setEmailNotVerifiedToastId(toastId);
-          } else {
-            toast.error(response.message);
           }
         },
       }

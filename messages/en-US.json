@@ -613,5 +613,17 @@
     "authenticationRequired": "Authentication Required",
     "home": "Home",
     "goBack": "Go Back"
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "subtitle": "An error occurred while processing your request",
+    "defaultMessage": "An unexpected error has occurred",
+    "errorCode": "Error Code",
+    "description": "We apologize for the inconvenience. Please try again or contact support if the problem persists.",
+    "backToHome": "Back to Home",
+    "goBack": "Go Back",
+    "refresh": "Refresh",
+    "needHelp": "Need Help?",
+    "helpDescription": "If you continue to experience issues, please contact our support team for assistance."
   }
 }

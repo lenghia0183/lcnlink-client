@@ -598,5 +598,17 @@
     "codeRequired": "Mã xác thực là bắt buộc",
     "codeLength": "Mã phải có đúng 6 chữ số",
     "codeFormat": "Mã chỉ được chứa số"
+  },
+  "Error": {
+    "title": "Đã xảy ra lỗi",
+    "subtitle": "Có lỗi xảy ra khi xử lý yêu cầu của bạn",
+    "defaultMessage": "Đã xảy ra lỗi không mong muốn",
+    "errorCode": "Mã Lỗi",
+    "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại hoặc liên hệ hỗ trợ nếu vấn đề vẫn tiếp diễn.",
+    "backToHome": "Về Trang Chủ",
+    "goBack": "Quay Lại",
+    "refresh": "Làm Mới",
+    "needHelp": "Cần Trợ Giúp?",
+    "helpDescription": "Nếu bạn vẫn gặp vấn đề, vui lòng liên hệ đội ngũ hỗ trợ của chúng tôi để được hỗ trợ."
   }
 }

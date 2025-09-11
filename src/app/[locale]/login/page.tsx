@@ -56,6 +56,9 @@ export default function LoginPage() {
   });
 
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [emailNotVerifiedToastId, setEmailNotVerifiedToastId] = useState<
+    number | string | null
+  >(null);
   const handleShowPassword = () => setIsShowPassword((v) => !v);
 
   const handleResendEmail = async (email: string) => {
@@ -64,6 +67,11 @@ export default function LoginPage() {
       {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
+            // Dismiss the email not verified toast
+            if (emailNotVerifiedToastId) {
+              toast.dismiss(emailNotVerifiedToastId);
+              setEmailNotVerifiedToastId(null);
+            }
             toast.success(tEmailVerify("resendSuccess"));
           } else {
             toast.error(response.message || tEmailVerify("resendError"));
@@ -77,6 +85,12 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (data: FormValues) => {
+    // Clear any existing email not verified toast
+    if (emailNotVerifiedToastId) {
+      toast.dismiss(emailNotVerifiedToastId);
+      setEmailNotVerifiedToastId(null);
+    }
+
     trigger(
       {
         email: data.email,
@@ -248,7 +262,7 @@ export default function LoginPage() {
             } else {
               // Check if it's EMAIL_NOT_VERIFIED error
               if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
-                toast.error(
+                const toastId = toast.error(
                   tEmailVerify("title"),
                   tEmailVerify("description"),
                   {
@@ -261,6 +275,7 @@ export default function LoginPage() {
                     duration: 10000,
                   }
                 );
+                setEmailNotVerifiedToastId(toastId);
               } else {
                 toast.error(response.message);
               }
@@ -271,15 +286,20 @@ export default function LoginPage() {
           // Check if it's EMAIL_NOT_VERIFIED error
           if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
             const email = methods.getValues("email");
-            toast.error(tEmailVerify("title"), tEmailVerify("description"), {
-              action: {
-                label: isResendingEmail
-                  ? tEmailVerify("resending")
-                  : tEmailVerify("resendEmail"),
-                onClick: () => handleResendEmail(email),
-              },
-              duration: 10000, // Show longer for email verification
-            });
+            const toastId = toast.error(
+              tEmailVerify("title"),
+              tEmailVerify("description"),
+              {
+                action: {
+                  label: isResendingEmail
+                    ? tEmailVerify("resending")
+                    : tEmailVerify("resendEmail"),
+                  onClick: () => handleResendEmail(email),
+                },
+                duration: 10000, // Show longer for email verification
+              }
+            );
+            setEmailNotVerifiedToastId(toastId);
           } else {
             toast.error(response.message);
           }
@@ -310,6 +330,15 @@ export default function LoginPage() {
     if (flow === AUTH_FLOW.VERIFY_EMAIL && success === "true")
       toast.success(message);
   }, [flow, success, message]);
+
+  // Cleanup toast on unmount
+  useEffect(() => {
+    return () => {
+      if (emailNotVerifiedToastId) {
+        toast.dismiss(emailNotVerifiedToastId);
+      }
+    };
+  }, [emailNotVerifiedToastId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">

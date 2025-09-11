@@ -27,3 +27,7 @@ export enum ResponseCodeEnum {
   // Custom business logic errors
   CODE_EXIST = 1001,
 }
+
+export enum ErrorCodeEnum {
+  EMAIL_NOT_VERIFIED = "EMAIL_NOT_VERIFIED",
+}

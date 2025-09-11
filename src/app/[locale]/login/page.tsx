@@ -20,15 +20,17 @@ import { getCookie } from "cookies-next";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";
 import { PATH } from "@/constants/path";
-import { useLogin } from "@/services/api/auth";
+import { useLogin, useResendEmailVerification } from "@/services/api/auth";
 import { getCookieMaxAge } from "@/utils/cookies.";
 import { useSearchParams } from "next/navigation";
 import { AUTH_FLOW } from "@/constants/common";
+import { ErrorCodeEnum } from "@/constants/reponse-code";
 
 type FormValues = AuthFormValues;
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
+  const tEmailVerify = useTranslations("EmailVerification");
   const tCommon = useTranslations("Common");
   const schema = getAuthSchema(t);
   const router = useRouter();
@@ -41,6 +43,8 @@ export default function LoginPage() {
   const { loginUser } = useUser();
 
   const { isMutating, trigger } = useLogin();
+  const { isMutating: isResendingEmail, trigger: resendEmailTrigger } =
+    useResendEmailVerification();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -54,6 +58,24 @@ export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const handleShowPassword = () => setIsShowPassword((v) => !v);
 
+  const handleResendEmail = async (email: string) => {
+    resendEmailTrigger(
+      { email },
+      {
+        onSuccess: (response) => {
+          if (validateResponseCode(response.statusCode)) {
+            toast.success(tEmailVerify("resendSuccess"));
+          } else {
+            toast.error(response.message || tEmailVerify("resendError"));
+          }
+        },
+        onError: (response) => {
+          toast.error(response.message || tEmailVerify("resendError"));
+        },
+      }
+    );
+  };
+
   const onSubmit = async (data: FormValues) => {
     trigger(
       {
@@ -62,6 +84,7 @@ export default function LoginPage() {
       },
       {
         onSuccess: async (response) => {
+          console.log("response", response);
           if (validateResponseCode(response.statusCode)) {
             console.log("response", response);
             // always set access/refresh tokens
@@ -223,12 +246,43 @@ export default function LoginPage() {
                 toast.info(response.message);
               }
             } else {
-              toast.error(response.message);
+              // Check if it's EMAIL_NOT_VERIFIED error
+              if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
+                toast.error(
+                  tEmailVerify("title"),
+                  tEmailVerify("description"),
+                  {
+                    action: {
+                      label: isResendingEmail
+                        ? tEmailVerify("resending")
+                        : tEmailVerify("resendEmail"),
+                      onClick: () => handleResendEmail(data.email),
+                    },
+                    duration: 10000,
+                  }
+                );
+              } else {
+                toast.error(response.message);
+              }
             }
           }
         },
         onError: (response) => {
-          toast.error(response.message);
+          // Check if it's EMAIL_NOT_VERIFIED error
+          if (response.errorCode === ErrorCodeEnum.EMAIL_NOT_VERIFIED) {
+            const email = methods.getValues("email");
+            toast.error(tEmailVerify("title"), tEmailVerify("description"), {
+              action: {
+                label: isResendingEmail
+                  ? tEmailVerify("resending")
+                  : tEmailVerify("resendEmail"),
+                onClick: () => handleResendEmail(email),
+              },
+              duration: 10000, // Show longer for email verification
+            });
+          } else {
+            toast.error(response.message);
+          }
         },
       }
     );

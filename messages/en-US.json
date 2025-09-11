@@ -625,5 +625,14 @@
     "refresh": "Refresh",
     "needHelp": "Need Help?",
     "helpDescription": "If you continue to experience issues, please contact our support team for assistance."
+  },
+  "EmailVerification": {
+    "title": "Email Not Verified",
+    "description": "Please verify your email address to continue. We've sent a verification link to your email.",
+    "resendEmail": "Resend Verification Email",
+    "resendSuccess": "Verification email sent successfully",
+    "resendError": "Failed to send verification email",
+    "checkEmail": "Please check your email inbox and spam folder",
+    "resending": "Sending..."
   }
 }

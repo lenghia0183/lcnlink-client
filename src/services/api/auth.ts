@@ -127,3 +127,13 @@ export const useChange2FA = () => {
 
   return useSWRMutation(url, fetcher);
 };
+
+export const useResendEmailVerification = () => {
+  const url = "v1/auth/resend-verify-email";
+
+  const fetcher = async (key: string, { arg }: { arg: { email: string } }) => {
+    return apiNoToken.post<RegisterResponse, { email: string }>(key, arg);
+  };
+
+  return useSWRMutation(url, fetcher);
+};

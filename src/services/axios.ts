@@ -105,9 +105,11 @@ export const createInstance = (
 // --- Xử lý lỗi ---
 const handleAxiosError = <T>(err: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(err)) {
+    console.log("err", err);
     return {
       statusCode: err.response?.data?.code || err.response?.status || 500,
       message: err.response?.data?.message || err.message,
+      errorCode: err.response?.data?.errorCode,
       ...(isDevelopment ? { errorDetails: err } : {}),
     };
   }

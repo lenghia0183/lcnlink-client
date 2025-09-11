@@ -1,4 +1,4 @@
-import { ResponseCodeEnum } from "@/constants/reponse-code";
+import { ErrorCodeEnum, ResponseCodeEnum } from "@/constants/reponse-code";
 import { AxiosError } from "axios";
 
 export interface Meta {
@@ -14,4 +14,5 @@ export interface ApiResponse<T> {
   data?: T;
   errorDetails?: AxiosError;
   message: string;
+  errorCode?: ErrorCodeEnum;
 }

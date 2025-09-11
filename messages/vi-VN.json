@@ -610,5 +610,14 @@
     "refresh": "Làm Mới",
     "needHelp": "Cần Trợ Giúp?",
     "helpDescription": "Nếu bạn vẫn gặp vấn đề, vui lòng liên hệ đội ngũ hỗ trợ của chúng tôi để được hỗ trợ."
+  },
+  "EmailVerification": {
+    "title": "Email Chưa Được Xác Thực",
+    "description": "Vui lòng xác thực địa chỉ email của bạn để tiếp tục. Chúng tôi đã gửi liên kết xác thực đến email của bạn.",
+    "resendEmail": "Gửi Lại Email Xác Thực",
+    "resendSuccess": "Đã gửi email xác thực thành công",
+    "resendError": "Không thể gửi email xác thực",
+    "checkEmail": "Vui lòng kiểm tra hộp thư email và thư mục spam",
+    "resending": "Đang gửi..."
   }
 }

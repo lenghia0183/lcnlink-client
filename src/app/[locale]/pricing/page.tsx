@@ -1,21 +1,17 @@
-
 "use client";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Check, 
-  X, 
-  Star, 
-  Zap, 
-  Shield, 
-  BarChart3, 
-  Crown,
-  Sparkles
-} from "lucide-react";
+import { Check, X, Star, Zap, Shield, Crown, Sparkles } from "lucide-react";
 
 export default function PricingPage() {
   const t = useTranslations("Pricing");
@@ -34,10 +30,10 @@ export default function PricingPage() {
         { name: t("features.customDomain"), included: false },
         { name: t("features.advancedAnalytics"), included: false },
         { name: t("features.teamCollaboration"), included: false },
-        { name: t("features.apiAccess"), included: false }
+        { name: t("features.apiAccess"), included: false },
       ],
       recommended: false,
-      buttonText: t("getStarted")
+      buttonText: t("getStarted"),
     },
     {
       name: t("plans.pro.name"),
@@ -51,10 +47,10 @@ export default function PricingPage() {
         { name: t("features.passwordProtection"), included: true },
         { name: t("features.qrCodes"), included: true },
         { name: t("features.prioritySupport"), included: true },
-        { name: t("features.apiAccess"), included: false }
+        { name: t("features.apiAccess"), included: false },
       ],
       recommended: true,
-      buttonText: t("startFreeTrial")
+      buttonText: t("startFreeTrial"),
     },
     {
       name: t("plans.business.name"),
@@ -68,30 +64,30 @@ export default function PricingPage() {
         { name: t("features.apiAccess"), included: true },
         { name: t("features.advancedSecurity"), included: true },
         { name: t("features.dedicatedSupport"), included: true },
-        { name: t("features.customIntegrations"), included: true }
+        { name: t("features.customIntegrations"), included: true },
       ],
       recommended: false,
-      buttonText: t("contactSales")
-    }
+      buttonText: t("contactSales"),
+    },
   ];
 
   const faqs = [
     {
       question: t("faq.q1"),
-      answer: t("faq.a1")
+      answer: t("faq.a1"),
     },
     {
       question: t("faq.q2"),
-      answer: t("faq.a2")
+      answer: t("faq.a2"),
     },
     {
       question: t("faq.q3"),
-      answer: t("faq.a3")
+      answer: t("faq.a3"),
     },
     {
       question: t("faq.q4"),
-      answer: t("faq.a4")
-    }
+      answer: t("faq.a4"),
+    },
   ];
 
   return (
@@ -107,33 +103,41 @@ export default function PricingPage() {
               </div>
             </div>
           </div>
-          
+
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             {t("title")}
           </h1>
-          
+
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
             {t("subtitle")}
           </p>
 
           {/* Billing Toggle */}
           <div className="flex items-center justify-center gap-4 mb-12">
-            <span className={`font-medium ${!isYearly ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span
+              className={`font-medium ${
+                !isYearly ? "text-blue-600" : "text-gray-500"
+              }`}
+            >
               {t("monthly")}
             </span>
             <button
               onClick={() => setIsYearly(!isYearly)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                isYearly ? 'bg-blue-600' : 'bg-gray-300'
+                isYearly ? "bg-blue-600" : "bg-gray-300"
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isYearly ? 'translate-x-6' : 'translate-x-1'
+                  isYearly ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>
-            <span className={`font-medium ${isYearly ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span
+              className={`font-medium ${
+                isYearly ? "text-blue-600" : "text-gray-500"
+              }`}
+            >
               {t("yearly")}
             </span>
             {isYearly && (
@@ -150,7 +154,7 @@ export default function PricingPage() {
             <Card
               key={index}
               className={`relative border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl ${
-                plan.recommended ? 'ring-2 ring-blue-500 scale-105' : ''
+                plan.recommended ? "ring-2 ring-blue-500 scale-105" : ""
               }`}
             >
               {plan.recommended && (
@@ -160,21 +164,27 @@ export default function PricingPage() {
                   </Badge>
                 </div>
               )}
-              
+
               <CardHeader className="text-center pb-6">
                 <div className="flex justify-center mb-4">
-                  <div className={`p-3 rounded-full ${
-                    plan.recommended 
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' 
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                  }`}>
+                  <div
+                    className={`p-3 rounded-full ${
+                      plan.recommended
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
                     {plan.icon}
                   </div>
                 </div>
-                
-                <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                <CardDescription className="text-base mt-2">{plan.description}</CardDescription>
-                
+
+                <CardTitle className="text-2xl font-bold">
+                  {plan.name}
+                </CardTitle>
+                <CardDescription className="text-base mt-2">
+                  {plan.description}
+                </CardDescription>
+
                 <div className="mt-6">
                   <div className="flex items-baseline justify-center">
                     <span className="text-4xl font-bold">
@@ -188,12 +198,13 @@ export default function PricingPage() {
                   </div>
                   {isYearly && plan.price.yearly > 0 && (
                     <p className="text-sm text-gray-500 mt-1">
-                      ${(plan.price.yearly / 12).toFixed(0)}/month {t("billedYearly")}
+                      ${(plan.price.yearly / 12).toFixed(0)}/month{" "}
+                      {t("billedYearly")}
                     </p>
                   )}
                 </div>
               </CardHeader>
-              
+
               <CardContent>
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
@@ -203,20 +214,24 @@ export default function PricingPage() {
                       ) : (
                         <X className="h-5 w-5 text-gray-400 flex-shrink-0" />
                       )}
-                      <span className={feature.included ? '' : 'text-gray-400 line-through'}>
+                      <span
+                        className={
+                          feature.included ? "" : "text-gray-400 line-through"
+                        }
+                      >
                         {feature.name}
                       </span>
                     </li>
                   ))}
                 </ul>
-                
+
                 <Button
                   className={`w-full ${
                     plan.recommended
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-                      : 'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700'
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                      : "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
                   }`}
-                  variant={plan.recommended ? 'default' : 'outline'}
+                  variant={plan.recommended ? "default" : "outline"}
                 >
                   {plan.buttonText}
                 </Button>
@@ -259,15 +274,22 @@ export default function PricingPage() {
 
         {/* FAQ Section */}
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">{t("faq.title")}</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            {t("faq.title")}
+          </h2>
           <div className="space-y-6">
             {faqs.map((faq, index) => (
-              <Card key={index} className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+              <Card
+                key={index}
+                className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+              >
                 <CardHeader>
                   <CardTitle className="text-lg">{faq.question}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {faq.answer}
+                  </p>
                 </CardContent>
               </Card>
             ))}

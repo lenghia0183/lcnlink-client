@@ -18,8 +18,8 @@ import {
 
 import useSWRMutation from "swr/mutation";
 
-export const useGetMe = () => {
-  const url = `v1/auth/me`;
+export const useGetMe = (enabled?: boolean) => {
+  const url = enabled ? `v1/auth/me` : null;
   const fetcher = async (url: string) => {
     const response = await api.get<User>(url);
     return response.data;

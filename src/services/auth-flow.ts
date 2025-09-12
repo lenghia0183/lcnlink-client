@@ -18,9 +18,6 @@ export interface RememberMeData {
   remember: boolean;
 }
 
-/**
- * Handles successful authentication response
- */
 export const handleSuccessfulAuth = async (
   response: ApiResponse<LoginResponse>,
   rememberMeData?: RememberMeData,
@@ -54,9 +51,6 @@ export const handleSuccessfulAuth = async (
   }
 };
 
-/**
- * Handles 2FA required response
- */
 export const handle2FARequired = async (
   response: ApiResponse<LoginResponse>,
   rememberMeData?: RememberMeData,
@@ -86,9 +80,6 @@ export const handle2FARequired = async (
   }
 };
 
-/**
- * Handles email not verified error
- */
 export const handleEmailNotVerifiedError = (
   email: string,
   onResendEmail: (email: string) => void,
@@ -108,13 +99,10 @@ export const handleEmailNotVerifiedError = (
       duration: 10000,
     }
   );
-
+  console.log("toastId", toastId);
   return toastId;
 };
 
-/**
- * Handles general authentication error
- */
 export const handleAuthError = (
   response: { errorCode?: string; message: string },
   email: string,
@@ -131,15 +119,12 @@ export const handleAuthError = (
       tEmailVerify
     );
   }
-
+  console.log("response return null", response);
   // Handle other errors
   toast.error(response.message);
   return null;
 };
 
-/**
- * Creates a complete authentication flow handler
- */
 export const createAuthFlowHandler = (
   loginUser: (user: LoginResponse) => void,
   router: { push: (path: string) => void },

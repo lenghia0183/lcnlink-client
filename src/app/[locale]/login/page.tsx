@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Mail, Lock, Eye, EyeOff, Link2 } from "lucide-react";
@@ -53,22 +53,19 @@ export default function LoginPage() {
   });
 
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [emailNotVerifiedToastId, setEmailNotVerifiedToastId] = useState<
-    number | string | null
-  >(null);
+  const emailNotVerifiedToastId = useRef<number | string | null>(null);
   const handleShowPassword = () => setIsShowPassword((v) => !v);
 
   const handleResendEmail = async (email: string) => {
+    if (emailNotVerifiedToastId.current) {
+      toast.dismiss(emailNotVerifiedToastId.current);
+      emailNotVerifiedToastId.current = null;
+    }
     resendEmailTrigger(
       { email },
       {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
-            // Dismiss the email not verified toast
-            if (emailNotVerifiedToastId) {
-              toast.dismiss(emailNotVerifiedToastId);
-              setEmailNotVerifiedToastId(null);
-            }
             toast.success(tEmailVerify("resendSuccess"));
           } else {
             toast.error(response.message || tEmailVerify("resendError"));
@@ -92,9 +89,9 @@ export default function LoginPage() {
 
   const onSubmit = async (data: FormValues) => {
     // Clear any existing email not verified toast
-    if (emailNotVerifiedToastId) {
-      toast.dismiss(emailNotVerifiedToastId);
-      setEmailNotVerifiedToastId(null);
+    if (emailNotVerifiedToastId.current) {
+      toast.dismiss(emailNotVerifiedToastId.current);
+      emailNotVerifiedToastId.current = null;
     }
 
     const rememberMeData = {
@@ -110,29 +107,23 @@ export default function LoginPage() {
       },
       {
         onSuccess: async (response) => {
-          console.log("response", response);
           if (validateResponseCode(response.statusCode)) {
-            // Handle successful login
             await authFlow.handleSuccess(response, rememberMeData);
           } else {
-            console.log("response", response);
             if (response?.data?.requires2FA) {
-              // Handle 2FA required
               await authFlow.handle2FA(response, rememberMeData);
             } else {
-              // Handle other errors
               const toastId = authFlow.handleError(response, data.email);
               if (toastId) {
-                setEmailNotVerifiedToastId(toastId);
+                emailNotVerifiedToastId.current = toastId;
               }
             }
           }
         },
         onError: (response) => {
-          // Handle error responses
           const toastId = authFlow.handleError(response, data.email);
           if (toastId) {
-            setEmailNotVerifiedToastId(toastId);
+            emailNotVerifiedToastId.current = toastId;
           }
         },
       }
@@ -165,11 +156,11 @@ export default function LoginPage() {
   // Cleanup toast on unmount
   useEffect(() => {
     return () => {
-      if (emailNotVerifiedToastId) {
-        toast.dismiss(emailNotVerifiedToastId);
+      if (emailNotVerifiedToastId.current) {
+        toast.dismiss(emailNotVerifiedToastId.current);
       }
     };
-  }, [emailNotVerifiedToastId]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4">

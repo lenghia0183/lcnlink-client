@@ -105,7 +105,6 @@ export const createInstance = (
 // --- Xử lý lỗi ---
 const handleAxiosError = <T>(err: unknown): ApiResponse<T> => {
   if (axios.isAxiosError(err)) {
-    console.log("err", err);
     return {
       statusCode: err.response?.data?.code || err.response?.status || 500,
       message: err.response?.data?.message || err.message,
@@ -207,7 +206,6 @@ export const createApi = (instance: AxiosInstance) => ({
 export const refreshAccessToken = async () => {
   const res = await nextApiNoToken.post(REFRESH_TOKEN_URL, {});
   if (!res) throw new Error("Failed to refresh token");
-  console.log("refresh token response", res);
 };
 
 // --- Tạo instance ---

@@ -619,5 +619,320 @@
     "resendError": "Không thể gửi email xác thực",
     "checkEmail": "Vui lòng kiểm tra hộp thư email và thư mục spam",
     "resending": "Đang gửi..."
+  },
+  "Cookies": {
+    "title": "Chính sách cookies",
+    "subtitle": "Chúng tôi sử dụng cookies để cải thiện trải nghiệm của bạn trên trang web. Tìm hiểu về các loại cookies chúng tôi sử dụng và cách quản lý chúng.",
+    "lastUpdated": "Cập nhật lần cuối",
+    "whatAreCookies": {
+      "title": "Cookies là gì?",
+      "description1": "Cookies là các tệp văn bản nhỏ được lưu trữ trên thiết bị của bạn khi bạn truy cập trang web. Chúng giúp trang web ghi nhớ thông tin về lần truy cập của bạn, làm cho lần truy cập tiếp theo dễ dàng hơn và trang web hữu ích hơn đối với bạn.",
+      "description2": "Cookies không chứa thông tin cá nhân có thể xác định danh tính và không thể chạy mã độc hại. Chúng đơn giản là dữ liệu text được sử dụng để cải thiện trải nghiệm người dùng."
+    },
+    "typesTitle": "Các loại cookies chúng tôi sử dụng",
+    "cookieTypes": {
+      "essential": {
+        "title": "Cookies cần thiết",
+        "description": "Các cookies này cần thiết để trang web hoạt động và không thể tắt.",
+        "examples": [
+          "Phiên đăng nhập của người dùng",
+          "Cài đặt bảo mật và xác thực",
+          "Preferences cơ bản của trang web"
+        ]
+      },
+      "analytics": {
+        "title": "Cookies phân tích",
+        "description": "Giúp chúng tôi hiểu cách người dùng tương tác với trang web.",
+        "examples": [
+          "Google Analytics để theo dõi lượt truy cập",
+          "Thống kê thời gian sử dụng trang",
+          "Phân tích hành vi người dùng"
+        ]
+      },
+      "functional": {
+        "title": "Cookies chức năng",
+        "description": "Lưu trữ tùy chọn và cài đặt để cải thiện trải nghiệm.",
+        "examples": [
+          "Ngôn ngữ hiển thị",
+          "Chế độ dark/light theme",
+          "Cài đặt giao diện người dùng"
+        ]
+      },
+      "security": {
+        "title": "Cookies bảo mật",
+        "description": "Bảo vệ trang web khỏi các cuộc tấn công và gian lận.",
+        "examples": [
+          "CSRF protection tokens",
+          "Rate limiting và spam protection",
+          "Security headers và validation"
+        ]
+      }
+    },
+    "required": "Bắt buộc",
+    "optional": "Tùy chọn",
+    "examples": "Ví dụ",
+    "management": {
+      "title": "Cách quản lý cookies",
+      "browserManagement": "Quản lý trong trình duyệt",
+      "browsers": {
+        "chrome": {
+          "name": "Chrome",
+          "steps": [
+            "Nhấp vào menu ba chấm ở góc trên bên phải",
+            "Chọn 'Cài đặt' > 'Quyền riêng tư và bảo mật'",
+            "Nhấp 'Cookies và dữ liệu trang web khác'",
+            "Quản lý cookies theo ý muốn"
+          ]
+        },
+        "firefox": {
+          "name": "Firefox", 
+          "steps": [
+            "Nhấp vào menu ba dạng ở góc trên bên phải",
+            "Chọn 'Cài đặt' > 'Quyền riêng tư & Bảo mật'",
+            "Tìm phần 'Cookies và dữ liệu trang web'",
+            "Chỉnh sửa cài đặt cookies"
+          ]
+        },
+        "safari": {
+          "name": "Safari",
+          "steps": [
+            "Vào menu 'Safari' > 'Tùy chọn'",
+            "Nhấp tab 'Quyền riêng tư'",
+            "Quản lý cài đặt cookies và website tracking",
+            "Chọn mức độ bảo mật phù hợp"
+          ]
+        }
+      },
+      "warning": {
+        "title": "Lưu ý quan trọng",
+        "description": "Việc tắt cookies có thể ảnh hưởng đến chức năng của trang web. Một số tính năng có thể không hoạt động đúng cách nếu bạn tắt tất cả cookies."
+      }
+    },
+    "support": {
+      "title": "Cần hỗ trợ về cookies?",
+      "description": "Nếu bạn có câu hỏi về cách chúng tôi sử dụng cookies hoặc cần hỗ trợ quản lý cài đặt cookies, đừng ngần ngại liên hệ.",
+      "email": "Email"
+    }
+  },
+  "Contact": {
+    "title": "Liên hệ với chúng tôi",
+    "subtitle": "Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn. Hãy liên hệ với chúng tôi bất cứ khi nào bạn cần!",
+    "contactInfo": "Thông tin liên hệ",
+    "contactDetails": {
+      "email": {
+        "title": "Email",
+        "details": "support@linkshortener.com",
+        "subtext": "Phản hồi trong vòng 24 giờ"
+      },
+      "phone": {
+        "title": "Điện thoại",
+        "details": "+84 123 456 789",
+        "subtext": "Thứ 2 - Thứ 6, 9:00 - 17:00"
+      },
+      "address": {
+        "title": "Địa chỉ",
+        "details": "123 Đường ABC, Quận 1",
+        "subtext": "TP. Hồ Chí Minh, Việt Nam"
+      },
+      "hours": {
+        "title": "Giờ làm việc",
+        "details": "Thứ 2 - Thứ 6",
+        "subtext": "9:00 AM - 5:00 PM (GMT+7)"
+      }
+    },
+    "urgentSupport": {
+      "title": "Hỗ trợ khẩn cấp",
+      "description": "Nếu bạn gặp vấn đề khẩn cấp, vui lòng gửi email với tiêu đề \"URGENT\" hoặc gọi hotline để được hỗ trợ ưu tiên."
+    },
+    "form": {
+      "title": "Gửi tin nhắn",
+      "name": "Họ và tên",
+      "namePlaceholder": "Nhập họ và tên của bạn",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "subject": "Chủ đề",
+      "subjectPlaceholder": "Tiêu đề tin nhắn",
+      "message": "Tin nhắn",
+      "messagePlaceholder": "Mô tả chi tiết vấn đề hoặc câu hỏi của bạn...",
+      "submit": "Gửi tin nhắn",
+      "successMessage": "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong vòng 24 giờ.",
+      "validation": {
+        "nameRequired": "Tên là bắt buộc",
+        "emailInvalid": "Email không hợp lệ",
+        "subjectRequired": "Chủ đề là bắt buộc",
+        "messageMin": "Tin nhắn phải có ít nhất 10 ký tự"
+      }
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "q1": "Q: Tôi cần bao lâu để nhận được phản hồi?",
+      "a1": "A: Chúng tôi cam kết phản hồi trong vòng 24 giờ làm việc.",
+      "q2": "Q: Tôi có thể yêu cầu tính năng mới không?",
+      "a2": "A: Có! Chúng tôi luôn chào đón ý kiến đóng góp từ người dùng."
+    }
+  },
+  "Privacy": {
+    "title": "Chính sách bảo mật",
+    "subtitle": "Chúng tôi cam kết bảo vệ quyền riêng tư và dữ liệu cá nhân của bạn. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn.",
+    "lastUpdated": "Cập nhật lần cuối",
+    "sections": {
+      "dataCollection": {
+        "title": "1. Thông tin chúng tôi thu thập",
+        "items": [
+          "Thông tin cá nhân: Tên, email, số điện thoại khi bạn đăng ký tài khoản",
+          "Dữ liệu sử dụng: Các link bạn tạo, số lần click, thời gian truy cập", 
+          "Thông tin kỹ thuật: Địa chỉ IP, loại trình duyệt, hệ điều hành",
+          "Cookies và dữ liệu theo dõi để cải thiện trải nghiệm người dùng"
+        ]
+      },
+      "dataUsage": {
+        "title": "2. Cách chúng tôi sử dụng thông tin",
+        "items": [
+          "Cung cấp và duy trì dịch vụ rút gọn link",
+          "Cung cấp thống kê và phân tích cho người dùng",
+          "Cải thiện và phát triển tính năng mới",
+          "Gửi thông báo quan trọng về dịch vụ",
+          "Hỗ trợ khách hàng và giải quyết vấn đề kỹ thuật"
+        ]
+      },
+      "dataSharing": {
+        "title": "3. Chia sẻ thông tin với bên thứ ba",
+        "items": [
+          "Chúng tôi KHÔNG bán thông tin cá nhân của bạn",
+          "Chỉ chia sẻ khi có yêu cầu pháp lý hợp lệ",
+          "Sử dụng nhà cung cấp dịch vụ đáng tin cậy (hosting, analytics)",
+          "Tất cả đối tác phải tuân thủ nghiêm ngặt chính sách bảo mật"
+        ]
+      },
+      "dataSecurity": {
+        "title": "4. Bảo mật thông tin",
+        "items": [
+          "Mã hóa SSL/TLS cho tất cả dữ liệu truyền tải",
+          "Mã hóa dữ liệu nhạy cảm trong cơ sở dữ liệu",
+          "Kiểm tra bảo mật định kỳ và cập nhật hệ thống",
+          "Giới hạn quyền truy cập chỉ cho nhân viên cần thiết",
+          "Sao lưu dữ liệu an toàn và khôi phục thảm họa"
+        ]
+      },
+      "dataStorage": {
+        "title": "5. Lưu trữ và xóa dữ liệu",
+        "items": [
+          "Dữ liệu được lưu trữ tại các trung tâm dữ liệu an toàn",
+          "Bạn có thể yêu cầu xóa tài khoản và dữ liệu bất cứ lúc nào",
+          "Dữ liệu thống kê ẩn danh có thể được lưu giữ để phân tích",
+          "Tuân thủ quy định về thời gian lưu trữ dữ liệu theo pháp luật"
+        ]
+      },
+      "userRights": {
+        "title": "6. Quyền lợi của bạn",
+        "items": [
+          "Quyền truy cập: Xem thông tin cá nhân chúng tôi có về bạn",
+          "Quyền chỉnh sửa: Cập nhật hoặc sửa đổi thông tin cá nhân",
+          "Quyền xóa: Yêu cầu xóa tài khoản và dữ liệu cá nhân",
+          "Quyền từ chối: Từ chối nhận email marketing hoặc thông báo",
+          "Quyền khiếu nại: Liên hệ cơ quan bảo vệ dữ liệu nếu cần thiết"
+        ]
+      }
+    },
+    "support": {
+      "title": "Có câu hỏi về chính sách này?",
+      "description": "Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào về chính sách bảo mật này, đừng ngần ngại liên hệ với chúng tôi.",
+      "email": "Email"
+    }
+  },
+  "Terms": {
+    "title": "Điều khoản dịch vụ",
+    "subtitle": "Vui lòng đọc kỹ các điều khoản và điều kiện sử dụng dịch vụ của chúng tôi. Việc sử dụng dịch vụ đồng nghĩa với việc bạn chấp nhận các điều khoản này.",
+    "effectiveDate": "Có hiệu lực từ",
+    "sections": {
+      "acceptance": {
+        "title": "1. Chấp nhận điều khoản",
+        "items": [
+          "Bằng việc sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân thủ các điều khoản này",
+          "Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ",
+          "Chúng tôi có quyền cập nhật điều khoản này bất cứ lúc nào",
+          "Việc tiếp tục sử dụng sau khi cập nhật đồng nghĩa với việc chấp nhận điều khoản mới"
+        ]
+      },
+      "userAccount": {
+        "title": "2. Tài khoản người dùng",
+        "items": [
+          "Bạn phải cung cấp thông tin chính xác khi đăng ký tài khoản",
+          "Bạn chịu trách nhiệm bảo mật thông tin đăng nhập của mình",
+          "Mỗi người chỉ được tạo một tài khoản duy nhất",
+          "Chúng tôi có quyền đình chỉ tài khoản vi phạm điều khoản"
+        ]
+      },
+      "acceptableUse": {
+        "title": "3. Sử dụng được phép",
+        "items": [
+          "Tạo link rút gọn cho mục đích hợp pháp và chính đáng",
+          "Chia sẻ link với người khác một cách có trách nhiệm",
+          "Sử dụng tính năng thống kê để theo dõi hiệu quả",
+          "Báo cáo các vấn đề kỹ thuật để chúng tôi cải thiện dịch vụ"
+        ]
+      },
+      "prohibitedUse": {
+        "title": "4. Hành vi bị cấm",
+        "items": [
+          "Tạo link đến nội dung bất hợp pháp, có hại hoặc không phù hợp",
+          "Sử dụng dịch vụ để spam, lừa đảo hoặc gây tổn hại",
+          "Cố gắng xâm nhập hoặc làm gián đoạn hệ thống",
+          "Sao chép, bán lại hoặc khai thác thương mại dịch vụ",
+          "Tạo tài khoản giả mạo hoặc cung cấp thông tin sai lệch"
+        ]
+      },
+      "liability": {
+        "title": "5. Trách nhiệm và giới hạn",
+        "items": [
+          "Dịch vụ được cung cấp \"như hiện tại\" không có bảo đảm nào",
+          "Chúng tôi không chịu trách nhiệm về nội dung của link gốc",
+          "Người dùng tự chịu trách nhiệm về việc sử dụng dịch vụ",
+          "Chúng tôi có quyền ngừng cung cấp dịch vụ bất cứ lúc nào",
+          "Không bảo đảm thời gian hoạt động 100% của hệ thống"
+        ]
+      },
+      "intellectualProperty": {
+        "title": "6. Quyền sở hữu trí tuệ", 
+        "items": [
+          "Tất cả quyền sở hữu trí tuệ của dịch vụ thuộc về chúng tôi",
+          "Bạn giữ quyền sở hữu đối với nội dung bạn chia sẻ",
+          "Bạn cấp cho chúng tôi quyền sử dụng dữ liệu để cung cấp dịch vụ",
+          "Không được sao chép, phân phối lại mã nguồn hoặc thiết kế"
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Thông tin giá cả",
+      "freeNotice": "🎉 Tất cả dịch vụ hiện tại đều MIỄN PHÍ!",
+      "freeDescription": "Chúng tôi cung cấp tất cả tính năng hoàn toàn miễn phí cho người dùng",
+      "features": {
+        "basicService": {
+          "name": "Dịch vụ cơ bản",
+          "description": "Tạo và quản lý link rút gọn",
+          "price": "Miễn phí"
+        },
+        "detailedStats": {
+          "name": "Thống kê chi tiết",
+          "description": "Xem phân tích click và nguồn truy cập",
+          "price": "Miễn phí"
+        },
+        "customLinks": {
+          "name": "Link tùy chỉnh",
+          "description": "Tạo alias tùy chỉnh cho link",
+          "price": "Miễn phí"
+        },
+        "passwordProtection": {
+          "name": "Bảo vệ mật khẩu",
+          "description": "Thêm mật khẩu bảo vệ cho link",
+          "price": "Miễn phí"
+        }
+      }
+    },
+    "support": {
+      "title": "Có thắc mắc về điều khoản?",
+      "description": "Nếu bạn cần làm rõ bất kỳ điều khoản nào hoặc có câu hỏi pháp lý, vui lòng liên hệ với bộ phận pháp chế của chúng tôi.",
+      "email": "Email"
+    }
   }
 }

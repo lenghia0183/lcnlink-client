@@ -634,5 +634,320 @@
     "resendError": "Failed to send verification email",
     "checkEmail": "Please check your email inbox and spam folder",
     "resending": "Sending..."
+  },
+  "Cookies": {
+    "title": "Cookie Policy",
+    "subtitle": "We use cookies to improve your experience on our website. Learn about the types of cookies we use and how to manage them.",
+    "lastUpdated": "Last updated",
+    "whatAreCookies": {
+      "title": "What are cookies?",
+      "description1": "Cookies are small text files stored on your device when you visit our website. They help the website remember information about your visit, making your next visit easier and the website more useful to you.",
+      "description2": "Cookies don't contain personally identifiable information and cannot run malicious code. They are simply text data used to improve user experience."
+    },
+    "typesTitle": "Types of cookies we use",
+    "cookieTypes": {
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "These cookies are necessary for the website to function and cannot be turned off.",
+        "examples": [
+          "User login sessions",
+          "Security and authentication settings",
+          "Basic website preferences"
+        ]
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "Help us understand how users interact with our website.",
+        "examples": [
+          "Google Analytics to track visits",
+          "Usage time statistics",
+          "User behavior analysis"
+        ]
+      },
+      "functional": {
+        "title": "Functional Cookies",
+        "description": "Store preferences and settings to improve experience.",
+        "examples": [
+          "Display language",
+          "Dark/light theme mode",
+          "User interface settings"
+        ]
+      },
+      "security": {
+        "title": "Security Cookies",
+        "description": "Protect the website from attacks and fraud.",
+        "examples": [
+          "CSRF protection tokens",
+          "Rate limiting and spam protection",
+          "Security headers and validation"
+        ]
+      }
+    },
+    "required": "Required",
+    "optional": "Optional",
+    "examples": "Examples",
+    "management": {
+      "title": "How to manage cookies",
+      "browserManagement": "Manage in browser",
+      "browsers": {
+        "chrome": {
+          "name": "Chrome",
+          "steps": [
+            "Click the three-dot menu in the top right corner",
+            "Select 'Settings' > 'Privacy and security'",
+            "Click 'Cookies and other site data'",
+            "Manage cookies as desired"
+          ]
+        },
+        "firefox": {
+          "name": "Firefox", 
+          "steps": [
+            "Click the three-bar menu in the top right corner",
+            "Select 'Settings' > 'Privacy & Security'",
+            "Find the 'Cookies and Site Data' section",
+            "Edit cookie settings"
+          ]
+        },
+        "safari": {
+          "name": "Safari",
+          "steps": [
+            "Go to 'Safari' menu > 'Preferences'",
+            "Click the 'Privacy' tab",
+            "Manage cookies and website tracking settings",
+            "Choose appropriate security level"
+          ]
+        }
+      },
+      "warning": {
+        "title": "Important note",
+        "description": "Disabling cookies may affect website functionality. Some features may not work properly if you disable all cookies."
+      }
+    },
+    "support": {
+      "title": "Need help with cookies?",
+      "description": "If you have questions about how we use cookies or need help managing cookie settings, don't hesitate to contact us.",
+      "email": "Email"
+    }
+  },
+  "Contact": {
+    "title": "Contact Us",
+    "subtitle": "We're always ready to listen and support you. Contact us whenever you need!",
+    "contactInfo": "Contact Information",
+    "contactDetails": {
+      "email": {
+        "title": "Email",
+        "details": "support@linkshortener.com",
+        "subtext": "Response within 24 hours"
+      },
+      "phone": {
+        "title": "Phone",
+        "details": "+84 123 456 789",
+        "subtext": "Monday - Friday, 9:00 - 17:00"
+      },
+      "address": {
+        "title": "Address",
+        "details": "123 ABC Street, District 1",
+        "subtext": "Ho Chi Minh City, Vietnam"
+      },
+      "hours": {
+        "title": "Business Hours",
+        "details": "Monday - Friday",
+        "subtext": "9:00 AM - 5:00 PM (GMT+7)"
+      }
+    },
+    "urgentSupport": {
+      "title": "Emergency Support",
+      "description": "If you encounter urgent issues, please email with subject \"URGENT\" or call our hotline for priority support."
+    },
+    "form": {
+      "title": "Send Message",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "Message subject",
+      "message": "Message",
+      "messagePlaceholder": "Describe your issue or question in detail...",
+      "submit": "Send Message",
+      "successMessage": "Thank you for contacting us! We will respond within 24 hours.",
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailInvalid": "Invalid email",
+        "subjectRequired": "Subject is required",
+        "messageMin": "Message must be at least 10 characters"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "Q: How long does it take to get a response?",
+      "a1": "A: We commit to responding within 24 business hours.",
+      "q2": "Q: Can I request new features?",
+      "a2": "A: Yes! We always welcome user feedback and suggestions."
+    }
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "We are committed to protecting your privacy and personal data. This policy explains how we collect, use, and protect your information.",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "dataCollection": {
+        "title": "1. Information we collect",
+        "items": [
+          "Personal information: Name, email, phone number when you register an account",
+          "Usage data: Links you create, number of clicks, access time", 
+          "Technical information: IP address, browser type, operating system",
+          "Cookies and tracking data to improve user experience"
+        ]
+      },
+      "dataUsage": {
+        "title": "2. How we use information",
+        "items": [
+          "Provide and maintain link shortening service",
+          "Provide statistics and analytics to users",
+          "Improve and develop new features",
+          "Send important service notifications",
+          "Customer support and technical issue resolution"
+        ]
+      },
+      "dataSharing": {
+        "title": "3. Information sharing with third parties",
+        "items": [
+          "We DO NOT sell your personal information",
+          "Only share when legally required",
+          "Use trusted service providers (hosting, analytics)",
+          "All partners must strictly comply with privacy policy"
+        ]
+      },
+      "dataSecurity": {
+        "title": "4. Information security",
+        "items": [
+          "SSL/TLS encryption for all data transmission",
+          "Encryption of sensitive data in databases",
+          "Regular security audits and system updates",
+          "Access limited to necessary staff only",
+          "Secure data backup and disaster recovery"
+        ]
+      },
+      "dataStorage": {
+        "title": "5. Data storage and deletion",
+        "items": [
+          "Data stored in secure data centers",
+          "You can request account and data deletion anytime",
+          "Anonymous statistical data may be kept for analysis",
+          "Comply with legal data retention regulations"
+        ]
+      },
+      "userRights": {
+        "title": "6. Your rights",
+        "items": [
+          "Access right: View personal information we have about you",
+          "Edit right: Update or modify personal information",
+          "Delete right: Request deletion of account and personal data",
+          "Opt-out right: Refuse marketing emails or notifications",
+          "Complaint right: Contact data protection authority if needed"
+        ]
+      }
+    },
+    "support": {
+      "title": "Questions about this policy?",
+      "description": "If you have any questions or concerns about this privacy policy, don't hesitate to contact us.",
+      "email": "Email"
+    }
+  },
+  "Terms": {
+    "title": "Terms of Service",
+    "subtitle": "Please read our terms and conditions of service carefully. Using our service means you accept these terms.",
+    "effectiveDate": "Effective from",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of terms",
+        "items": [
+          "By using our service, you agree to comply with these terms",
+          "If you don't agree with any terms, please stop using the service",
+          "We reserve the right to update these terms at any time",
+          "Continued use after updates means acceptance of new terms"
+        ]
+      },
+      "userAccount": {
+        "title": "2. User accounts",
+        "items": [
+          "You must provide accurate information when registering",
+          "You are responsible for securing your login information",
+          "Each person may only create one unique account",
+          "We reserve the right to suspend accounts that violate terms"
+        ]
+      },
+      "acceptableUse": {
+        "title": "3. Acceptable use",
+        "items": [
+          "Create short links for legitimate and proper purposes",
+          "Share links with others responsibly",
+          "Use analytics features to track effectiveness",
+          "Report technical issues so we can improve the service"
+        ]
+      },
+      "prohibitedUse": {
+        "title": "4. Prohibited behavior",
+        "items": [
+          "Creating links to illegal, harmful, or inappropriate content",
+          "Using the service for spam, fraud, or causing harm",
+          "Attempting to breach or disrupt the system",
+          "Copying, reselling, or commercially exploiting the service",
+          "Creating fake accounts or providing false information"
+        ]
+      },
+      "liability": {
+        "title": "5. Responsibility and limitations",
+        "items": [
+          "Service provided \"as is\" without any warranty",
+          "We are not responsible for the content of original links",
+          "Users are solely responsible for their use of the service",
+          "We reserve the right to discontinue service at any time",
+          "No guarantee of 100% system uptime"
+        ]
+      },
+      "intellectualProperty": {
+        "title": "6. Intellectual property rights", 
+        "items": [
+          "All service intellectual property rights belong to us",
+          "You retain ownership of content you share",
+          "You grant us rights to use data to provide services",
+          "May not copy, redistribute source code or designs"
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Pricing information",
+      "freeNotice": "🎉 All current services are FREE!",
+      "freeDescription": "We provide all features completely free for users",
+      "features": {
+        "basicService": {
+          "name": "Basic Service",
+          "description": "Create and manage short links",
+          "price": "Free"
+        },
+        "detailedStats": {
+          "name": "Detailed Statistics",
+          "description": "View click analytics and traffic sources",
+          "price": "Free"
+        },
+        "customLinks": {
+          "name": "Custom Links",
+          "description": "Create custom aliases for links",
+          "price": "Free"
+        },
+        "passwordProtection": {
+          "name": "Password Protection",
+          "description": "Add password protection to links",
+          "price": "Free"
+        }
+      }
+    },
+    "support": {
+      "title": "Questions about terms?",
+      "description": "If you need clarification on any terms or have legal questions, please contact our legal department.",
+      "email": "Email"
+    }
   }
 }

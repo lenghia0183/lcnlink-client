@@ -1,6 +1,6 @@
 "use client";
 
-// import { useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { AppCard } from "@/components/AppCard";
 import { AppButton } from "@/components/AppButton";
 import { TextField } from "@/components/FormFields/TextField";
@@ -11,17 +11,22 @@ import { z } from "zod";
 import { toast } from "@/components/AppToast";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 
-const contactSchema = z.object({
-  name: z.string().min(1, "Tên là bắt buộc"),
-  email: z.string().email("Email không hợp lệ"),
-  subject: z.string().min(1, "Chủ đề là bắt buộc"),
-  message: z.string().min(10, "Tin nhắn phải có ít nhất 10 ký tự"),
-});
+function getContactSchema(t: any) {
+  return z.object({
+    name: z.string().min(1, t("form.validation.nameRequired")),
+    email: z.string().email(t("form.validation.emailInvalid")),
+    subject: z.string().min(1, t("form.validation.subjectRequired")),
+    message: z.string().min(10, t("form.validation.messageMin")),
+  });
+}
 
 type ContactFormValues = z.infer<typeof contactSchema>;
 
+type ContactFormValues = z.infer<ReturnType<typeof getContactSchema>>;
+
 export default function ContactPage() {
-  // const t = useTranslations("Contact");
+  const t = useTranslations("Contact");
+  const contactSchema = getContactSchema(t);
 
   const methods = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -39,33 +44,33 @@ export default function ContactPage() {
     
     // Reset form and show success message
     methods.reset();
-    toast.success("Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong vòng 24 giờ.");
+    toast.success(t("form.successMessage"));
   };
 
   const contactInfo = [
     {
       icon: <Mail className="h-6 w-6" />,
-      title: "Email",
-      details: "support@linkshortener.com",
-      subtext: "Phản hồi trong vòng 24 giờ",
+      title: t("contactDetails.email.title"),
+      details: t("contactDetails.email.details"),
+      subtext: t("contactDetails.email.subtext"),
     },
     {
       icon: <Phone className="h-6 w-6" />,
-      title: "Điện thoại",
-      details: "+84 123 456 789",
-      subtext: "Thứ 2 - Thứ 6, 9:00 - 17:00",
+      title: t("contactDetails.phone.title"),
+      details: t("contactDetails.phone.details"),
+      subtext: t("contactDetails.phone.subtext"),
     },
     {
       icon: <MapPin className="h-6 w-6" />,
-      title: "Địa chỉ",
-      details: "123 Đường ABC, Quận 1",
-      subtext: "TP. Hồ Chí Minh, Việt Nam",
+      title: t("contactDetails.address.title"),
+      details: t("contactDetails.address.details"),
+      subtext: t("contactDetails.address.subtext"),
     },
     {
       icon: <Clock className="h-6 w-6" />,
-      title: "Giờ làm việc",
-      details: "Thứ 2 - Thứ 6",
-      subtext: "9:00 AM - 5:00 PM (GMT+7)",
+      title: t("contactDetails.hours.title"),
+      details: t("contactDetails.hours.details"),
+      subtext: t("contactDetails.hours.subtext"),
     },
   ];
 
@@ -75,10 +80,10 @@ export default function ContactPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Liên hệ với chúng tôi
+            {t("title")}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn. Hãy liên hệ với chúng tôi bất cứ khi nào bạn cần!
+            {t("subtitle")}
           </p>
         </div>
 
@@ -86,7 +91,7 @@ export default function ContactPage() {
           {/* Contact Information */}
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Thông tin liên hệ
+              {t("contactInfo")}
             </h2>
             
             {contactInfo.map((info, index) => (
@@ -115,10 +120,9 @@ export default function ContactPage() {
             {/* Additional Info */}
             <AppCard className="p-6 bg-gradient-to-r from-blue-500 to-purple-600">
               <div className="text-white">
-                <h3 className="font-semibold mb-2">Hỗ trợ khẩn cấp</h3>
+                <h3 className="font-semibold mb-2">{t("urgentSupport.title")}</h3>
                 <p className="text-blue-100 text-sm">
-                  Nếu bạn gặp vấn đề khẩn cấp, vui lòng gửi email với tiêu đề "URGENT" 
-                  hoặc gọi hotline để được hỗ trợ ưu tiên.
+                  {t("urgentSupport.description")}
                 </p>
               </div>
             </AppCard>
@@ -128,7 +132,7 @@ export default function ContactPage() {
           <div>
             <AppCard className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Gửi tin nhắn
+                {t("form.title")}
               </h2>
               
               <FormProvider {...methods}>
@@ -136,30 +140,30 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <TextField
                       name="name"
-                      label="Họ và tên"
-                      placeholder="Nhập họ và tên của bạn"
+                      label={t("form.name")}
+                      placeholder={t("form.namePlaceholder")}
                       required
                     />
                     <TextField
                       name="email"
-                      label="Email"
+                      label={t("form.email")}
                       type="email"
-                      placeholder="your.email@example.com"
+                      placeholder={t("form.emailPlaceholder")}
                       required
                     />
                   </div>
 
                   <TextField
                     name="subject"
-                    label="Chủ đề"
-                    placeholder="Tiêu đề tin nhắn"
+                    label={t("form.subject")}
+                    placeholder={t("form.subjectPlaceholder")}
                     required
                   />
 
                   <TextAreaField
                     name="message"
-                    label="Tin nhắn"
-                    placeholder="Mô tả chi tiết vấn đề hoặc câu hỏi của bạn..."
+                    label={t("form.message")}
+                    placeholder={t("form.messagePlaceholder")}
                     rows={6}
                     required
                   />
@@ -170,7 +174,7 @@ export default function ContactPage() {
                     iconLeft={<Send className="h-5 w-5" />}
                     loading={methods.formState.isSubmitting}
                   >
-                    Gửi tin nhắn
+                    {t("form.submit")}
                   </AppButton>
                 </form>
               </FormProvider>
@@ -179,23 +183,23 @@ export default function ContactPage() {
             {/* FAQ Section */}
             <AppCard className="p-6 mt-6">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                Câu hỏi thường gặp
+                {t("faq.title")}
               </h3>
               <div className="space-y-3 text-sm">
                 <div>
                   <p className="font-medium text-gray-700 dark:text-gray-300">
-                    Q: Tôi cần bao lâu để nhận được phản hồi?
+                    {t("faq.q1")}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400">
-                    A: Chúng tôi cam kết phản hồi trong vòng 24 giờ làm việc.
+                    {t("faq.a1")}
                   </p>
                 </div>
                 <div>
                   <p className="font-medium text-gray-700 dark:text-gray-300">
-                    Q: Tôi có thể yêu cầu tính năng mới không?
+                    {t("faq.q2")}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400">
-                    A: Có! Chúng tôi luôn chào đón ý kiến đóng góp từ người dùng.
+                    {t("faq.a2")}
                   </p>
                 </div>
               </div>

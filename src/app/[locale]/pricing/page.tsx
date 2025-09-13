@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,65 +10,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Star, Zap, Shield, Crown, Sparkles } from "lucide-react";
+import { Check, Zap, Sparkles, Gift, Star, Heart } from "lucide-react";
 
 export default function PricingPage() {
   const t = useTranslations("Pricing");
-  const [isYearly, setIsYearly] = useState(false);
 
-  const plans = [
-    {
-      name: t("plans.free.name"),
-      description: t("plans.free.description"),
-      price: { monthly: 0, yearly: 0 },
-      icon: <Zap className="h-6 w-6" />,
-      features: [
-        { name: t("features.linksPerMonth", { count: 100 }), included: true },
-        { name: t("features.basicAnalytics"), included: true },
-        { name: t("features.standardSupport"), included: true },
-        { name: t("features.customDomain"), included: true },
-        { name: t("features.advancedAnalytics"), included: true },
-        { name: t("features.teamCollaboration"), included: true },
-        { name: t("features.apiAccess"), included: true },
-      ],
-      recommended: false,
-      buttonText: t("getStarted"),
-    },
-    {
-      name: t("plans.pro.name"),
-      description: t("plans.pro.description"),
-      price: { monthly: 0, yearly: 0 },
-      icon: <Star className="h-6 w-6" />,
-      features: [
-        { name: t("features.linksPerMonth", { count: 5000 }), included: true },
-        { name: t("features.advancedAnalytics"), included: true },
-        { name: t("features.customDomain"), included: true },
-        { name: t("features.passwordProtection"), included: true },
-        { name: t("features.qrCodes"), included: true },
-        { name: t("features.prioritySupport"), included: true },
-        { name: t("features.apiAccess"), included: true },
-      ],
-      recommended: true,
-      buttonText: t("getStarted"),
-    },
-    {
-      name: t("plans.business.name"),
-      description: t("plans.business.description"),
-      price: { monthly: 0, yearly: 0 },
-      icon: <Crown className="h-6 w-6" />,
-      features: [
-        { name: t("features.unlimitedLinks"), included: true },
-        { name: t("features.teamCollaboration"), included: true },
-        { name: t("features.whiteLabel"), included: true },
-        { name: t("features.apiAccess"), included: true },
-        { name: t("features.advancedSecurity"), included: true },
-        { name: t("features.dedicatedSupport"), included: true },
-        { name: t("features.customIntegrations"), included: true },
-      ],
-      recommended: false,
-      buttonText: t("getStarted"),
-    },
-  ];
+  const freePlan = {
+    name: t("plans.free.name"),
+    description: t("plans.free.description"),
+    icon: <Gift className="h-8 w-8" />,
+    features: [
+      { name: t("features.unlimitedLinks"), included: true },
+      { name: t("features.advancedAnalytics"), included: true },
+      { name: t("features.customDomain"), included: true },
+      { name: t("features.passwordProtection"), included: true },
+      { name: t("features.qrCodes"), included: true },
+      { name: t("features.basicAnalytics"), included: true },
+      { name: t("features.apiAccess"), included: true },
+      { name: t("features.standardSupport"), included: true },
+    ],
+    buttonText: t("getStarted"),
+  };
 
   const faqs = [
     {
@@ -113,191 +74,158 @@ export default function PricingPage() {
           </p>
           
           {/* Free announcement */}
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8 max-w-3xl mx-auto">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-2">
-                🎉 Tất cả dịch vụ hiện tại đều MIỄN PHÍ!
-              </h2>
-              <p className="text-green-700 dark:text-green-300">
-                Chúng tôi cung cấp tất cả tính năng cao cấp hoàn toàn miễn phí cho tất cả người dùng. 
-                Không có chi phí ẩn, không có giới hạn thời gian sử dụng.
-              </p>
-            </div>
-          </div>
-
-          {/* Billing Toggle */}
-          <div className="flex items-center justify-center gap-4 mb-12">
-            <span
-              className={`font-medium ${
-                !isYearly ? "text-blue-600" : "text-gray-500"
-              }`}
-            >
-              {t("monthly")}
-            </span>
-            <button
-              onClick={() => setIsYearly(!isYearly)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                isYearly ? "bg-blue-600" : "bg-gray-300"
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isYearly ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
-            </button>
-            <span
-              className={`font-medium ${
-                isYearly ? "text-blue-600" : "text-gray-500"
-              }`}
-            >
-              {t("yearly")}
-            </span>
-            {isYearly && (
-              <Badge variant="secondary" className="ml-2">
-                {t("save20")}
-              </Badge>
-            )}
-          </div>
-        </div>
-
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {plans.map((plan, index) => (
-            <Card
-              key={index}
-              className={`relative border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl ${
-                plan.recommended ? "ring-2 ring-blue-500 scale-105" : ""
-              }`}
-            >
-              {plan.recommended && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-1">
-                    {t("mostPopular")}
-                  </Badge>
-                </div>
-              )}
-
-              <CardHeader className="text-center pb-6">
-                <div className="flex justify-center mb-4">
-                  <div
-                    className={`p-3 rounded-full ${
-                      plan.recommended
-                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                    }`}
-                  >
-                    {plan.icon}
-                  </div>
-                </div>
-
-                <CardTitle className="text-2xl font-bold">
-                  {plan.name}
-                </CardTitle>
-                <CardDescription className="text-base mt-2">
-                  {plan.description}
-                </CardDescription>
-
-                <div className="mt-6">
-                  <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold">
-                      ${isYearly ? plan.price.yearly : plan.price.monthly}
-                    </span>
-                    {plan.price.monthly > 0 && (
-                      <span className="text-gray-600 dark:text-gray-400 ml-2">
-                        /{isYearly ? t("year") : t("month")}
-                      </span>
-                    )}
-                  </div>
-                  {isYearly && plan.price.yearly > 0 && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      ${(plan.price.yearly / 12).toFixed(0)}/month{" "}
-                      {t("billedYearly")}
-                    </p>
-                  )}
-                </div>
-              </CardHeader>
-
-              <CardContent>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-3">
-                      {feature.included ? (
-                        <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      ) : (
-                        <X className="h-5 w-5 text-gray-400 flex-shrink-0" />
-                      )}
-                      <span
-                        className={
-                          feature.included ? "" : "text-gray-400 line-through"
-                        }
-                      >
-                        {feature.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  className={`w-full ${
-                    plan.recommended
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                      : "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
-                  }`}
-                  variant={plan.recommended ? "default" : "outline"}
-                >
-                  {plan.buttonText}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Enterprise Section */}
-        <Card className="border-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white mb-16">
-          <CardContent className="p-8 text-center">
-            <div className="flex justify-center mb-4">
-              <Shield className="h-12 w-12" />
-            </div>
-            <h3 className="text-2xl font-bold mb-4">{t("enterprise.title")}</h3>
-            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              {t("enterprise.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5" />
-                  <span>{t("enterprise.feature1")}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5" />
-                  <span>{t("enterprise.feature2")}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5" />
-                  <span>{t("enterprise.feature3")}</span>
+          <div className="relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 dark:from-green-900/30 dark:via-emerald-900/20 dark:to-green-900/30 border border-green-200 dark:border-green-700 rounded-2xl p-8 mb-12 max-w-4xl mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-emerald-400/10 animate-pulse"></div>
+            <div className="relative text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full shadow-lg">
+                  <Heart className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <Button variant="secondary" className="text-blue-600">
-                {t("enterprise.contactUs")}
-              </Button>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-4">
+                🎉 Hoàn toàn MIỄN PHÍ mãi mãi!
+              </h2>
+              <p className="text-lg text-green-700 dark:text-green-300 max-w-2xl mx-auto mb-6">
+                Chúng tôi tin rằng công cụ rút gọn URL tốt nên được mọi người sử dụng miễn phí. 
+                Tất cả tính năng cao cấp đều có sẵn - không có chi phí ẩn, không có giới hạn thời gian.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-sm font-medium">
+                <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 px-4 py-2 rounded-full">
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span className="text-green-800 dark:text-green-200">Không giới hạn link</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 px-4 py-2 rounded-full">
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span className="text-green-800 dark:text-green-200">Phân tích chi tiết</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 px-4 py-2 rounded-full">
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span className="text-green-800 dark:text-green-200">Tất cả tính năng</span>
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* Free Plan Card */}
+        <div className="flex justify-center mb-16">
+          <Card className="relative w-full max-w-lg border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-105">
+            {/* Featured badge */}
+            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+              <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 text-sm font-semibold shadow-lg">
+                <Star className="h-4 w-4 mr-1" />
+                Được khuyên dùng
+              </Badge>
+            </div>
+
+            <CardHeader className="text-center pb-6 pt-12">
+              <div className="flex justify-center mb-6">
+                <div className="p-4 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
+                  {freePlan.icon}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-ping opacity-20"></div>
+                </div>
+              </div>
+
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                {freePlan.name}
+              </CardTitle>
+              <CardDescription className="text-lg mt-3 text-gray-600 dark:text-gray-300">
+                {freePlan.description}
+              </CardDescription>
+
+              <div className="mt-6">
+                <div className="flex items-baseline justify-center mb-2">
+                  <span className="text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    $0
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400 ml-2 text-lg">
+                    /mãi mãi
+                  </span>
+                </div>
+                <p className="text-green-600 font-semibold">
+                  ✨ Miễn phí hoàn toàn, không có điều kiện
+                </p>
+              </div>
+            </CardHeader>
+
+            <CardContent className="px-8">
+              <ul className="space-y-4 mb-8">
+                {freePlan.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} className="flex items-center gap-3">
+                    <div className="p-1 bg-green-100 dark:bg-green-900/30 rounded-full">
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+                      {feature.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button
+                size="lg"
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <Zap className="h-5 w-5 mr-2" />
+                {freePlan.buttonText}
+              </Button>
+              
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  💳 Không cần thẻ tín dụng • 🚀 Sử dụng ngay lập tức
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Why Free Section */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 backdrop-blur-sm">
+            <CardContent className="p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                🤔 Tại sao chúng tôi miễn phí?
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="p-4">
+                  <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-full w-fit mx-auto mb-4">
+                    <Heart className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Vì cộng đồng</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Chúng tôi tin rằng công nghệ tốt nên phục vụ mọi người, không phân biệt khả năng tài chính.</p>
+                </div>
+                <div className="p-4">
+                  <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-full w-fit mx-auto mb-4">
+                    <Zap className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Đơn giản hóa</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Không có gói phức tạp, không có giới hạn khó hiểu. Chỉ có một dịch vụ tuyệt vời, hoàn toàn miễn phí.</p>
+                </div>
+                <div className="p-4">
+                  <div className="p-3 bg-purple-100 dark:bg-purple-900/50 rounded-full w-fit mx-auto mb-4">
+                    <Sparkles className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Niềm tin</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Chúng tôi xây dựng niềm tin qua chất lượng, không qua mô hình định giá phức tạp.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* FAQ Section */}
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {t("faq.title")}
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, index) => (
               <Card
                 key={index}
-                className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+                className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:shadow-lg transition-shadow duration-300"
               >
                 <CardHeader>
-                  <CardTitle className="text-lg">{faq.question}</CardTitle>
+                  <CardTitle className="text-lg text-gray-800 dark:text-white">{faq.question}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 dark:text-gray-300">

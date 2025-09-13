@@ -1,86 +1,55 @@
 "use client";
 
-// import { useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { AppCard } from "@/components/AppCard";
 import { Cookie, Settings, Eye, Shield, Trash2, CheckCircle } from "lucide-react";
 
 export default function CookiePolicyPage() {
-  // const t = useTranslations("Cookies");
+  const t = useTranslations("Cookies");
 
   const cookieTypes = [
     {
       icon: <CheckCircle className="h-6 w-6" />,
-      title: "Cookies cần thiết",
-      description: "Các cookies này cần thiết để trang web hoạt động và không thể tắt.",
+      title: t("cookieTypes.essential.title"),
+      description: t("cookieTypes.essential.description"),
       required: true,
-      examples: [
-        "Phiên đăng nhập của người dùng",
-        "Cài đặt bảo mật và xác thực",
-        "Preferences cơ bản của trang web"
-      ]
+      examples: t.raw("cookieTypes.essential.examples") || []
     },
     {
       icon: <Eye className="h-6 w-6" />,
-      title: "Cookies phân tích",
-      description: "Giúp chúng tôi hiểu cách người dùng tương tác với trang web.",
+      title: t("cookieTypes.analytics.title"),
+      description: t("cookieTypes.analytics.description"),
       required: false,
-      examples: [
-        "Google Analytics để theo dõi lượt truy cập",
-        "Thống kê thời gian sử dụng trang",
-        "Phân tích hành vi người dùng"
-      ]
+      examples: t.raw("cookieTypes.analytics.examples") || []
     },
     {
       icon: <Settings className="h-6 w-6" />,
-      title: "Cookies chức năng",
-      description: "Lưu trữ tùy chọn và cài đặt để cải thiện trải nghiệm.",
+      title: t("cookieTypes.functional.title"),
+      description: t("cookieTypes.functional.description"),
       required: false,
-      examples: [
-        "Ngôn ngữ hiển thị",
-        "Chế độ dark/light theme",
-        "Cài đặt giao diện người dùng"
-      ]
+      examples: t.raw("cookieTypes.functional.examples") || []
     },
     {
       icon: <Shield className="h-6 w-6" />,
-      title: "Cookies bảo mật",
-      description: "Bảo vệ trang web khỏi các cuộc tấn công và gian lận.",
+      title: t("cookieTypes.security.title"),
+      description: t("cookieTypes.security.description"),
       required: true,
-      examples: [
-        "CSRF protection tokens",
-        "Rate limiting và spam protection",
-        "Security headers và validation"
-      ]
+      examples: t.raw("cookieTypes.security.examples") || []
     }
   ];
 
   const managementOptions = [
     {
-      browser: "Chrome",
-      steps: [
-        "Nhấp vào menu ba chấm ở góc trên bên phải",
-        "Chọn 'Cài đặt' > 'Quyền riêng tư và bảo mật'",
-        "Nhấp 'Cookies và dữ liệu trang web khác'",
-        "Quản lý cookies theo ý muốn"
-      ]
+      browser: t("management.browsers.chrome.name"),
+      steps: t.raw("management.browsers.chrome.steps") || []
     },
     {
-      browser: "Firefox",
-      steps: [
-        "Nhấp vào menu ba dạng ở góc trên bên phải",
-        "Chọn 'Cài đặt' > 'Quyền riêng tư & Bảo mật'",
-        "Tìm phần 'Cookies và dữ liệu trang web'",
-        "Chỉnh sửa cài đặt cookies"
-      ]
+      browser: t("management.browsers.firefox.name"),
+      steps: t.raw("management.browsers.firefox.steps") || []
     },
     {
-      browser: "Safari",
-      steps: [
-        "Vào menu 'Safari' > 'Tùy chọn'",
-        "Nhấp tab 'Quyền riêng tư'",
-        "Quản lý cài đặt cookies và website tracking",
-        "Chọn mức độ bảo mật phù hợp"
-      ]
+      browser: t("management.browsers.safari.name"),
+      steps: t.raw("management.browsers.safari.steps") || []
     }
   ];
 
@@ -95,14 +64,13 @@ export default function CookiePolicyPage() {
             </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Chính sách cookies
+            {t("title")}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Chúng tôi sử dụng cookies để cải thiện trải nghiệm của bạn trên trang web. 
-            Tìm hiểu về các loại cookies chúng tôi sử dụng và cách quản lý chúng.
+            {t("subtitle")}
           </p>
           <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
-            Cập nhật lần cuối: {new Date().toLocaleDateString('vi-VN')}
+            {t("lastUpdated")}: {new Date().toLocaleDateString()}
           </div>
         </div>
 
@@ -110,16 +78,13 @@ export default function CookiePolicyPage() {
         <div className="max-w-4xl mx-auto mb-12">
           <AppCard className="p-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Cookies là gì?
+              {t("whatAreCookies.title")}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-              Cookies là các tệp văn bản nhỏ được lưu trữ trên thiết bị của bạn khi bạn truy cập trang web. 
-              Chúng giúp trang web ghi nhớ thông tin về lần truy cập của bạn, làm cho lần truy cập tiếp theo 
-              dễ dàng hơn và trang web hữu ích hơn đối với bạn.
+              {t("whatAreCookies.description1")}
             </p>
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              Cookies không chứa thông tin cá nhân có thể xác định danh tính và không thể chạy mã độc hại. 
-              Chúng đơn giản là dữ liệu text được sử dụng để cải thiện trải nghiệm người dùng.
+              {t("whatAreCookies.description2")}
             </p>
           </AppCard>
         </div>
@@ -127,7 +92,7 @@ export default function CookiePolicyPage() {
         {/* Types of cookies */}
         <div className="max-w-4xl mx-auto mb-12">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Các loại cookies chúng tôi sử dụng
+            {t("typesTitle")}
           </h2>
           
           <div className="grid gap-6">
@@ -157,7 +122,7 @@ export default function CookiePolicyPage() {
                           ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
                           : 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
                       }`}>
-                        {type.required ? 'Bắt buộc' : 'Tùy chọn'}
+                        {type.required ? t("required") : t("optional")}
                       </span>
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -165,7 +130,7 @@ export default function CookiePolicyPage() {
                     </p>
                     <div>
                       <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                        Ví dụ:
+                        {t("examples")}:
                       </h4>
                       <ul className="space-y-1">
                         {type.examples.map((example, exampleIndex) => (
@@ -189,12 +154,12 @@ export default function CookiePolicyPage() {
         <div className="max-w-4xl mx-auto mb-12">
           <AppCard className="p-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Cách quản lý cookies
+              {t("management.title")}
             </h2>
             
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Quản lý trong trình duyệt
+                {t("management.browserManagement")}
               </h3>
               <div className="space-y-6">
                 {managementOptions.map((option, index) => (
@@ -226,11 +191,10 @@ export default function CookiePolicyPage() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">
-                    Lưu ý quan trọng
+                    {t("management.warning.title")}
                   </h4>
                   <p className="text-amber-700 dark:text-amber-400 text-sm">
-                    Việc tắt cookies có thể ảnh hưởng đến chức năng của trang web. 
-                    Một số tính năng có thể không hoạt động đúng cách nếu bạn tắt tất cả cookies.
+                    {t("management.warning.description")}
                   </p>
                 </div>
               </div>
@@ -242,13 +206,12 @@ export default function CookiePolicyPage() {
         <div className="max-w-4xl mx-auto">
           <AppCard className="p-8 bg-gradient-to-r from-blue-500 to-purple-600">
             <div className="text-white text-center">
-              <h3 className="text-xl font-bold mb-4">Cần hỗ trợ về cookies?</h3>
+              <h3 className="text-xl font-bold mb-4">{t("support.title")}</h3>
               <p className="text-blue-100 mb-6">
-                Nếu bạn có câu hỏi về cách chúng tôi sử dụng cookies hoặc cần hỗ trợ 
-                quản lý cài đặt cookies, đừng ngần ngại liên hệ.
+                {t("support.description")}
               </p>
               <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
-                <span className="text-blue-100">Email: </span>
+                <span className="text-blue-100">{t("support.email")}: </span>
                 <a 
                   href="mailto:support@linkshortener.com" 
                   className="text-white font-semibold hover:text-blue-200 transition-colors"

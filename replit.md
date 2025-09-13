@@ -102,3 +102,32 @@ Preferred communication style: Simple, everyday language.
 - **Custom type definitions**: Comprehensive TypeScript interfaces for API responses, user data, and application state
 - **Response validation**: Centralized response code validation utilities
 - **Environment detection**: Client/server environment utilities for SSR compatibility
+
+# Recent Changes
+
+## September 13, 2025 - Guest User Experience & Policy Pages Enhancement
+
+### Guest User localStorage Functionality
+- **Home page enhancement**: Added localStorage support for guest users (non-logged in)
+- **Link creation for guests**: When users create links without logging in, links are stored locally in browser storage
+- **Guest link display**: Added dedicated section on home page to display previously created links from localStorage
+- **Security improvements**: Guest links don't store sensitive data (passwords) for security
+- **UX enhancements**: Added copy, delete, and click functionality for guest links
+
+### New Policy & Information Pages
+- **Contact page** (`/contact`): Professional contact form with company information and FAQ
+- **Privacy Policy page** (`/privacy`): Comprehensive privacy policy covering data collection and user rights
+- **Terms of Service page** (`/terms`): Complete terms and conditions with usage guidelines
+- **Cookie Policy page** (`/cookies`): Detailed cookie usage explanation and management instructions
+
+### Pricing Model Update
+- **Free for all**: Updated pricing page to make all services completely free
+- **Feature accessibility**: All premium features (custom domains, advanced analytics, API access, etc.) now included in free plan
+- **UI improvements**: Added prominent "All services are FREE" announcement banner
+- **Simplified pricing**: All plans now show $0 pricing with full feature access
+
+### Technical Improvements
+- **Error handling**: Improved localStorage operations with try/catch blocks
+- **SSR compatibility**: Added proper browser environment checks for client-side features
+- **Performance**: Optimized compilation by removing Turbopack to avoid symlink issues
+- **Type safety**: Maintained TypeScript compliance across all new features

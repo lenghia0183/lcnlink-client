@@ -70,12 +70,9 @@ export function OAuthButtons({
   };
 
   const handleFacebookAuth = async () => {
-    try {
-      toast.info(t("oauth.facebookComingSoon"));
-    } catch (error) {
-      console.error("Facebook OAuth error:", error);
-      toast.error(t("oauth.error"));
-    }
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001";
+    window.location.href = `${backendUrl}/api/v1/auth/facebook`;
   };
 
   return (

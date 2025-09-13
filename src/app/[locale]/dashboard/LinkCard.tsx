@@ -9,7 +9,6 @@ import {
   Settings,
   Copy,
   QrCode,
-  BarChart3,
   Edit,
   Share2,
   Mail,
@@ -29,10 +28,13 @@ import { AppCard } from "@/components/AppCard";
 import { LinkData } from "@/types/Link";
 import { useTranslations } from "next-intl";
 import { LINK_STATUS } from "@/constants/common";
+import { useState } from "react";
+import { AppDialog } from "@/components/AppDialog";
+import Image from "@/components/Image";
 
 interface LinkCardProps {
   link?: LinkData;
-  onEdit: (link: LinkData) => void;
+  onEdit?: (link: LinkData) => void;
   onDelete: (link: LinkData) => void;
   onCopy: (text: string, id: string) => void;
   copiedId?: string;
@@ -46,7 +48,7 @@ export const LinkCard = ({
   copiedId,
 }: LinkCardProps) => {
   const t = useTranslations("Dashboard");
-
+  const [isShowQrCode, setIsShowQrCode] = useState(false);
   if (!link) return null;
 
   const getStatusBadge = () => {
@@ -151,10 +153,12 @@ export const LinkCard = ({
             />
           )}
           <div className="flex items-center gap-6 text-xs text-gray-500">
-            <span className="flex items-center gap-1">
-              <MousePointer className="h-3 w-3" />
-              {link?.clicksCount ?? 0} {t("clicks")}
-            </span>
+            {link?.clicksCount !== undefined && (
+              <span className="flex items-center gap-1">
+                <MousePointer className="h-3 w-3" />
+                {link?.clicksCount ?? 0} {t("clicks")}
+              </span>
+            )}
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {link?.createdAt ? format(link.createdAt, "dd/MM/yyyy") : "--"}
@@ -168,21 +172,33 @@ export const LinkCard = ({
           </div>
         </div>
         <div className="flex items-center gap-2 ml-4">
-          <AppButton variant="outline" size="icon" iconLeft={<QrCode />} />
-          <AppButton variant="outline" size="icon" iconLeft={<BarChart3 />} />
           <AppButton
             variant="outline"
             size="icon"
-            iconLeft={<Settings />}
-            onClick={() => link && onEdit(link)}
+            iconLeft={<QrCode />}
+            onClick={() => {
+              setIsShowQrCode(true);
+            }}
           />
+          {onEdit && (
+            <AppButton
+              variant="outline"
+              size="icon"
+              iconLeft={<Settings />}
+              onClick={() => onEdit(link)}
+            />
+          )}
           <AppDropdown
             items={[
-              {
-                label: t("edit"),
-                icon: <Edit className="h-4 w-4" />,
-                onClick: () => link && onEdit(link),
-              },
+              ...(onEdit
+                ? [
+                    {
+                      label: t("edit"),
+                      icon: <Edit className="h-4 w-4" />,
+                      onClick: () => onEdit(link),
+                    },
+                  ]
+                : []),
               {
                 label: "Share",
                 icon: <Share2 className="h-4 w-4" />,
@@ -235,6 +251,21 @@ export const LinkCard = ({
           />
         </div>
       </div>
+      <AppDialog
+        open={isShowQrCode}
+        onOpenChange={setIsShowQrCode}
+        title={t("")}
+        classNameContent=""
+      >
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${link?.shortedUrl}`}
+            alt="QR Code"
+            width={300}
+            height={300}
+          ></Image>
+        </div>
+      </AppDialog>
     </AppCard>
   );
 };

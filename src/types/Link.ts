@@ -6,7 +6,7 @@ export interface LinkData {
   originalUrl: string;
   shortedUrl: string;
   alias?: string;
-  clicksCount: number;
+  clicksCount?: number;
   successfulAccessCount: number;
   maxClicks?: number;
   isActive: boolean;

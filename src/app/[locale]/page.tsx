@@ -36,6 +36,13 @@ import { addDays } from "date-fns";
 import { useUser } from "@/context/userProvider";
 import { LinkData } from "@/types/Link";
 import { LINK_STATUS } from "@/constants/common";
+import LoggedOutGuard from "@/components/Guard/LoggedOutGuard";
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "@/utils/localStorage";
+import { LinkCard } from "./dashboard/LinkCard";
 
 type FormValues = UrlFormValues;
 export default function HomePage() {
@@ -43,38 +50,24 @@ export default function HomePage() {
   const schema = getUrlSchema(t);
   const { isLoggedIn } = useUser();
   const [localLinks, setLocalLinks] = useState<LinkData[]>([]);
+  const [copiedId, setCopiedId] = useState<string | undefined>();
 
   const { trigger: createLinkTrigger, isMutating: isCreateLinkMutating } =
     useCreateLink();
 
   // Load local links from localStorage on component mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('guestLinks');
-      if (stored) {
-        try {
-          const parsedLinks = JSON.parse(stored);
-          setLocalLinks(parsedLinks);
-        } catch (error) {
-          console.error('Error parsing local links:', error);
-          localStorage.removeItem('guestLinks');
-        }
-      }
+    const storedLinks = getLocalStorageItem<LinkData[]>("guestLinks");
+    if (storedLinks) {
+      setLocalLinks(storedLinks);
     }
   }, []);
-
   // Save local links to localStorage whenever localLinks changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        if (localLinks.length > 0) {
-          localStorage.setItem('guestLinks', JSON.stringify(localLinks));
-        } else {
-          localStorage.removeItem('guestLinks');
-        }
-      } catch (error) {
-        console.error('Error saving local links:', error);
-      }
+    if (localLinks.length > 0) {
+      setLocalStorageItem("guestLinks", localLinks);
+    } else {
+      removeLocalStorageItem("guestLinks");
     }
   }, [localLinks]);
 
@@ -114,49 +107,7 @@ export default function HomePage() {
     },
   });
 
-  const allValues = methods.watch();
-
-  useEffect(() => {
-    console.log("Form values changed:", allValues);
-    console.log(
-      "allValues.expirationDate",
-      allValues.expirationDate?.toISOString()
-    );
-  }, [allValues]);
-
   const onSubmit = async (formValue: FormValues) => {
-    console.log("formValue", formValue);
-    
-    if (!isLoggedIn) {
-      // Create mock shortened link for non-logged in users
-      const mockLink: LinkData = {
-        id: `guest-${Date.now()}`,
-        originalUrl: formValue?.originUrl || "",
-        shortedUrl: `${typeof window !== 'undefined' ? window.location.origin : 'https://example.com'}/s/${Math.random().toString(36).substring(2, 8)}`,
-        alias: formValue.alias,
-        clicksCount: 0,
-        successfulAccessCount: 0,
-        maxClicks: Number(formValue?.maxClicks) || undefined,
-        isActive: true,
-        expireAt: formValue.expirationDate?.toISOString(),
-        createdAt: new Date().toISOString(),
-        description: formValue.description,
-        password: "", // Don't store password for security
-        isUsePassword: Boolean(formValue.password),
-        status: LINK_STATUS.ACTIVE,
-      };
-      
-      // Add to local storage
-      setLocalLinks(prev => [mockLink, ...prev]);
-      
-      // Reset form
-      methods.reset();
-      
-      toast.success("Link đã được tạo và lưu vào bộ nhớ tạm thời. Đăng ký tài khoản để lưu vĩnh viễn!");
-      return;
-    }
-    
-    // For logged in users, use API
     createLinkTrigger(
       {
         body: {
@@ -172,6 +123,27 @@ export default function HomePage() {
         onSuccess: (response) => {
           if (validateResponseCode(response.statusCode)) {
             toast.success(response.message);
+            if (!isLoggedIn) {
+              setLocalLinks((prev) => [
+                {
+                  id: response?.data?.id || `new-${Date.now()}`,
+                  originalUrl: response?.data?.originalUrl || "",
+                  shortedUrl: response?.data?.shortedUrl || "",
+                  alias: response?.data?.alias || "",
+                  clicksCount: undefined,
+                  successfulAccessCount:
+                    response?.data?.successfulAccessCount || 0,
+                  isActive: response?.data?.isActive || true,
+                  expireAt: response?.data?.expireAt,
+                  createdAt:
+                    response?.data?.createdAt || new Date().toISOString(),
+                  description: response?.data?.description,
+                  isUsePassword: response?.data?.isUsePassword || false,
+                  status: response?.data?.status ?? LINK_STATUS.ACTIVE,
+                },
+                ...prev,
+              ]);
+            }
             methods.reset();
           } else {
             toast.error(response.message);
@@ -281,6 +253,57 @@ export default function HomePage() {
           </AppCard>
         </div>
 
+        {/* Display guest links for non-logged in users */}
+        <LoggedOutGuard>
+          {!isLoggedIn && localLinks.length > 0 && (
+            <div className="my-12">
+              <AppCard className="max-w-4xl mx-auto">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    Link đã tạo của bạn
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Đăng ký tài khoản để lưu link vĩnh viễn và sử dụng nhiều
+                    tính năng khác!
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  {/* Display guest links for non-logged in users */}
+                  <LoggedOutGuard>
+                    {!isLoggedIn && localLinks.length > 0 && (
+                      <div className="space-y-4">
+                        {localLinks.map((link) => (
+                          <LinkCard
+                            key={link.id}
+                            link={link}
+                            copiedId={copiedId}
+                            onDelete={(l) => {
+                              setLocalLinks((prev) =>
+                                prev.filter((item) => item.id !== l.id)
+                              );
+                              toast.success("Đã xóa link!");
+                            }}
+                            onCopy={async (text, id) => {
+                              try {
+                                await navigator.clipboard.writeText(text);
+                                setCopiedId(id);
+                                toast.success("Đã sao chép link!");
+                                setTimeout(() => setCopiedId(undefined), 2000);
+                              } catch {
+                                toast.error("Không thể sao chép link!");
+                              }
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </LoggedOutGuard>
+                </div>
+              </AppCard>
+            </div>
+          )}
+        </LoggedOutGuard>
+
         {/* Features Section */}
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
@@ -344,80 +367,6 @@ export default function HomePage() {
             </div>
           </AppCard>
         </div>
-
-        {/* Display guest links for non-logged in users */}
-        {!isLoggedIn && localLinks.length > 0 && (
-          <div className="mt-12">
-            <AppCard className="max-w-4xl mx-auto">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  Link đã tạo của bạn
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Đăng ký tài khoản để lưu link vĩnh viễn và sử dụng nhiều tính năng khác!
-                </p>
-              </div>
-              <div className="space-y-4">
-                {localLinks.map((link) => (
-                  <div key={link.id} className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-2">
-                          <a 
-                            href={link.shortedUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium transition-colors underline"
-                          >
-                            {link.shortedUrl}
-                          </a>
-                          <AppButton
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              if (typeof navigator !== 'undefined' && navigator.clipboard) {
-                                navigator.clipboard.writeText(link.shortedUrl);
-                                toast.success("Đã sao chép link!");
-                              } else {
-                                toast.error("Không thể sao chép link!");
-                              }
-                            }}
-                          >
-                            Sao chép
-                          </AppButton>
-                          <AppButton
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setLocalLinks(prev => prev.filter(l => l.id !== link.id));
-                              toast.success("Đã xóa link!");
-                            }}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            Xóa
-                          </AppButton>
-                        </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                          <strong>Gốc:</strong> {link.originalUrl}
-                        </p>
-                        {link.description && (
-                          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                            <strong>Mô tả:</strong> {link.description}
-                          </p>
-                        )}
-                        {link.isUsePassword && (
-                          <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
-                            🔒 Link có mật khẩu bảo vệ
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </AppCard>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -27,10 +27,10 @@ export default function PricingPage() {
         { name: t("features.linksPerMonth", { count: 100 }), included: true },
         { name: t("features.basicAnalytics"), included: true },
         { name: t("features.standardSupport"), included: true },
-        { name: t("features.customDomain"), included: false },
-        { name: t("features.advancedAnalytics"), included: false },
-        { name: t("features.teamCollaboration"), included: false },
-        { name: t("features.apiAccess"), included: false },
+        { name: t("features.customDomain"), included: true },
+        { name: t("features.advancedAnalytics"), included: true },
+        { name: t("features.teamCollaboration"), included: true },
+        { name: t("features.apiAccess"), included: true },
       ],
       recommended: false,
       buttonText: t("getStarted"),
@@ -38,7 +38,7 @@ export default function PricingPage() {
     {
       name: t("plans.pro.name"),
       description: t("plans.pro.description"),
-      price: { monthly: 9, yearly: 90 },
+      price: { monthly: 0, yearly: 0 },
       icon: <Star className="h-6 w-6" />,
       features: [
         { name: t("features.linksPerMonth", { count: 5000 }), included: true },
@@ -47,15 +47,15 @@ export default function PricingPage() {
         { name: t("features.passwordProtection"), included: true },
         { name: t("features.qrCodes"), included: true },
         { name: t("features.prioritySupport"), included: true },
-        { name: t("features.apiAccess"), included: false },
+        { name: t("features.apiAccess"), included: true },
       ],
       recommended: true,
-      buttonText: t("startFreeTrial"),
+      buttonText: t("getStarted"),
     },
     {
       name: t("plans.business.name"),
       description: t("plans.business.description"),
-      price: { monthly: 29, yearly: 290 },
+      price: { monthly: 0, yearly: 0 },
       icon: <Crown className="h-6 w-6" />,
       features: [
         { name: t("features.unlimitedLinks"), included: true },
@@ -67,7 +67,7 @@ export default function PricingPage() {
         { name: t("features.customIntegrations"), included: true },
       ],
       recommended: false,
-      buttonText: t("contactSales"),
+      buttonText: t("getStarted"),
     },
   ];
 
@@ -108,9 +108,22 @@ export default function PricingPage() {
             {t("title")}
           </h1>
 
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
             {t("subtitle")}
           </p>
+          
+          {/* Free announcement */}
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8 max-w-3xl mx-auto">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-2">
+                🎉 Tất cả dịch vụ hiện tại đều MIỄN PHÍ!
+              </h2>
+              <p className="text-green-700 dark:text-green-300">
+                Chúng tôi cung cấp tất cả tính năng cao cấp hoàn toàn miễn phí cho tất cả người dùng. 
+                Không có chi phí ẩn, không có giới hạn thời gian sử dụng.
+              </p>
+            </div>
+          </div>
 
           {/* Billing Toggle */}
           <div className="flex items-center justify-center gap-4 mb-12">

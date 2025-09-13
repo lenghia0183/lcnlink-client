@@ -58,6 +58,9 @@ export default function ProfilePage() {
 
   const { userData, refreshGetMe } = useUser();
 
+  const isEnableChangePassword =
+    userData?.oauthProvider && userData?.oauthProviderId ? false : true;
+
   const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
     useUpdateMe();
 
@@ -287,6 +290,7 @@ export default function ProfilePage() {
               rightIconOnClick={() =>
                 setIsShowCurrentPassword(!isShowCurrentPassword)
               }
+              disabled={isEnableChangePassword}
             />
             <TextField
               name="newPassword"
@@ -302,6 +306,7 @@ export default function ProfilePage() {
                 )
               }
               rightIconOnClick={() => setIsShowNewPassword(!isShowNewPassword)}
+              disabled={isEnableChangePassword}
             />
             <TextField
               name="confirmPassword"
@@ -319,11 +324,12 @@ export default function ProfilePage() {
               rightIconOnClick={() =>
                 setIsShowConfirmPassword(!isShowConfirmPassword)
               }
+              disabled={isEnableChangePassword}
             />
             <AppButton
               type="submit"
               iconLeft={<Save className="h-4 w-4" />}
-              disabled={isChangePasswordMutating}
+              disabled={isChangePasswordMutating || isEnableChangePassword}
               className="w-full"
             >
               {isChangePasswordMutating

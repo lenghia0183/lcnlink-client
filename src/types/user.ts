@@ -23,4 +23,6 @@ export interface User {
   isEnable2FA: IS_2FA_ENUM;
   isActive: IS_2FA_ENUM;
   isLocked: USER_LOCKED_ENUM;
+  oauthProvider: string | null;
+  oauthProviderId: string | null;
 }

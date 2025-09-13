@@ -202,7 +202,12 @@
     "success": "Success",
     "cancel": "Cancel",
     "tryAgainLater": "Please try again later",
-    "redirecting": "Redirecting..."
+    "redirecting": "Redirecting...",
+    "vietnamese": "Vietnamese",
+    "english": "English",
+    "dark": "Dark Mode",
+    "light": "Light Mode",
+    "system": "System Default"
   },
   "common": {
     "loading": "Loading...",
@@ -700,7 +705,7 @@
           ]
         },
         "firefox": {
-          "name": "Firefox", 
+          "name": "Firefox",
           "steps": [
             "Click the three-bar menu in the top right corner",
             "Select 'Settings' > 'Privacy & Security'",
@@ -795,7 +800,7 @@
         "title": "1. Information we collect",
         "items": [
           "Personal information: Name, email, phone number when you register an account",
-          "Usage data: Links you create, number of clicks, access time", 
+          "Usage data: Links you create, number of clicks, access time",
           "Technical information: IP address, browser type, operating system",
           "Cookies and tracking data to improve user experience"
         ]
@@ -908,7 +913,7 @@
         ]
       },
       "intellectualProperty": {
-        "title": "6. Intellectual property rights", 
+        "title": "6. Intellectual property rights",
         "items": [
           "All service intellectual property rights belong to us",
           "You retain ownership of content you share",

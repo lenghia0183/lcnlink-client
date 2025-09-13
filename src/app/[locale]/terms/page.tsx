@@ -11,56 +11,56 @@ export default function TermsOfServicePage() {
     {
       icon: <FileText className="h-6 w-6" />,
       title: t("sections.acceptance.title"),
-      content: t.raw("sections.acceptance.items") || []
+      content: t.raw("sections.acceptance.items") || [],
     },
     {
       icon: <Users className="h-6 w-6" />,
       title: t("sections.userAccount.title"),
-      content: t.raw("sections.userAccount.items") || []
+      content: t.raw("sections.userAccount.items") || [],
     },
     {
       icon: <Check className="h-6 w-6" />,
       title: t("sections.acceptableUse.title"),
-      content: t.raw("sections.acceptableUse.items") || []
+      content: t.raw("sections.acceptableUse.items") || [],
     },
     {
       icon: <X className="h-6 w-6" />,
       title: t("sections.prohibitedUse.title"),
-      content: t.raw("sections.prohibitedUse.items") || []
+      content: t.raw("sections.prohibitedUse.items") || [],
     },
     {
       icon: <AlertTriangle className="h-6 w-6" />,
       title: t("sections.liability.title"),
-      content: t.raw("sections.liability.items") || []
+      content: t.raw("sections.liability.items") || [],
     },
     {
       icon: <Scale className="h-6 w-6" />,
       title: t("sections.intellectualProperty.title"),
-      content: t.raw("sections.intellectualProperty.items") || []
-    }
+      content: t.raw("sections.intellectualProperty.items") || [],
+    },
   ];
 
   const pricing = [
     {
       feature: t("pricing.features.basicService.name"),
       description: t("pricing.features.basicService.description"),
-      price: t("pricing.features.basicService.price")
+      price: t("pricing.features.basicService.price"),
     },
     {
       feature: t("pricing.features.detailedStats.name"),
       description: t("pricing.features.detailedStats.description"),
-      price: t("pricing.features.detailedStats.price")
+      price: t("pricing.features.detailedStats.price"),
     },
     {
       feature: t("pricing.features.customLinks.name"),
       description: t("pricing.features.customLinks.description"),
-      price: t("pricing.features.customLinks.price")
+      price: t("pricing.features.customLinks.price"),
     },
     {
       feature: t("pricing.features.passwordProtection.name"),
       description: t("pricing.features.passwordProtection.description"),
-      price: t("pricing.features.passwordProtection.price")
-    }
+      price: t("pricing.features.passwordProtection.price"),
+    },
   ];
 
   return (
@@ -101,9 +101,9 @@ export default function TermsOfServicePage() {
                     </h2>
                   </div>
                 </div>
-                
+
                 <ul className="space-y-3">
-                  {section.content.map((item, itemIndex) => (
+                  {section.content.map((item: string, itemIndex: number) => (
                     <li key={itemIndex} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                       <span className="text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -131,10 +131,13 @@ export default function TermsOfServicePage() {
                 </p>
               </div>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-4">
               {pricing.map((item, index) => (
-                <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <div
+                  key={index}
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -157,13 +160,11 @@ export default function TermsOfServicePage() {
           <AppCard className="p-8 mt-8 bg-gradient-to-r from-blue-500 to-purple-600">
             <div className="text-white text-center">
               <h3 className="text-xl font-bold mb-4">{t("support.title")}</h3>
-              <p className="text-blue-100 mb-6">
-                {t("support.description")}
-              </p>
+              <p className="text-blue-100 mb-6">{t("support.description")}</p>
               <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
                 <span className="text-blue-100">{t("support.email")}: </span>
-                <a 
-                  href="mailto:legal@linkshortener.com" 
+                <a
+                  href="mailto:legal@linkshortener.com"
                   className="text-white font-semibold hover:text-blue-200 transition-colors"
                 >
                   legal@linkshortener.com

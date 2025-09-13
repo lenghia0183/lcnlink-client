@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Globe, Check } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const langFromPathname = (path: string): Locale => {
   const langSegment = path.split("/")[1];
@@ -29,10 +30,21 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const currentLang = langFromPathname(pathname);
+  const tCommon = useTranslations("Common");
 
   const languages = [
-    { label: "Tiếng Việt", value: Locales.VI, flag: "🇻🇳", locale: "vi-VN" },
-    { label: "English", value: Locales.EN, flag: "🇺🇸", locale: "en-US" },
+    {
+      label: tCommon("vietnamese"),
+      value: Locales.VI,
+      flag: "🇻🇳",
+      locale: "vi-VN",
+    },
+    {
+      label: tCommon("english"),
+      value: Locales.EN,
+      flag: "🇺🇸",
+      locale: "en-US",
+    },
   ];
 
   const handleLanguageChange = (lang: (typeof languages)[number]) => {

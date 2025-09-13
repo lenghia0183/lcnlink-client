@@ -201,7 +201,12 @@
     "success": "Thành công",
     "cancel": "Hủy",
     "tryAgainLater": "Vui lòng thử lại sau",
-    "redirecting": "Đang chuyển hướng..."
+    "redirecting": "Đang chuyển hướng...",
+    "vietnamese": "Tiếng Việt",
+    "english": "Tiếng Anh",
+    "dark": "Chế độ tối",
+    "light": "Chế độ sáng",
+    "system": "Mặc định hệ thống"
   },
   "common": {
     "loading": "Đang tải...",
@@ -685,7 +690,7 @@
           ]
         },
         "firefox": {
-          "name": "Firefox", 
+          "name": "Firefox",
           "steps": [
             "Nhấp vào menu ba dạng ở góc trên bên phải",
             "Chọn 'Cài đặt' > 'Quyền riêng tư & Bảo mật'",
@@ -780,7 +785,7 @@
         "title": "1. Thông tin chúng tôi thu thập",
         "items": [
           "Thông tin cá nhân: Tên, email, số điện thoại khi bạn đăng ký tài khoản",
-          "Dữ liệu sử dụng: Các link bạn tạo, số lần click, thời gian truy cập", 
+          "Dữ liệu sử dụng: Các link bạn tạo, số lần click, thời gian truy cập",
           "Thông tin kỹ thuật: Địa chỉ IP, loại trình duyệt, hệ điều hành",
           "Cookies và dữ liệu theo dõi để cải thiện trải nghiệm người dùng"
         ]
@@ -893,7 +898,7 @@
         ]
       },
       "intellectualProperty": {
-        "title": "6. Quyền sở hữu trí tuệ", 
+        "title": "6. Quyền sở hữu trí tuệ",
         "items": [
           "Tất cả quyền sở hữu trí tuệ của dịch vụ thuộc về chúng tôi",
           "Bạn giữ quyền sở hữu đối với nội dung bạn chia sẻ",

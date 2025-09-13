@@ -8,9 +8,11 @@ import {
   Phone,
   MapPin,
   Github,
-  Twitter,
   Linkedin,
+  Facebook,
 } from "lucide-react";
+import { PATH } from "@/constants/path";
+import LoggedInGuard from "./Guard/LoggedinGuard";
 
 export default function Footer() {
   const t = useTranslations("Footer");
@@ -30,19 +32,22 @@ export default function Footer() {
             <p className="text-gray-400 mb-6 max-w-md">{t("description")}</p>
             <div className="flex space-x-4">
               <Link
-                href="#"
+                target="_blank"
+                href="https://github.com/lenghia0183"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Github className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                target="_blank"
+                href="https://www.facebook.com/nghia.cong.le.2024"
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <Twitter className="h-5 w-5" />
+                <Facebook className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                target="_blank"
+                href="https://www.linkedin.com/in/nghia-le-366628384/"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
@@ -56,7 +61,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/"
+                  href={PATH.HOME}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   {t("home")}
@@ -64,23 +69,25 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/about"
+                  href={PATH.ABOUT}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   {t("about")}
                 </Link>
               </li>
+              <LoggedInGuard>
+                <li>
+                  <Link
+                    href={PATH.DASHBOARD}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {t("dashboard")}
+                  </Link>
+                </li>
+              </LoggedInGuard>
               <li>
                 <Link
-                  href="/dashboard"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t("dashboard")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/pricing"
+                  href={PATH.PRICING}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   {t("pricing")}
@@ -88,7 +95,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href={PATH.CONTACT}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   {t("contact")}

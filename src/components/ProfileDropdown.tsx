@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { User, Settings, Shield, LogOut, ChevronDown } from "lucide-react";
+import { User, Shield, LogOut, ChevronDown } from "lucide-react";
 import { AppDropdown } from "./AppDropDown";
 import { useUser } from "@/context/userProvider";
 import { useRouter } from "@/i18n/routing";

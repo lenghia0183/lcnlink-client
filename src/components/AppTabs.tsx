@@ -24,6 +24,8 @@ export const AppTabs = ({
   className,
   onValueChange,
 }: AppTabsProps) => {
+  console.log("rerender", defaultValue);
+
   return (
     <Tabs
       onValueChange={onValueChange}

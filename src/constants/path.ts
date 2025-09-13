@@ -5,9 +5,15 @@ export const PATH = {
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
   VERIFY_2FA: "/verify-2fa",
-  PROFILE: "/profile",
-  MANAGE_2FA: "/manage-2fa",
+  PROFILE: "/profile?tab=me",
+  DASHBOARD: "/dashboard",
+  ABOUT: "/about",
+  ANALYTICS: "/analytics",
   NOT_FOUND: "/not-found",
+  PRICING: "/pricing",
+  CONTACT: "/contact",
+  PASSKEY: "/passkey",
+  SECURITY: "/profile?tab=security",
 };
 
 export const PAGE_TITLE = {

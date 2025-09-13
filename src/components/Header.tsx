@@ -17,42 +17,30 @@ import { usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/context/userProvider";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+import { PATH } from "@/constants/path";
+import LoggedInGuard from "./Guard/LoggedinGuard";
 
 export default function Header() {
   const [isShowNavDrawer, setIsShowNavDrawer] = useState(false);
-  const [navigation, setNavigation] = useState<
-    { name: string; href: string }[]
-  >([]);
 
   const pathname = usePathname();
   const t = useTranslations("Navigation");
-  const { isLoggedIn, logoutUser } = useUser();
-  const baseNav = [
-    { name: t("home"), href: "/" },
-    { name: t("about"), href: "/about" },
-    { name: t("dashboard"), href: "/dashboard" },
-    { name: t("analytics"), href: "/analytics" },
-    { name: t("pricing"), href: "/pricing" },
+  const { logoutUser } = useUser();
+
+  // Các link public
+  const publicNav = [
+    { name: t("home"), href: PATH.HOME },
+    { name: t("about"), href: PATH.ABOUT },
+    { name: t("pricing"), href: PATH.PRICING },
   ];
 
-  // Profile navigation for logged in users
-  const profileNav = { name: t("profile"), href: "/profile" };
-
-  useEffect(() => {
-    const currentNav = [...baseNav];
-    
-    if (isLoggedIn) {
-      // Add profile link for logged in users
-      currentNav.push(profileNav);
-    } else {
-      currentNav.push({ name: t("login"), href: "/login" });
-      currentNav.push({ name: t("register"), href: "/register" });
-    }
-
-    setNavigation(currentNav);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, t]);
+  // Các link cần login mới thấy
+  const protectedNav = [
+    { name: t("dashboard"), href: PATH.DASHBOARD },
+    { name: t("analytics"), href: PATH.ANALYTICS },
+  ];
 
   return (
     <header
@@ -61,59 +49,88 @@ export default function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-              <Link2 className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              LcnLink
-            </span>
-          </Link>
+          <div className="flex items-center space-x-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+                <Link2 className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                LcnLink
+              </span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
-              {baseNav.map((item) => (
-                <NavigationMenuItem key={item.name}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-                        pathname === item.href
-                          ? "text-foreground"
-                          : "text-foreground/60"
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+            {/* Desktop Navigation */}
+            <NavigationMenu className="hidden md:flex">
+              <NavigationMenuList>
+                {/* Public nav */}
+                {publicNav.map((item) => (
+                  <NavigationMenuItem key={item.name}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                          pathname === item.href
+                            ? "text-foreground"
+                            : "text-foreground/60"
+                        )}
+                      >
+                        {item.name}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+
+                {/* Protected nav */}
+                <LoggedInGuard>
+                  <>
+                    {protectedNav.map((item) => (
+                      <NavigationMenuItem key={item.name}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                              pathname === item.href
+                                ? "text-foreground"
+                                : "text-foreground/60"
+                            )}
+                          >
+                            {item.name}
+                          </Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    ))}
+                  </>
+                </LoggedInGuard>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
           {/* Right side actions */}
           <div className="flex items-center space-x-2">
-            {!isLoggedIn ? (
-              <div className="hidden md:flex items-center space-x-2">
-                <AppButton variant="ghost" href="/login" asChild>
-                  {t("login")}
-                </AppButton>
-                <AppButton
-                  asChild
-                  className="bg-gradient-to-r from-blue-500 to-purple-600"
-                  href="/register"
-                >
-                  {t("register")}
-                </AppButton>
-              </div>
-            ) : (
+            <LoggedInGuard
+              fallback={
+                <div className="hidden md:flex items-center space-x-2">
+                  <AppButton variant="ghost" href="/login" asChild>
+                    {t("login")}
+                  </AppButton>
+                  <AppButton
+                    asChild
+                    className="bg-gradient-to-r from-blue-500 to-purple-600"
+                    href="/register"
+                  >
+                    {t("register")}
+                  </AppButton>
+                </div>
+              }
+            >
               <div className="hidden md:flex items-center space-x-2">
                 <ProfileDropdown />
               </div>
-            )}
+            </LoggedInGuard>
+
             <LanguageSwitcher />
             <ModeToggle />
 
@@ -141,7 +158,8 @@ export default function Header() {
             title="Menu"
           >
             <>
-              {navigation.map((item) => (
+              {/* Public */}
+              {publicNav.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -156,11 +174,33 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              {isLoggedIn && (
-                <AppButton variant="outline" fullWidth onClick={logoutUser}>
-                  {t("logout")}
-                </AppButton>
-              )}
+
+              {/* Protected */}
+              <LoggedInGuard>
+                <>
+                  {[
+                    ...protectedNav,
+                    { name: t("profile"), href: PATH.PROFILE },
+                  ].map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        "block px-3 py-2 rounded-md text-sm font-medium",
+                        pathname === item.href
+                          ? "bg-accent text-accent-foreground"
+                          : "text-foreground/60"
+                      )}
+                      onClick={() => setIsShowNavDrawer(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                  <AppButton variant="outline" fullWidth onClick={logoutUser}>
+                    {t("logout")}
+                  </AppButton>
+                </>
+              </LoggedInGuard>
             </>
           </AppDrawer>
         </div>

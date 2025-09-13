@@ -3,11 +3,12 @@
 import { useTranslations } from "next-intl";
 import { AppButton } from "./AppButton";
 import { toast } from "./AppToast";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
 import { getCookieMaxAge } from "@/utils/cookies.";
 import { nextApi } from "@/services/axios";
+import { PATH } from "@/constants/path";
 
 interface OAuthButtonsProps {
   mode?: "login" | "register";
@@ -26,8 +27,6 @@ export function OAuthButtons({
     const setTokens = async () => {
       const accessToken = searchParams.get("access_token");
       const refreshToken = searchParams.get("refresh_token");
-
-      console.log("accessToken", accessToken, "refreshToken", refreshToken);
 
       if (accessToken && refreshToken) {
         const cookiesToSet = [
@@ -57,7 +56,7 @@ export function OAuthButtons({
 
         await nextApi.post("/auth/set-cookie", { cookies: cookiesToSet });
 
-        router.replace("/dashboard");
+        router.replace(PATH.DASHBOARD);
       }
     };
 

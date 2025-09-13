@@ -41,10 +41,13 @@ import {
   useUpdateMe,
 } from "@/services/api/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
+import { useQueryState } from "@/hooks/useQueryState";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
   const tCommon = useTranslations("Common");
+
+  const { tab, setTab } = useQueryState({ tab: "" });
 
   const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
@@ -54,8 +57,6 @@ export default function ProfilePage() {
   const [show2FAManagementModal, setShow2FAManagementModal] = useState(false);
 
   const { userData, refreshGetMe } = useUser();
-
-  console.log("userData", userData);
 
   const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
     useUpdateMe();
@@ -399,10 +400,11 @@ export default function ProfilePage() {
         </div>
 
         <AppTabs
-          defaultValue="profile"
+          defaultValue={tab}
+          onValueChange={(value) => setTab(value)}
           tabs={[
             {
-              value: "profile",
+              value: "me",
               label: t("profile"),
               icon: <User className="w-4 h-4" />,
               content: profileTab,

@@ -4,13 +4,13 @@ import { RefreshTokenResponse } from "@/types/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getCookieMaxAge } from "@/utils/cookies.";
 
 export async function POST() {
   try {
     const cookieStore = await cookies();
 
     const refreshToken = cookieStore.get("refreshToken")?.value;
-
     if (!refreshToken) {
       return NextResponse.json(
         {
@@ -36,6 +36,9 @@ export async function POST() {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         sameSite: "lax",
+        maxAge: getCookieMaxAge(
+          process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || "15m"
+        ),
       });
     } else {
       cookieStore.set({

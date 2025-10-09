@@ -119,7 +119,8 @@
       "orContinueWith": "Or continue with",
       "googleComingSoon": "Google login coming soon!",
       "facebookComingSoon": "Facebook login coming soon!",
-      "error": "OAuth authentication failed",
+      "failed": "OAuth authentication failed",
+      "success": "OAuth authentication successful",
       "loginTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
       "registerTerms": "By creating an account, you agree to our Terms of Service and Privacy Policy"
     }

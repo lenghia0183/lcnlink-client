@@ -118,7 +118,8 @@
       "orContinueWith": "Hoặc tiếp tục với",
       "googleComingSoon": "Đăng nhập Google sắp có!",
       "facebookComingSoon": "Đăng nhập Facebook sắp có!",
-      "error": "Xác thực OAuth thất bại",
+      "failed": "Xác thực OAuth thất bại",
+      "success": "Xác thực OAuth thành công",
       "loginTerms": "Bằng cách đăng nhập, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi",
       "registerTerms": "Bằng cách tạo tài khoản, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi"
     }

@@ -27,6 +27,7 @@ export function OAuthButtons({
     const setTokens = async () => {
       const accessToken = searchParams.get("access_token");
       const refreshToken = searchParams.get("refresh_token");
+      const message = searchParams.get("message");
 
       if (accessToken && refreshToken) {
         const cookiesToSet = [
@@ -37,7 +38,7 @@ export function OAuthButtons({
               httpOnly: false,
               path: "/",
               maxAge: getCookieMaxAge(
-                process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || "3600"
+                process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || "15m"
               ),
             },
           },
@@ -48,7 +49,7 @@ export function OAuthButtons({
               httpOnly: false,
               path: "/",
               maxAge: getCookieMaxAge(
-                process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || "604800"
+                process.env.NEXT_PUBLIC_REFRESH_TOKEN_EXPIRE || "7d"
               ),
             },
           },
@@ -56,6 +57,7 @@ export function OAuthButtons({
 
         await nextApi.post("/auth/set-cookie", { cookies: cookiesToSet });
 
+        toast.success(message || t("oauth.success"));
         router.replace(PATH.DASHBOARD);
       }
     };

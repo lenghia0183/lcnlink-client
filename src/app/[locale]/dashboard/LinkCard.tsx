@@ -31,6 +31,8 @@ import { LINK_STATUS } from "@/constants/common";
 import { useState } from "react";
 import { AppDialog } from "@/components/AppDialog";
 import Image from "@/components/Image";
+import { shareOnFacebook, shareOnTwitter } from "@/utils/socialShare";
+import { toast } from "@/components/AppToast";
 
 interface LinkCardProps {
   link?: LinkData;
@@ -90,6 +92,23 @@ export const LinkCard = ({
   const getProgressPercentage = (clicks?: number, maxClicks?: number) => {
     if (!maxClicks || !clicks) return 0;
     return Math.min((clicks / maxClicks) * 100, 100);
+  };
+
+  const handleTwitterShare = () => {
+    if (!link?.shortedUrl) return;
+
+    shareOnTwitter({
+      url: link.shortedUrl,
+      title: link.description || "Check out this link",
+    });
+  };
+
+  const handleFacebookShare = () => {
+    if (!link?.shortedUrl) return;
+
+    shareOnFacebook({
+      url: link.shortedUrl,
+    });
   };
 
   return (
@@ -200,33 +219,28 @@ export const LinkCard = ({
                   ]
                 : []),
               {
-                label: "Share",
+                label: t("share"),
                 icon: <Share2 className="h-4 w-4" />,
                 submenu: [
                   {
-                    label: "Copy link",
+                    label: t("copyLink"),
                     icon: <Copy className="h-4 w-4" />,
                     onClick: () =>
                       link?.shortedUrl &&
                       onCopy(link.shortedUrl, link?.id ?? ""),
                   },
                   {
-                    label: "Share via email",
-                    icon: <Mail className="h-4 w-4" />,
-                    onClick: () => console.log("Email share clicked"),
-                  },
-                  {
-                    label: "Social media",
+                    label: t("socialMedia"),
                     submenu: [
                       {
                         label: "Twitter",
                         icon: <Twitter className="h-4 w-4" />,
-                        onClick: () => console.log("Twitter share clicked"),
+                        onClick: handleTwitterShare,
                       },
                       {
                         label: "Facebook",
                         icon: <Facebook className="h-4 w-4" />,
-                        onClick: () => console.log("Facebook share clicked"),
+                        onClick: handleFacebookShare,
                       },
                     ],
                   },

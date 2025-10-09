@@ -13,6 +13,7 @@ import { LinkData } from "@/types/Link";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { useEffect } from "react";
 import { addDays } from "date-fns";
+import { safeDate } from "@/utils/date";
 
 const editSchema = z.object({
   description: z.string().optional(),
@@ -57,7 +58,8 @@ export const EditLinkDialog = ({
     methods.reset({
       description: selectedLink?.description,
       alias: selectedLink?.alias,
-      expirationDate: new Date(selectedLink?.expireAt || ""),
+      expirationDate: safeDate(selectedLink?.expireAt),
+
       password: selectedLink?.password,
       maxClicks: selectedLink?.maxClicks?.toString(),
     });

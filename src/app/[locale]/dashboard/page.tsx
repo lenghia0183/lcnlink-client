@@ -27,6 +27,7 @@ import validateResponseCode from "@/utils/validateResponseCode";
 import { toast } from "@/components/AppToast";
 import { CreateLinkFormValues } from "./validation";
 import { format } from "date-fns";
+import { safeDate } from "@/utils/date";
 
 export type TotalLinksPerStatus = {
   [key in LinkStatus]: number;
@@ -156,7 +157,7 @@ export default function DashboardPage() {
         alias: formValue.alias,
         maxClicks: Number(formValue?.maxClicks) || 0,
         expireAt: formValue.expirationDate
-          ? format(new Date(formValue.expirationDate), "yyyy-MM-dd HH:mm")
+          ? format(safeDate(formValue.expirationDate)!, "yyyy-MM-dd HH:mm")
           : "",
 
         description: formValue.description,

@@ -36,6 +36,7 @@ function getFormattedDateValue(
   mode: "single" | "range" | "multiple",
   value: unknown
 ): string {
+  console.log("value", value);
   if (mode === "single" && value instanceof Date) {
     return format(value, "PPP");
   }
@@ -77,6 +78,7 @@ export const DatePickerField = ({
       control={control}
       render={({ field }) => {
         const formatted = getFormattedDateValue(mode, field.value);
+        console.log(formatted);
         return (
           <FormItem className={className}>
             {label && (

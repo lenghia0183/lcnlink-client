@@ -11,7 +11,6 @@ import {
   QrCode,
   Edit,
   Share2,
-  Mail,
   Twitter,
   Facebook,
   Trash2,
@@ -20,7 +19,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-import { format } from "date-fns";
 import { AppButton } from "@/components/AppButton";
 import { AppProgress } from "@/components/AppProgress";
 import { AppDropdown } from "@/components/AppDropDown";
@@ -32,7 +30,7 @@ import { useState } from "react";
 import { AppDialog } from "@/components/AppDialog";
 import Image from "@/components/Image";
 import { shareOnFacebook, shareOnTwitter } from "@/utils/socialShare";
-import { toast } from "@/components/AppToast";
+import { safeFormat } from "@/utils/date";
 
 interface LinkCardProps {
   link?: LinkData;
@@ -180,12 +178,14 @@ export const LinkCard = ({
             )}
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {link?.createdAt ? format(link.createdAt, "dd/MM/yyyy") : "--"}
+              {link?.createdAt
+                ? safeFormat(link?.createdAt, "dd/MM/yyyy")
+                : "--"}
             </span>
             {link?.expireAt && (
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {t("expires")} {format(link.expireAt, "dd/MM/yyyy")}
+                {t("expires")} {safeFormat(link?.expireAt, "dd/MM/yyyy")}
               </span>
             )}
           </div>
@@ -268,7 +268,7 @@ export const LinkCard = ({
       <AppDialog
         open={isShowQrCode}
         onOpenChange={setIsShowQrCode}
-        title={t("")}
+        title={""}
         classNameContent=""
       >
         <div className="flex flex-col items-center gap-4">
@@ -277,7 +277,7 @@ export const LinkCard = ({
             alt="QR Code"
             width={300}
             height={300}
-          ></Image>
+          />
         </div>
       </AppDialog>
     </AppCard>

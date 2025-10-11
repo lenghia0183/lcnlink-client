@@ -3,7 +3,7 @@ import { LinkData } from "@/types/Link";
 import { useTranslations } from "next-intl";
 import { LinkCard } from "./LinkCard";
 import { AppCard } from "@/components/AppCard";
-import { Link2 } from "lucide-react";
+import { Link2, Inbox } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
 import { LINK_STATUS, LinkStatus } from "@/constants/common";
 import { TotalLinksPerStatus } from "./page";
@@ -29,6 +29,7 @@ interface LinkManagementCardProps {
 
 export const LinkManagementCard = ({
   links = [],
+  searchTerm,
   activeTab,
   onTabChange,
   onEdit,
@@ -42,6 +43,7 @@ export const LinkManagementCard = ({
   loading: isLoading = false,
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
+  console.log("totalLinksPerStatus", totalLinksPerStatus);
   const tabConfig = [
     {
       value: "",
@@ -107,20 +109,34 @@ export const LinkManagementCard = ({
     label: `${t(config.labelKey)} (${config.count ?? 0})`,
     content: (
       <div className="space-y-4">
-        {isLoading
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonLinkCard key={index} />
-            ))
-          : links?.map((link) => (
-              <LinkCard
-                key={link?.id ?? Math.random().toString()}
-                link={link}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onCopy={onCopy}
-                copiedId={copiedId ?? ""}
-              />
-            ))}
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonLinkCard key={index} />
+          ))
+        ) : links && links.length > 0 ? (
+          links.map((link) => (
+            <LinkCard
+              key={link?.id ?? Math.random().toString()}
+              link={link}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onCopy={onCopy}
+              copiedId={copiedId ?? ""}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Inbox className="h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+              {t("noLinksFound")}
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              {searchTerm
+                ? t("noLinksMatchSearch")
+                : t("noLinksInThisCategory")}
+            </p>
+          </div>
+        )}
       </div>
     ),
   }));
@@ -143,12 +159,14 @@ export const LinkManagementCard = ({
         onValueChange={onTabChange}
         tabsListClassName="flex-wrap h-fit"
       />
-      <AppPagination
-        className="mt-6 sm:mt-10 px-4 sm:px-6 pb-4 sm:pb-6"
-        currentPage={page ?? 1}
-        onPageChange={setPage}
-        totalPages={totalPages ?? 1}
-      />
+      {totalPages > 1 && (
+        <AppPagination
+          className="mt-6 sm:mt-10 px-4 sm:px-6 pb-4 sm:pb-6"
+          currentPage={page ?? 1}
+          onPageChange={setPage}
+          totalPages={totalPages ?? 1}
+        />
+      )}
     </AppCard>
   );
 };

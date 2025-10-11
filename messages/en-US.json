@@ -391,7 +391,10 @@
     "trackUsage": "Track usage",
     "deleteLinkTitle": "Delete link?",
     "deleteLinkDescription": "Are you sure you want to delete the link \"{name}\"? This action cannot be undone.",
-    "deleteLinkDefaultDescription": "Are you sure you want to delete this link? This action cannot be undone."
+    "deleteLinkDefaultDescription": "Are you sure you want to delete this link? This action cannot be undone.",
+    "noLinksFound": "No links found",
+    "noLinksMatchSearch": "No links match your search criteria",
+    "noLinksInThisCategory": "No links in this category"
   },
   "Analytics": {
     "title": "Link Analytics",

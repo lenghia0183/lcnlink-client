@@ -460,7 +460,10 @@
     "trackUsage": "Theo dõi sử dụng",
     "deleteLinkTitle": "Xóa liên kết?",
     "deleteLinkDescription": "Bạn có chắc chắn muốn xóa liên kết \"{name}\"? Hành động này không thể hoàn tác.",
-    "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác."
+    "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác.",
+    "noLinksFound": "Không tìm thấy liên kết",
+    "noLinksMatchSearch": "Không có liên kết nào phù hợp với tiêu chí tìm kiếm của bạn",
+    "noLinksInThisCategory": "Không có liên kết trong danh mục này"
   },
   "Analytics": {
     "title": "Phân tích liên kết",

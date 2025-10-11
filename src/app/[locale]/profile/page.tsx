@@ -42,6 +42,8 @@ import {
 } from "@/services/api/auth";
 import validateResponseCode from "@/utils/validateResponseCode";
 import { useQueryState } from "@/hooks/useQueryState";
+import { SkeletonProfileTabs } from "@/components/skeleton/SkeletonProfileTabs";
+import { SkeletonSecurityTab } from "@/components/skeleton/SkeletonSecurityTab";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
@@ -56,7 +58,7 @@ export default function ProfilePage() {
   const [show2FADialog, setShow2FADialog] = useState(false);
   const [show2FAManagementModal, setShow2FAManagementModal] = useState(false);
 
-  const { userData, refreshGetMe } = useUser();
+  const { userData, refreshGetMe, isLoading } = useUser();
 
   const isEnableChangePassword =
     userData?.oauthProvider && userData?.oauthProviderId ? false : true;
@@ -80,7 +82,7 @@ export default function ProfilePage() {
       email: userData?.email || "",
       phone: userData?.phone || "",
       gender: userData?.gender || USER_GENDER_ENUM.MALE,
-      dateOfBirth: new Date(userData?.createdAt || 0),
+      dateOfBirth: userData?.dateOfBirth ? new Date(userData.dateOfBirth) : null,
     },
   });
 
@@ -103,17 +105,20 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    profileMethods.setValue("fullname", userData?.fullname || "");
-    profileMethods.setValue("email", userData?.email || "");
-    profileMethods.setValue("phone", userData?.phone || "");
-    profileMethods.setValue(
-      "gender",
-      userData?.gender || USER_GENDER_ENUM.MALE
-    );
-    profileMethods.setValue(
-      "dateOfBirth",
-      new Date(userData?.dateOfBirth || 0)
-    );
+    if (userData) {
+      profileMethods.setValue("fullname", userData?.fullname || "");
+      profileMethods.setValue("email", userData?.email || "");
+      profileMethods.setValue("phone", userData?.phone || "");
+      profileMethods.setValue(
+        "gender",
+        userData?.gender || USER_GENDER_ENUM.MALE
+      );
+      if (userData?.dateOfBirth) {
+        profileMethods.setValue("dateOfBirth", new Date(userData.dateOfBirth));
+      } else {
+        profileMethods.setValue("dateOfBirth", null);
+      }
+    }
   }, [userData, profileMethods]);
 
   const onSubmitProfile = async (formValue: ProfileFormValues) => {
@@ -123,7 +128,7 @@ export default function ProfilePage() {
         email: formValue.email,
         phone: formValue.phone,
         gender: formValue.gender,
-        dateOfBirth: formValue.dateOfBirth.toISOString(),
+        dateOfBirth: formValue.dateOfBirth ? formValue.dateOfBirth.toISOString() : undefined,
       },
       {
         onSuccess: (response) => {
@@ -193,203 +198,213 @@ export default function ProfilePage() {
 
   const profileTab = (
     <div className="space-y-6">
-      <AppCard
-        title={t("personalInfo")}
-        description={t("updatePersonalInfo")}
-        padded
-      >
-        <FormProvider {...profileMethods}>
-          <form
-            onSubmit={profileMethods.handleSubmit(onSubmitProfile)}
-            className="space-y-4"
-            noValidate
-          >
-            <TextField
-              name="fullname"
-              label={t("fullname")}
-              placeholder={t("fullnamePlaceholder")}
-              leftIcon={<User className="w-4 h-4" />}
-            />
-            <TextField
-              name="email"
-              label={t("email")}
-              placeholder={t("emailPlaceholder")}
-              leftIcon={<Mail className="w-4 h-4" />}
-            />
-            <TextField
-              name="phone"
-              label={t("phone")}
-              placeholder={t("phonePlaceholder")}
-              leftIcon={<Phone className="w-4 h-4" />}
-            />
-            <RadioGroupField
-              name="gender"
-              label={t("gender")}
-              options={[
-                {
-                  label: t("male"),
-                  value: USER_GENDER_ENUM.MALE,
-                },
-                {
-                  label: t("female"),
-                  value: USER_GENDER_ENUM.FEMALE,
-                },
-                {
-                  label: t("other"),
-                  value: USER_GENDER_ENUM.OTHER,
-                },
-              ]}
-            />
-            <DatePickerField
-              name="dateOfBirth"
-              label={t("dateOfBirth")}
-              placeholder={t("selectDate")}
-              hideNavigation
-              captionLayout="dropdown"
-            />
-            <AppButton
-              type="submit"
-              iconLeft={<Save className="h-4 w-4" />}
-              disabled={isUpdateMeMutating}
-              className="w-full"
+      {isLoading ? (
+        <SkeletonProfileTabs />
+      ) : (
+        <AppCard
+          title={t("personalInfo")}
+          description={t("updatePersonalInfo")}
+          padded
+        >
+          <FormProvider {...profileMethods}>
+            <form
+              onSubmit={profileMethods.handleSubmit(onSubmitProfile)}
+              className="space-y-4"
+              noValidate
             >
-              {isUpdateMeMutating ? tCommon("loading") : t("updateProfile")}
-            </AppButton>
-          </form>
-        </FormProvider>
-      </AppCard>
+              <TextField
+                name="fullname"
+                label={t("fullname")}
+                placeholder={t("fullnamePlaceholder")}
+                leftIcon={<User className="w-4 h-4" />}
+              />
+              <TextField
+                name="email"
+                label={t("email")}
+                placeholder={t("emailPlaceholder")}
+                leftIcon={<Mail className="w-4 h-4" />}
+              />
+              <TextField
+                name="phone"
+                label={t("phone")}
+                placeholder={t("phonePlaceholder")}
+                leftIcon={<Phone className="w-4 h-4" />}
+              />
+              <RadioGroupField
+                name="gender"
+                label={t("gender")}
+                options={[
+                  {
+                    label: t("male"),
+                    value: USER_GENDER_ENUM.MALE,
+                  },
+                  {
+                    label: t("female"),
+                    value: USER_GENDER_ENUM.FEMALE,
+                  },
+                  {
+                    label: t("other"),
+                    value: USER_GENDER_ENUM.OTHER,
+                  },
+                ]}
+              />
+              <DatePickerField
+                name="dateOfBirth"
+                label={t("dateOfBirth")}
+                placeholder={t("selectDate")}
+                hideNavigation
+                captionLayout="dropdown"
+              />
+              <AppButton
+                type="submit"
+                iconLeft={<Save className="h-4 w-4" />}
+                disabled={isUpdateMeMutating}
+                className="w-full"
+              >
+                {isUpdateMeMutating ? tCommon("loading") : t("updateProfile")}
+              </AppButton>
+            </form>
+          </FormProvider>
+        </AppCard>
+      )}
     </div>
   );
 
   const securityTab = (
     <div className="space-y-6">
-      <AppCard
-        title={t("changePassword")}
-        description={t("updatePassword")}
-        padded
-      >
-        <FormProvider {...passwordMethods}>
-          <form
-            onSubmit={passwordMethods.handleSubmit(onSubmitPassword)}
-            className="space-y-4"
-            noValidate
+      {isLoading ? (
+        <SkeletonSecurityTab />
+      ) : (
+        <>
+          <AppCard
+            title={t("changePassword")}
+            description={t("updatePassword")}
+            padded
           >
-            <TextField
-              name="currentPassword"
-              label={t("currentPassword")}
-              type={isShowCurrentPassword ? "text" : "password"}
-              placeholder={t("currentPasswordPlaceholder")}
-              leftIcon={<Shield className="h-4 w-4" />}
-              rightIcon={
-                isShowCurrentPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )
-              }
-              rightIconOnClick={() =>
-                setIsShowCurrentPassword(!isShowCurrentPassword)
-              }
-              disabled={isEnableChangePassword}
-            />
-            <TextField
-              name="newPassword"
-              label={t("newPassword")}
-              type={isShowNewPassword ? "text" : "password"}
-              placeholder={t("newPasswordPlaceholder")}
-              leftIcon={<Shield className="h-4 w-4" />}
-              rightIcon={
-                isShowNewPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )
-              }
-              rightIconOnClick={() => setIsShowNewPassword(!isShowNewPassword)}
-              disabled={isEnableChangePassword}
-            />
-            <TextField
-              name="confirmPassword"
-              label={t("confirmPassword")}
-              type={isShowConfirmPassword ? "text" : "password"}
-              placeholder={t("confirmPasswordPlaceholder")}
-              leftIcon={<Shield className="h-4 w-4" />}
-              rightIcon={
-                isShowConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )
-              }
-              rightIconOnClick={() =>
-                setIsShowConfirmPassword(!isShowConfirmPassword)
-              }
-              disabled={isEnableChangePassword}
-            />
-            <AppButton
-              type="submit"
-              iconLeft={<Save className="h-4 w-4" />}
-              disabled={isChangePasswordMutating || isEnableChangePassword}
-              className="w-full"
-            >
-              {isChangePasswordMutating
-                ? tCommon("loading")
-                : t("changePassword")}
-            </AppButton>
-          </form>
-        </FormProvider>
-      </AppCard>
+            <FormProvider {...passwordMethods}>
+              <form
+                onSubmit={passwordMethods.handleSubmit(onSubmitPassword)}
+                className="space-y-4"
+                noValidate
+              >
+                <TextField
+                  name="currentPassword"
+                  label={t("currentPassword")}
+                  type={isShowCurrentPassword ? "text" : "password"}
+                  placeholder={t("currentPasswordPlaceholder")}
+                  leftIcon={<Shield className="h-4 w-4" />}
+                  rightIcon={
+                    isShowCurrentPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )
+                  }
+                  rightIconOnClick={() =>
+                    setIsShowCurrentPassword(!isShowCurrentPassword)
+                  }
+                  disabled={isEnableChangePassword}
+                />
+                <TextField
+                  name="newPassword"
+                  label={t("newPassword")}
+                  type={isShowNewPassword ? "text" : "password"}
+                  placeholder={t("newPasswordPlaceholder")}
+                  leftIcon={<Shield className="h-4 w-4" />}
+                  rightIcon={
+                    isShowNewPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )
+                  }
+                  rightIconOnClick={() => setIsShowNewPassword(!isShowNewPassword)}
+                  disabled={isEnableChangePassword}
+                />
+                <TextField
+                  name="confirmPassword"
+                  label={t("confirmPassword")}
+                  type={isShowConfirmPassword ? "text" : "password"}
+                  placeholder={t("confirmPasswordPlaceholder")}
+                  leftIcon={<Shield className="h-4 w-4" />}
+                  rightIcon={
+                    isShowConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )
+                  }
+                  rightIconOnClick={() =>
+                    setIsShowConfirmPassword(!isShowConfirmPassword)
+                  }
+                  disabled={isEnableChangePassword}
+                />
+                <AppButton
+                  type="submit"
+                  iconLeft={<Save className="h-4 w-4" />}
+                  disabled={isChangePasswordMutating || isEnableChangePassword}
+                  className="w-full"
+                >
+                  {isChangePasswordMutating
+                    ? tCommon("loading")
+                    : t("changePassword")}
+                </AppButton>
+              </form>
+            </FormProvider>
+          </AppCard>
 
-      <AppCard
-        title={t("twoFactorAuth")}
-        description={t("twoFactorDescription")}
-        padded
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            {userData?.isEnable2FA ? (
-              <ShieldCheck className="h-8 w-8 text-green-500" />
-            ) : (
-              <ShieldOff className="h-8 w-8 text-gray-400" />
-            )}
-            <div>
-              <h3 className="font-medium">
-                {userData?.isEnable2FA
-                  ? t("twoFactorEnabled")
-                  : t("twoFactorDisabled")}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {userData?.isEnable2FA
-                  ? t("twoFactorEnabledDesc")
-                  : t("twoFactorDisabledDesc")}
-              </p>
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            <AppButton
-              onClick={handleManage2FA}
-              iconLeft={<Shield className="h-4 w-4" />}
-              className="flex-1"
-            >
-              {t("manage2FA")}
-            </AppButton>
-            <AppButton
-              variant={userData?.isEnable2FA ? "destructive" : "outline"}
-              onClick={handleToggle2FA}
-              iconLeft={
-                userData?.isEnable2FA ? (
-                  <ShieldOff className="h-4 w-4" />
+          <AppCard
+            title={t("twoFactorAuth")}
+            description={t("twoFactorDescription")}
+            padded
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                {userData?.isEnable2FA ? (
+                  <ShieldCheck className="h-8 w-8 text-green-500" />
                 ) : (
-                  <ShieldCheck className="h-4 w-4" />
-                )
-              }
-              size="sm"
-            >
-              {userData?.isEnable2FA ? t("disable") : t("enable")}
-            </AppButton>
-          </div>
-        </div>
-      </AppCard>
+                  <ShieldOff className="h-8 w-8 text-gray-400" />
+                )}
+                <div>
+                  <h3 className="font-medium">
+                    {userData?.isEnable2FA
+                      ? t("twoFactorEnabled")
+                      : t("twoFactorDisabled")}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {userData?.isEnable2FA
+                      ? t("twoFactorEnabledDesc")
+                      : t("twoFactorDisabledDesc")}
+                  </p>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <AppButton
+                  onClick={handleManage2FA}
+                  iconLeft={<Shield className="h-4 w-4" />}
+                  className="flex-1"
+                >
+                  {t("manage2FA")}
+                </AppButton>
+                <AppButton
+                  variant={userData?.isEnable2FA ? "destructive" : "outline"}
+                  onClick={handleToggle2FA}
+                  iconLeft={
+                    userData?.isEnable2FA ? (
+                      <ShieldOff className="h-4 w-4" />
+                    ) : (
+                      <ShieldCheck className="h-4 w-4" />
+                    )
+                  }
+                  size="sm"
+                >
+                  {userData?.isEnable2FA ? t("disable") : t("enable")}
+                </AppButton>
+              </div>
+            </div>
+          </AppCard>
+        </>
+      )}
     </div>
   );
 

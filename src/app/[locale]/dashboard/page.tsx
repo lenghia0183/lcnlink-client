@@ -43,19 +43,20 @@ export default function DashboardPage() {
     tab: "",
   });
 
-  const { data: dataLinkList, mutate: mutateLinkList } = useGetLinks({
+  const { data: dataLinkList, mutate: mutateLinkList, isValidating: isValidatingLinks } = useGetLinks({
     page: page,
     limit: 10,
     keyword: keyword,
     filter: buildFilterFromObject({ status: tab }),
   });
 
-  const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus } =
+  const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus, isValidating: isValidatingStats } =
     useGetTotalLinkPerStatus();
 
   const {
     data: dataLinkStatisticOverview,
     mutate: mutateLinkStatisticOverview,
+    isValidating: isValidatingOverview,
   } = useGetLinkStatisticOverview();
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
@@ -187,6 +188,9 @@ export default function DashboardPage() {
     }
   };
 
+  // Determine if we're in a loading state
+  const isLoading = isValidatingLinks || isValidatingStats || isValidatingOverview;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
@@ -218,6 +222,7 @@ export default function DashboardPage() {
             expired: dataTotalLinkPerStatus?.expired ?? 0,
             disabled: dataTotalLinkPerStatus?.disabled ?? 0,
           }}
+          loading={isLoading}
         />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
@@ -243,6 +248,7 @@ export default function DashboardPage() {
           totalPages={Math.ceil(
             (dataLinkList?.meta?.total ?? 1) / (dataLinkList?.meta?.limit ?? 1)
           )}
+          loading={isLoading}
         />
 
         <EditLinkDialog

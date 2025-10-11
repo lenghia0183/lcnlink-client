@@ -12,7 +12,7 @@ export const getProfileFormSchema = (t: (key: string) => string) =>
       .min(1, t("phoneRequired"))
       .regex(/^[+]?[0-9\s-()]+$/, t("phoneInvalid")),
     gender: z.number(t("register.genderInvalid")),
-    dateOfBirth: z.date(t("dateOfBirthRequired")),
+    dateOfBirth: z.date(t("dateOfBirthRequired")).nullable(),
   });
 
 export const getPasswordFormSchema = (t: (key: string) => string) =>

@@ -1,6 +1,7 @@
 // components/dashboard/StatsCards.tsx
 import { AppCard } from "@/components/AppCard";
 import { GetLinkStatisticOverviewResponse } from "@/types/Link";
+import { SkeletonStatsCard } from "@/components/skeleton/SkeletonStatsCard";
 
 import { Link2, MousePointer, Shield, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -9,11 +10,13 @@ import { TotalLinksPerStatus } from "./page";
 interface StatsCardsProps {
   dataTotalLinkPerStatus?: TotalLinksPerStatus;
   linkStatisticOverview?: GetLinkStatisticOverviewResponse;
+  loading?: boolean;
 }
 
 export const StatsCards = ({
   linkStatisticOverview,
   dataTotalLinkPerStatus,
+  loading = false,
 }: StatsCardsProps) => {
   const t = useTranslations("Dashboard");
 
@@ -57,6 +60,16 @@ export const StatsCards = ({
       iconBg: "bg-orange-50 dark:bg-orange-900/20",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-flow-dense gap-6 mb-8">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <SkeletonStatsCard key={index} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-flow-dense gap-6 mb-8">

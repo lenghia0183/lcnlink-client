@@ -22,17 +22,21 @@ import {
   useGetCountryBreakdown,
   useGetLinkStatisticOverview,
 } from "@/services/api/links";
+import { SkeletonAnalyticsPage } from "@/components/skeleton/SkeletonAnalyticsPage";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
 
   // Hooks
-  const { data: devices, mutate: refreshDevices } = useDeviceBreakdown();
-  const { data: browsers, mutate: refreshBrowsers } = useGetBrowserBreakdown();
-  const { data: countries, mutate: refreshCountries } =
+  const { data: devices, mutate: refreshDevices, isLoading: isLoadingDevices } = useDeviceBreakdown();
+  const { data: browsers, mutate: refreshBrowsers, isLoading: isLoadingBrowsers } = useGetBrowserBreakdown();
+  const { data: countries, mutate: refreshCountries, isLoading: isLoadingCountries } =
     useGetCountryBreakdown();
 
-  const { data: linkStatisticOverview } = useGetLinkStatisticOverview();
+  const { data: linkStatisticOverview, isLoading: isLoadingOverview } = useGetLinkStatisticOverview();
+
+  // Check if any data is loading
+  const isLoading = isLoadingDevices || isLoadingBrowsers || isLoadingCountries || isLoadingOverview;
 
   // Stats
   const stats = [
@@ -63,6 +67,11 @@ export default function AnalyticsPage() {
     refreshBrowsers();
     refreshCountries();
   };
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return <SkeletonAnalyticsPage />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">

@@ -7,6 +7,9 @@ import { Link2 } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
 import { LINK_STATUS, LinkStatus } from "@/constants/common";
 import { TotalLinksPerStatus } from "./page";
+import { SkeletonLinkCard } from "@/components/skeleton/SkeletonLinkCard";
+import { SkeletonTabs } from "@/components/skeleton/SkeletonTabs";
+import { SkeletonLoader } from "@/components/skeleton/SkeletonLoader";
 
 interface LinkManagementCardProps {
   links?: LinkData[];
@@ -21,6 +24,7 @@ interface LinkManagementCardProps {
   page: number;
   totalPages: number;
   setPage: (value: number) => void;
+  loading?: boolean;
 }
 
 export const LinkManagementCard = ({
@@ -35,6 +39,7 @@ export const LinkManagementCard = ({
   totalLinksPerStatus,
   totalPages,
   setPage,
+  loading = false,
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
 
@@ -70,21 +75,48 @@ export const LinkManagementCard = ({
     },
   ];
 
+  if (loading) {
+    return (
+      <AppCard
+        className="border-gray-200 dark:border-gray-700"
+        headerClassName=""
+        title={
+          <div className="flex items-center gap-2">
+            <div className="h-5 w-5">
+              <SkeletonLoader width="100%" height="100%" borderRadius="0.25rem" />
+            </div>
+            <SkeletonLoader width="10rem" height="1.5rem" />
+          </div>
+        }
+        description={<SkeletonLoader width="15rem" height="1rem" />}
+      >
+        <SkeletonTabs tabCount={tabConfig.length} />
+        <div className="mt-10 flex justify-center">
+          <SkeletonLoader width="20rem" height="2.5rem" borderRadius="0.375rem" />
+        </div>
+      </AppCard>
+    );
+  }
+
   const tabs: TabItem[] = tabConfig.map((config) => ({
     value: config.value,
     label: `${t(config.labelKey)} (${config.count ?? 0})`,
     content: (
       <div className="space-y-4">
-        {links?.map((link) => (
-          <LinkCard
-            key={link?.id ?? Math.random().toString()}
-            link={link}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onCopy={onCopy}
-            copiedId={copiedId ?? ""}
-          />
-        ))}
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonLinkCard key={index} />
+            ))
+          : links?.map((link) => (
+              <LinkCard
+                key={link?.id ?? Math.random().toString()}
+                link={link}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onCopy={onCopy}
+                copiedId={copiedId ?? ""}
+              />
+            ))}
       </div>
     ),
   }));

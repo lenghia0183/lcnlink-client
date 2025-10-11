@@ -193,18 +193,18 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t("title")}
             </h1>
-            <p className="text-gray-600 dark:text-gray-300">{t("subtitle")}</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">{t("subtitle")}</p>
           </div>
 
           <AppButton
-            className="mt-4 lg:mt-0 bg-blue-600 hover:bg-blue-700"
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
             iconLeft={<Plus className="h-4 w-4 mr-2" />}
             onClick={() => {
               setIsCreateDialogOpen(true);

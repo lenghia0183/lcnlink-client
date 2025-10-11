@@ -40,29 +40,41 @@ export const SearchAndFilters = ({
   return (
     <AppCard
       className="mb-8 border-gray-200 dark:border-gray-700"
-      contentClassName="p-6"
+      contentClassName="p-4 sm:p-6"
     >
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(handleSubmit)}
-          className="flex flex-col lg:flex-row gap-4"
+          className="flex flex-col sm:flex-row gap-4"
         >
-          <TextField
-            name="searchTerm"
-            placeholder={t("searchPlaceholder")}
-            leftIcon={<Search className="h-4 w-4 text-gray-400" />}
-            inputClassName="pl-10"
-            className="flex-1"
-          />
+          <div className="flex-1">
+            <TextField
+              name="searchTerm"
+              placeholder={t("searchPlaceholder")}
+              leftIcon={<Search className="h-4 w-4 text-gray-400" />}
+              inputClassName="pl-10"
+              className="w-full"
+            />
+          </div>
 
-          <div className="flex gap-2">
-            <AppButton type="submit" variant="outline" iconLeft={<Filter />}>
+          <div className="flex gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+            <AppButton 
+              type="submit" 
+              variant="outline" 
+              iconLeft={<Filter />}
+              className="w-full sm:w-auto"
+            >
               {t("filter")}
             </AppButton>
-            <AppButton variant="outline" iconLeft={<Download />}>
-              {t("export")}
+            <AppButton 
+              variant="outline" 
+              iconLeft={<Download />}
+              className="w-full sm:w-auto"
+            >
+           {t("export")}
             </AppButton>
           </div>
+
         </form>
       </FormProvider>
     </AppCard>

@@ -112,18 +112,19 @@ export const LinkCard = ({
   return (
     <AppCard
       className="border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow"
-      contentClassName="p-6"
+      contentClassName="p-4 sm:p-6"
     >
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-3">
-            <code className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
-              <Globe className="h-4 w-4" />
-              {link?.shortedUrl ?? ""}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <code className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1.5 sm:px-3 sm:py-2 rounded-md text-sm font-medium flex items-center gap-2 w-full sm:w-auto">
+              <Globe className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">{link?.shortedUrl ?? ""}</span>
             </code>
             <AppButton
               variant="ghost"
               size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-9"
               onClick={() => onCopy(link?.shortedUrl ?? "", link?.id ?? "")}
               iconLeft={
                 copiedId === link?.id ? (
@@ -141,14 +142,14 @@ export const LinkCard = ({
               </Badge>
             )}
           </div>
-          <div className="flex items-center gap-2 mb-3">
-            <ExternalLink className="h-4 w-4 text-gray-400" />
-            <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+          <div className="flex items-start gap-2 mb-3">
+            <ExternalLink className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 break-words">
               {link?.originalUrl ?? ""}
             </p>
           </div>
           {link?.description && (
-            <p className="text-sm text-gray-500 mb-3 italic">
+            <p className="text-sm text-gray-500 mb-3 italic break-words">
               {link.description}
             </p>
           )}
@@ -167,9 +168,10 @@ export const LinkCard = ({
                   ? "bg-red-500"
                   : "bg-blue-500"
               }
+              className="mb-3"
             />
           )}
-          <div className="flex items-center gap-6 text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
             {link?.clicksCount !== undefined && (
               <span className="flex items-center gap-1">
                 <MousePointer className="h-3 w-3" />
@@ -190,10 +192,11 @@ export const LinkCard = ({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 ml-4">
+        <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-2 ml-0 sm:ml-4">
           <AppButton
             variant="outline"
             size="icon"
+            className="h-8 w-8 sm:h-9 sm:w-9"
             iconLeft={<QrCode />}
             onClick={() => {
               setIsShowQrCode(true);
@@ -203,6 +206,7 @@ export const LinkCard = ({
             <AppButton
               variant="outline"
               size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-9"
               iconLeft={<Settings />}
               onClick={() => onEdit(link)}
             />
@@ -258,6 +262,7 @@ export const LinkCard = ({
               <AppButton
                 variant="outline"
                 size="icon"
+                className="h-8 w-8 sm:h-9 sm:w-9"
                 iconLeft={<MoreHorizontal />}
               />
             }
@@ -269,15 +274,19 @@ export const LinkCard = ({
         open={isShowQrCode}
         onOpenChange={setIsShowQrCode}
         title={""}
-        classNameContent=""
+        classNameContent="p-4 sm:p-6"
       >
         <div className="flex flex-col items-center gap-4">
           <Image
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${link?.shortedUrl}`}
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${link?.shortedUrl}`}
             alt="QR Code"
-            width={300}
-            height={300}
+            width={200}
+            height={200}
+            className="w-48 h-48 sm:w-64 sm:h-64"
           />
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center break-words max-w-full">
+            {link?.shortedUrl}
+          </p>
         </div>
       </AppDialog>
     </AppCard>

@@ -79,20 +79,18 @@ export const LinkManagementCard = ({
     return (
       <AppCard
         className="border-gray-200 dark:border-gray-700"
-        headerClassName=""
+        headerClassName="p-4 sm:p-6"
         title={
           <div className="flex items-center gap-2">
-            <div className="h-5 w-5">
-              <SkeletonLoader width="100%" height="100%" borderRadius="0.25rem" />
-            </div>
-            <SkeletonLoader width="10rem" height="1.5rem" />
+            <Link2 className="h-5 w-5" />
+            {t("linkManagement")}
           </div>
         }
-        description={<SkeletonLoader width="15rem" height="1rem" />}
+        description={t("subtitle")}
       >
         <SkeletonTabs tabCount={tabConfig.length} />
-        <div className="mt-10 flex justify-center">
-          <SkeletonLoader width="20rem" height="2.5rem" borderRadius="0.375rem" />
+        <div className="mt-6 sm:mt-10 flex justify-center px-4 sm:px-6 pb-4 sm:pb-6">
+          <SkeletonLoader width="100%" height="2.5rem" borderRadius="0.375rem" />
         </div>
       </AppCard>
     );
@@ -124,7 +122,7 @@ export const LinkManagementCard = ({
   return (
     <AppCard
       className="border-gray-200 dark:border-gray-700"
-      headerClassName=""
+      headerClassName="p-4 sm:p-6"
       title={
         <div className="flex items-center gap-2">
           <Link2 className="h-5 w-5" />
@@ -137,10 +135,10 @@ export const LinkManagementCard = ({
         tabs={tabs ?? []}
         defaultValue={activeTab}
         onValueChange={onTabChange}
-        className="w-full"
+        tabsListClassName="flex-wrap h-fit"
       />
       <AppPagination
-        className="mt-10"
+        className="mt-6 sm:mt-10 px-4 sm:px-6 pb-4 sm:pb-6"
         currentPage={page ?? 1}
         onPageChange={setPage}
         totalPages={totalPages ?? 1}

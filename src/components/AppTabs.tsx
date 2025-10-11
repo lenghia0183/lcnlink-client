@@ -15,6 +15,7 @@ interface AppTabsProps {
   tabs: TabItem[];
   defaultValue?: string;
   className?: string;
+  tabsListClassName?: string;
   onValueChange?: (value: string) => void;
 }
 
@@ -22,6 +23,7 @@ export const AppTabs = ({
   tabs,
   defaultValue,
   className,
+  tabsListClassName,
   onValueChange,
 }: AppTabsProps) => {
   console.log("rerender", defaultValue);
@@ -32,7 +34,7 @@ export const AppTabs = ({
       defaultValue={defaultValue || tabs[0]?.value}
       className={cn(className)}
     >
-      <TabsList className={cn()}>
+      <TabsList className={cn(tabsListClassName)}>
         {tabs.map(({ value, label, icon }) => (
           <TabsTrigger key={value} value={value}>
             {icon}

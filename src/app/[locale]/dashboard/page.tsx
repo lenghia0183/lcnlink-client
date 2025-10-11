@@ -43,20 +43,27 @@ export default function DashboardPage() {
     tab: "",
   });
 
-  const { data: dataLinkList, mutate: mutateLinkList, isValidating: isValidatingLinks } = useGetLinks({
+  const {
+    data: dataLinkList,
+    mutate: mutateLinkList,
+    isValidating: isLoadingLinks,
+  } = useGetLinks({
     page: page,
     limit: 10,
     keyword: keyword,
     filter: buildFilterFromObject({ status: tab }),
   });
 
-  const { data: dataTotalLinkPerStatus, mutate: mutateTotalLinkPerStatus, isValidating: isValidatingStats } =
-    useGetTotalLinkPerStatus();
+  const {
+    data: dataTotalLinkPerStatus,
+    mutate: mutateTotalLinkPerStatus,
+    isValidating: isLoadingStats,
+  } = useGetTotalLinkPerStatus();
 
   const {
     data: dataLinkStatisticOverview,
     mutate: mutateLinkStatisticOverview,
-    isValidating: isValidatingOverview,
+    isValidating: isLoadingLinkStatisticOverview,
   } = useGetLinkStatisticOverview();
 
   const { trigger: deleteLinkTrigger } = useDeleteLink();
@@ -65,8 +72,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     mutateLinkList();
-    mutateTotalLinkPerStatus();
-    mutateLinkStatisticOverview();
+    // mutateTotalLinkPerStatus();
+    // mutateLinkStatisticOverview();
   }, [page, keyword, tab]);
 
   const [copiedId, setCopiedId] = useState<string>("");
@@ -188,9 +195,6 @@ export default function DashboardPage() {
     }
   };
 
-  // Determine if we're in a loading state
-  const isLoading = isValidatingLinks || isValidatingStats || isValidatingOverview;
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -200,7 +204,9 @@ export default function DashboardPage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t("title")}
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">{t("subtitle")}</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
+              {t("subtitle")}
+            </p>
           </div>
 
           <AppButton
@@ -222,7 +228,7 @@ export default function DashboardPage() {
             expired: dataTotalLinkPerStatus?.expired ?? 0,
             disabled: dataTotalLinkPerStatus?.disabled ?? 0,
           }}
-          loading={isLoading}
+          loading={isLoadingLinkStatisticOverview || isLoadingStats}
         />
 
         <SearchAndFilters defaultSearch={keyword} onSearchChange={setKeyword} />
@@ -239,7 +245,7 @@ export default function DashboardPage() {
           page={page}
           setPage={setPage}
           totalLinksPerStatus={{
-            all: dataLinkList?.meta?.total ?? 0,
+            all: dataLinkStatisticOverview?.totalLink ?? 0,
             active: dataTotalLinkPerStatus?.active ?? 0,
             expired: dataTotalLinkPerStatus?.expired ?? 0,
             disabled: dataTotalLinkPerStatus?.disabled ?? 0,
@@ -248,7 +254,7 @@ export default function DashboardPage() {
           totalPages={Math.ceil(
             (dataLinkList?.meta?.total ?? 1) / (dataLinkList?.meta?.limit ?? 1)
           )}
-          loading={isLoading}
+          loading={isLoadingLinks}
         />
 
         <EditLinkDialog

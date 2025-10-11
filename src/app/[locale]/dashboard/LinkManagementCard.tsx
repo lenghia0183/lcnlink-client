@@ -39,10 +39,9 @@ export const LinkManagementCard = ({
   totalLinksPerStatus,
   totalPages,
   setPage,
-  loading = false,
+  loading: isLoading = false,
 }: LinkManagementCardProps) => {
   const t = useTranslations("Dashboard");
-
   const tabConfig = [
     {
       value: "",
@@ -75,7 +74,10 @@ export const LinkManagementCard = ({
     },
   ];
 
-  if (loading) {
+  // Show skeleton for the entire card only when we don't have the tab counts yet
+  const showFullSkeleton = isLoading && !totalLinksPerStatus;
+
+  if (showFullSkeleton) {
     return (
       <AppCard
         className="border-gray-200 dark:border-gray-700"
@@ -90,7 +92,11 @@ export const LinkManagementCard = ({
       >
         <SkeletonTabs tabCount={tabConfig.length} />
         <div className="mt-6 sm:mt-10 flex justify-center px-4 sm:px-6 pb-4 sm:pb-6">
-          <SkeletonLoader width="100%" height="2.5rem" borderRadius="0.375rem" />
+          <SkeletonLoader
+            width="100%"
+            height="2.5rem"
+            borderRadius="0.375rem"
+          />
         </div>
       </AppCard>
     );
@@ -101,7 +107,7 @@ export const LinkManagementCard = ({
     label: `${t(config.labelKey)} (${config.count ?? 0})`,
     content: (
       <div className="space-y-4">
-        {loading
+        {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
               <SkeletonLinkCard key={index} />
             ))

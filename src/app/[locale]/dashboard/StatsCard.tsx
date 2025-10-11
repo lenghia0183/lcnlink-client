@@ -16,7 +16,7 @@ interface StatsCardsProps {
 export const StatsCards = ({
   linkStatisticOverview,
   dataTotalLinkPerStatus,
-  loading = false,
+  loading: isLoading = false,
 }: StatsCardsProps) => {
   const t = useTranslations("Dashboard");
 
@@ -61,7 +61,11 @@ export const StatsCards = ({
     },
   ];
 
-  if (loading) {
+  // Only show skeleton if we're loading and don't have the required data yet
+  const showSkeleton =
+    isLoading && (!linkStatisticOverview || !dataTotalLinkPerStatus);
+
+  if (showSkeleton) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 grid-flow-dense gap-4 sm:gap-6 mb-8">
         {Array.from({ length: 4 }).map((_, index) => (

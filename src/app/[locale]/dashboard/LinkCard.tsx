@@ -192,7 +192,7 @@ export const LinkCard = ({
             )}
           </div>
         </div>
-        <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-2 ml-0 sm:ml-4">
+        <div className="flex mt-5 sm:mt-0 items-center sm:items-end gap-2 sm:gap-2 ml-0 sm:ml-4">
           <AppButton
             variant="outline"
             size="icon"

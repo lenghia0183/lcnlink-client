@@ -12,6 +12,7 @@ import eventEmitter from "@/utils/eventEmitter";
 import { EVENT_EMITTER } from "@/constants/common";
 import { getServerCookies } from "@/utils/cookies.";
 import { isServer } from "@/utils/env";
+import validateResponseCode from "@/utils/validateResponseCode";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL + "/api/" || "";
 const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN + "/api/" || "";
@@ -87,11 +88,28 @@ export const createInstance = (
         originalRequest?.url !== REFRESH_TOKEN_URL
       ) {
         originalRequest._retry = true;
+        
+        // Queue refresh token requests to prevent multiple simultaneous refresh attempts
+        if (!refreshingPromise) {
+          refreshingPromise = refreshAccessToken()
+            .then(() => {
+              refreshingPromise = null;
+            })
+            .catch((refreshError) => {
+              refreshingPromise = null;
+              // Only emit logout event if we're not already in the refresh token process
+              eventEmitter.emit(EVENT_EMITTER.LOGOUT);
+              throw refreshError;
+            });
+        }
+        
         try {
-          await refreshAccessToken();
+          // Wait for the refresh token process to complete
+          await refreshingPromise;
+          // Retry the original request
           return instance(originalRequest);
-        } catch {
-          eventEmitter.emit(EVENT_EMITTER.LOGOUT);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
         }
       }
 
@@ -203,9 +221,13 @@ export const createApi = (instance: AxiosInstance) => ({
 });
 
 // --- Refresh access token ---
+// Use a promise to queue refresh token requests
+let refreshingPromise: Promise<void> | null = null;
+
 export const refreshAccessToken = async () => {
   const res = await nextApiNoToken.post(REFRESH_TOKEN_URL, {});
-  if (!res) throw new Error("Failed to refresh token");
+  if (!res || !validateResponseCode(res.statusCode))
+    throw new Error("Failed to refresh token");
 };
 
 // --- Tạo instance ---

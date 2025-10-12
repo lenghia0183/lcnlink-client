@@ -15,9 +15,9 @@ export async function POST() {
       return NextResponse.json(
         {
           message: "Missing refresh token",
-          statusCode: ResponseCodeEnum.UNAUTHORIZED,
+          statusCode: ResponseCodeEnum.BAD_REQUEST,
         },
-        { status: 401 }
+        { status: ResponseCodeEnum.BAD_REQUEST }
       );
     }
 
@@ -40,6 +40,17 @@ export async function POST() {
           process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRE || "15m"
         ),
       });
+
+      return NextResponse.json(
+        {
+          message: "Token refreshed successfully",
+          statusCode: ResponseCodeEnum.SUCCESS,
+          data: {
+            accessToken: refreshResponse?.data?.accessToken || "",
+          },
+        },
+        { status: ResponseCodeEnum.SUCCESS }
+      );
     } else {
       cookieStore.set({
         name: "accessToken",
@@ -57,19 +68,22 @@ export async function POST() {
         path: "/",
         sameSite: "lax",
       });
-    }
 
-    return NextResponse.json(
-      { message: "Refresh Token", statusCode: ResponseCodeEnum.SUCCESS },
-      { status: 200 }
-    );
+      return NextResponse.json(
+        {
+          message: "Failed to refresh token",
+          statusCode: ResponseCodeEnum.UNAUTHORIZED,
+        },
+        { status: ResponseCodeEnum.UNAUTHORIZED }
+      );
+    }
   } catch (error) {
     return NextResponse.json(
       {
         message: "Internal Server Error",
         statusCode: ResponseCodeEnum.INTERNAL_SERVER_ERROR,
       },
-      { status: 500 }
+      { status: ResponseCodeEnum.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -5,7 +5,7 @@ import { LinkCard } from "./LinkCard";
 import { AppCard } from "@/components/AppCard";
 import { Link2, Inbox } from "lucide-react";
 import { AppPagination } from "@/components/AppPagination";
-import { LINK_STATUS, LinkStatus } from "@/constants/common";
+import { LINK_STATUS } from "@/constants/common";
 import { TotalLinksPerStatus } from "./page";
 import { SkeletonLinkCard } from "@/components/skeleton/SkeletonLinkCard";
 import { SkeletonTabs } from "@/components/skeleton/SkeletonTabs";

@@ -74,7 +74,7 @@ export default function DashboardPage() {
     mutateLinkList();
     // mutateTotalLinkPerStatus();
     // mutateLinkStatisticOverview();
-  }, [page, keyword, tab]);
+  }, [page, keyword, tab, mutateLinkList]);
 
   const [copiedId, setCopiedId] = useState<string>("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);

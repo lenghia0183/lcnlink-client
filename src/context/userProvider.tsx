@@ -17,7 +17,7 @@ import { setLocalStorageItem } from "@/utils/localStorage";
 import { toast } from "@/components/AppToast";
 import { useGetMe } from "@/services/api/auth";
 
-import { getCookie } from "cookies-next";
+import { getCookie, hasCookie } from "cookies-next";
 
 interface UserContextType {
   userData: User | null;
@@ -44,15 +44,14 @@ export function UserProvider({
   children: React.ReactNode;
   initialUser?: User | null;
 }) {
-  const hasInitialUserOrToken =
-    Boolean(initialUser) || Boolean(getCookie("accessToken"));
+  const hasInitialUserOrToken = Boolean(initialUser);
 
   const {
     data,
     isLoading: isLoadingGetMe,
     isValidating: isValidatingGetMe,
     mutate: refreshGetMe,
-  } = useGetMe(hasInitialUserOrToken);
+  } = useGetMe();
 
   const tCommon = useTranslations("common");
   const router = useRouter();

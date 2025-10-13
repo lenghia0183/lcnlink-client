@@ -27,11 +27,13 @@ const i18nMiddleware = createMiddleware({
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
+  const refreshToken = request.cookies.get("refreshToken")?.value;
 
   // Check authentication for protected routes
   if (
     protectedRoutes.some((route) => pathname.includes(route)) &&
-    !accessToken
+    !accessToken &&
+    !refreshToken
   ) {
     const locale = getPreferredLocale(request);
     const loginUrl = new URL(`/${locale}${PATH.LOGIN}`, request.nextUrl.origin);

@@ -39,6 +39,7 @@ export default function Header() {
   // Các link cần login mới thấy
   const protectedNav = [
     { name: t("dashboard"), href: PATH.DASHBOARD },
+    { name: t("referrers"), href: PATH.REFERRERS },
     { name: t("analytics"), href: PATH.ANALYTICS },
   ];
 

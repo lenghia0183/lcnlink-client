@@ -187,6 +187,7 @@
     "about": "Giới thiệu",
     "contact": "Liên hệ",
     "dashboard": "Bảng điều khiển",
+    "referrers": "Referrer",
     "analytics": "Phân tích",
     "pricing": "Giá cả",
     "logout": "Đăng xuất",
@@ -233,6 +234,38 @@
     "authenticationRequired": "Yêu cầu xác thực",
     "home": "Trang chủ",
     "goBack": "Quay lại"
+  },
+  "Referrers": {
+    "title": "Quản lý Referrer",
+    "subtitle": "Quản lý và tổ chức các referrer của bạn để tạo liên kết",
+    "createNewReferrer": "Tạo Referrer Mới",
+    "referrerManagement": "Quản lý Referrer",
+    "searchPlaceholder": "Tìm kiếm theo referrer hoặc bí danh...",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "referrer": {
+      "required": "Referrer là bắt buộc"
+    },
+    "referrerLabel": "Referrer",
+    "referrerPlaceholder": "Nhập referrer (ví dụ: google.com)",
+    "aliasLabel": "Bí danh (Tùy chọn)",
+    "aliasPlaceholder": "Nhập bí danh cho referrer này",
+    "alias": "Bí danh",
+    "createdAt": "Được tạo",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "cancel": "Hủy",
+    "update": "Cập nhật",
+    "create": "Tạo Referrer",
+    "createReferrerTitle": "Tạo Referrer Mới",
+    "createReferrerDescription": "Nhập thông tin để tạo referrer mới",
+    "editReferrerTitle": "Chỉnh sửa Referrer",
+    "editReferrerDescription": "Cập nhật thông tin cho referrer của bạn",
+    "deleteReferrerTitle": "Xóa referrer?",
+    "deleteReferrerDescription": "Bạn có chắc chắn muốn xóa referrer \"{referrer}\"? Hành động này không thể hoàn tác.",
+    "noReferrersFound": "Không tìm thấy referrer",
+    "noReferrersMatchSearch": "Không có referrer nào phù hợp với tiêu chí tìm kiếm của bạn",
+    "noReferrers": "Bạn chưa tạo bất kỳ referrer nào"
   },
   "Profile": {
     "title": "Cài Đặt Hồ Sơ",
@@ -463,7 +496,10 @@
     "deleteLinkDefaultDescription": "Bạn có chắc chắn muốn xóa liên kết này? Hành động này không thể hoàn tác.",
     "noLinksFound": "Không tìm thấy liên kết",
     "noLinksMatchSearch": "Không có liên kết nào phù hợp với tiêu chí tìm kiếm của bạn",
-    "noLinksInThisCategory": "Không có liên kết trong danh mục này"
+    "noLinksInThisCategory": "Không có liên kết trong danh mục này",
+    "referrer": "Referrer",
+    "selectReferrer": "Chọn referrer...",
+    "loadingReferrers": "Đang tải referrer..."
   },
   "Analytics": {
     "title": "Phân tích liên kết",

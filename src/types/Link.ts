@@ -29,6 +29,7 @@ export interface CreateLinkBody {
   password?: string;
   description?: string;
   maxClicks?: number;
+  referrerId?: string;
 }
 
 export interface UpdateLinkBody {

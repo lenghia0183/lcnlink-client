@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
+import { ReferrerSelectField } from "@/components/FormFields/ReferrerSelectField";
 import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 import { AppDialog } from "@/components/AppDialog";
 
@@ -94,6 +95,11 @@ export const CreateLinkDialog = ({
             name="alias"
             label={t("customAlias")}
             placeholder={t("aliasPlaceholder")}
+          />
+          <ReferrerSelectField
+            name="referrer"
+            label={t("referrer")}
+            placeholder={t("selectReferrer")}
           />
           <TextAreaField
             name="description"

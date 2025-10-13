@@ -7,6 +7,7 @@ export const PATH = {
   VERIFY_2FA: "/verify-2fa",
   PROFILE: "/profile?tab=me",
   DASHBOARD: "/dashboard",
+  REFERRERS: "/referrers",
   ABOUT: "/about",
   ANALYTICS: "/analytics",
   NOT_FOUND: "/not-found",

@@ -189,6 +189,7 @@
     "contact": "Contact",
     "dashboard": "Dashboard",
     "analytics": "Analytics",
+    "referrers": "Referrers",
     "logout": "Logout",
     "pricing": "Pricing",
     "login": "Login",
@@ -394,7 +395,10 @@
     "deleteLinkDefaultDescription": "Are you sure you want to delete this link? This action cannot be undone.",
     "noLinksFound": "No links found",
     "noLinksMatchSearch": "No links match your search criteria",
-    "noLinksInThisCategory": "No links in this category"
+    "noLinksInThisCategory": "No links in this category",
+    "referrer": "Referrer",
+    "selectReferrer": "Select referrer...",
+    "loadingReferrers": "Loading referrers..."
   },
   "Analytics": {
     "title": "Link Analytics",
@@ -626,6 +630,38 @@
     "authenticationRequired": "Authentication Required",
     "home": "Home",
     "goBack": "Go Back"
+  },
+  "Referrers": {
+    "title": "Referrer Management",
+    "subtitle": "Manage and organize your referrers for link creation",
+    "createNewReferrer": "Create New Referrer",
+    "referrerManagement": "Referrer Management",
+    "searchPlaceholder": "Search by referrer or alias...",
+    "filter": "Filter",
+    "export": "Export",
+    "referrer": {
+      "required": "Referrer is required"
+    },
+    "referrerLabel": "Referrer",
+    "referrerPlaceholder": "Enter referrer (e.g., google.com)",
+    "aliasLabel": "Alias (Optional)",
+    "aliasPlaceholder": "Enter alias for this referrer",
+    "alias": "Alias",
+    "createdAt": "Created",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "update": "Update",
+    "create": "Create Referrer",
+    "createReferrerTitle": "Create New Referrer",
+    "createReferrerDescription": "Enter information to create a new referrer",
+    "editReferrerTitle": "Edit Referrer",
+    "editReferrerDescription": "Update information for your referrer",
+    "deleteReferrerTitle": "Delete referrer?",
+    "deleteReferrerDescription": "Are you sure you want to delete the referrer \"{referrer}\"? This action cannot be undone.",
+    "noReferrersFound": "No referrers found",
+    "noReferrersMatchSearch": "No referrers match your search criteria",
+    "noReferrers": "You haven't created any referrers yet"
   },
   "Error": {
     "title": "Something went wrong",

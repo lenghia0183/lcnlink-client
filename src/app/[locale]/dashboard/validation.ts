@@ -10,12 +10,14 @@ export const getCreateLinkSchema = (t: (key: string) => string) =>
   z.object({
     originUrl: z.string().url(t("createLink.originInvalid")),
     alias: z.string().optional(),
-    referrer: z.object({
-      id: z.string(),
-      name: z.string(),
-      alias: z.string().optional(),
-      label: z.string(),
-    }).optional(),
+    referrer: z
+      .object({
+        id: z.string(),
+        referrer: z.string(),
+        alias: z.string().optional(),
+      })
+      .optional()
+      .nullable(),
     expirationDate: z.date().nullable().optional(),
     password: z.string().optional(),
     description: z.string().optional(),

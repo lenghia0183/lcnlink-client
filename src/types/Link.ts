@@ -16,6 +16,7 @@ export interface LinkData {
   password?: string;
   isUsePassword: boolean;
   status: LinkStatus;
+  referrer: { id: string; referrer: string; alias?: string } | null;
 }
 
 export interface GetLinkResponse extends Meta {
@@ -28,7 +29,7 @@ export interface CreateLinkBody {
   expireAt?: string;
   password?: string;
   description?: string;
-  maxClicks?: number;
+  maxClicks?: number | null;
   referrerId?: string;
 }
 
@@ -37,7 +38,8 @@ export interface UpdateLinkBody {
   expireAt?: string;
   password?: string;
   description?: string;
-  maxClicks?: number;
+  maxClicks?: number | null;
+  referrerId?: string;
 }
 
 export type GetTotalLinkPerStatusResponse = {

@@ -122,7 +122,7 @@ export function AutoCompleteField<T, R = T[]>({
   }, [debounced, open]);
 
   useEffect(() => {
-    if (!open) return;
+    // if (!open) return;
     if (!asyncRequest) return;
     if (!filterOptionsLocally) return;
 

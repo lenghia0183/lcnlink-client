@@ -114,10 +114,13 @@ export default function DashboardPage() {
         body: {
           originalUrl: formValue?.originUrl || "",
           alias: formValue.alias,
-          maxClicks: Number(formValue?.maxClicks) || 0,
+          maxClicks: Number.isFinite(Number(formValue?.maxClicks))
+            ? Number(formValue?.maxClicks)
+            : null,
           expireAt: formValue.expirationDate?.toISOString(),
           description: formValue.description,
           password: formValue.password,
+          referrerId: formValue.referrer?.id,
         },
       },
       {
@@ -159,19 +162,20 @@ export default function DashboardPage() {
   };
 
   const handleConfirmEdit = (formValue: EditFormValues) => {
-    console.log("formValue", formValue);
     if (selectedLink) {
       const body = {
         alias: formValue.alias,
-        maxClicks: Number(formValue?.maxClicks) || 0,
+        maxClicks: Number.isFinite(Number(formValue?.maxClicks))
+          ? Number(formValue?.maxClicks)
+          : null,
         expireAt: formValue.expirationDate
           ? format(safeDate(formValue.expirationDate)!, "yyyy-MM-dd HH:mm")
-          : "",
-
-        description: formValue.description,
-        password: formValue.password ?? undefined,
+          : undefined,
+        description: formValue.description || undefined,
+        password: formValue.password || undefined,
+        referrerId: formValue.referrer?.id || undefined,
       };
-      console.log("body", body);
+
       updateLinkTrigger(
         {
           id: selectedLink?.id || "",

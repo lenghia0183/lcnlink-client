@@ -14,6 +14,9 @@ import { DatePickerField } from "@/components/FormFields/DatePickerField";
 import { useEffect } from "react";
 import { addDays } from "date-fns";
 import { safeDate } from "@/utils/date";
+import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
+import { searchReferrers } from "@/services/api/referrers";
+import { ReferrerData } from "@/types/Referrer";
 
 const editSchema = z.object({
   description: z.string().optional(),
@@ -21,6 +24,14 @@ const editSchema = z.object({
   maxClicks: z.string().optional(),
   expirationDate: z.date().nullable().optional(),
   alias: z.string().optional(),
+  referrer: z
+    .object({
+      id: z.string(),
+      referrer: z.string(),
+      alias: z.string().optional(),
+    })
+    .optional()
+    .nullable(),
 });
 
 export type EditFormValues = z.infer<typeof editSchema>;
@@ -46,6 +57,7 @@ export const EditLinkDialog = ({
     expirationDate: null,
     password: "",
     maxClicks: "",
+    referrer: null,
   };
 
   const methods = useForm<EditFormValues>({
@@ -53,15 +65,19 @@ export const EditLinkDialog = ({
     defaultValues: initialData,
     mode: "onChange",
   });
-
+  console.log("selectedLink", selectedLink);
   useEffect(() => {
     methods.reset({
       description: selectedLink?.description,
       alias: selectedLink?.alias,
       expirationDate: safeDate(selectedLink?.expireAt),
-
       password: selectedLink?.password,
       maxClicks: selectedLink?.maxClicks?.toString(),
+      referrer: {
+        id: selectedLink?.referrer?.id || "",
+        referrer: selectedLink?.referrer?.referrer || "",
+        alias: selectedLink?.referrer?.alias || "",
+      },
     });
   }, [selectedLink, methods]);
 
@@ -104,6 +120,22 @@ export const EditLinkDialog = ({
             name="alias"
             label={t("customAlias")}
             placeholder={t("aliasPlaceholder")}
+          />
+          <AutoCompleteField<ReferrerData>
+            name="referrer"
+            label={t("referrer")}
+            placeholder={t("selectReferrer")}
+            asyncRequest={searchReferrers}
+            asyncRequestHelper={(data) => {
+              return data;
+            }}
+            getOptionLabel={(option) => {
+              return option.referrer;
+            }}
+            isOptionEqualToValue={(option, value) => {
+              return option?.id === value?.id;
+            }}
+            autoFetch={true}
           />
           <TextAreaField
             name="description"

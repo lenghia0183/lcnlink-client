@@ -8,12 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/FormFields/TextField";
 import { TextAreaField } from "@/components/FormFields/TextAreaField";
 import { DatePickerField } from "@/components/FormFields/DatePickerField";
-import { ReferrerSelectField } from "@/components/FormFields/ReferrerSelectField";
 import { TEXTFIELD_ALLOW } from "@/constants/regexes";
 import { AppDialog } from "@/components/AppDialog";
 
 import { useRef } from "react";
 import { addDays } from "date-fns";
+import { AutoCompleteField } from "@/components/FormFields/AutoCompleteField";
+import { searchReferrers } from "@/services/api/referrers";
 
 type FormValues = CreateLinkFormValues;
 
@@ -39,6 +40,7 @@ export const CreateLinkDialog = ({
       alias: "",
       expirationDate: null,
       password: "",
+      referrer: null,
       description: "",
       maxClicks: "",
     },
@@ -96,10 +98,21 @@ export const CreateLinkDialog = ({
             label={t("customAlias")}
             placeholder={t("aliasPlaceholder")}
           />
-          <ReferrerSelectField
+          <AutoCompleteField
             name="referrer"
             label={t("referrer")}
             placeholder={t("selectReferrer")}
+            asyncRequest={searchReferrers}
+            asyncRequestHelper={(data) => {
+              return data;
+            }}
+            getOptionLabel={(option) => {
+              return option.referrer;
+            }}
+            isOptionEqualToValue={(option, value) => {
+              return option?.id === value?.id;
+            }}
+            autoFetch={true}
           />
           <TextAreaField
             name="description"

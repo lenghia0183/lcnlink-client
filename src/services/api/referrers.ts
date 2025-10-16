@@ -2,11 +2,11 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { api } from "@/services/axios";
-import { 
-  ReferrerData, 
-  GetReferrerResponse, 
-  CreateReferrerBody, 
-  UpdateReferrerBody 
+import {
+  ReferrerData,
+  GetReferrerResponse,
+  CreateReferrerBody,
+  UpdateReferrerBody,
 } from "@/types/Referrer";
 
 interface GetReferrersParams {
@@ -15,14 +15,18 @@ interface GetReferrersParams {
   keyword?: string;
 }
 
+const getReferrersList = async (params: GetReferrersParams) => {
+  const response = await api.get<GetReferrerResponse>(
+    "v1/referrers/list",
+    params
+  );
+  return response.data;
+};
+
 export const useGetReferrers = (params: GetReferrersParams) => {
   const url = `v1/referrers/list`;
-  const fetcher = async (url: string) => {
-    const response = await api.get<GetReferrerResponse>(url, params);
-    return response.data;
-  };
 
-  return useSWR(url, fetcher);
+  return useSWR(url, () => getReferrersList(params));
 };
 
 export const useDeleteReferrer = () => {
@@ -44,7 +48,10 @@ export const useCreateReferrer = () => {
     key: string,
     { arg }: { arg: { body: CreateReferrerBody } }
   ) => {
-    const response = await api.post<ReferrerData, CreateReferrerBody>(key, arg.body);
+    const response = await api.post<ReferrerData, CreateReferrerBody>(
+      key,
+      arg.body
+    );
     return response;
   };
 
@@ -67,4 +74,17 @@ export const useUpdateReferrer = () => {
   };
 
   return useSWRMutation(url, fetcher);
+};
+
+export const fetchReferrers = async (
+  params: GetReferrersParams
+): Promise<ReferrerData[]> => {
+  const response = await getReferrersList(params);
+  return response?.items || [];
+};
+
+export const searchReferrers = async (
+  keyword: string
+): Promise<ReferrerData[]> => {
+  return fetchReferrers({ keyword, limit: 10 });
 };

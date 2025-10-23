@@ -114,9 +114,8 @@ export default function DashboardPage() {
         body: {
           originalUrl: formValue?.originUrl || "",
           alias: formValue.alias,
-          maxClicks: Number.isFinite(Number(formValue?.maxClicks))
-            ? Number(formValue?.maxClicks)
-            : null,
+          maxClicks:
+            formValue?.maxClicks !== "" ? Number(formValue?.maxClicks) : null,
           expireAt: formValue.expirationDate?.toISOString(),
           description: formValue.description,
           password: formValue.password,
@@ -162,17 +161,18 @@ export default function DashboardPage() {
   };
 
   const handleConfirmEdit = (formValue: EditFormValues) => {
+    console.log("formValue", formValue);
     if (selectedLink) {
       const body = {
         alias: formValue.alias,
-        maxClicks: Number.isFinite(Number(formValue?.maxClicks))
-          ? Number(formValue?.maxClicks)
-          : null,
+        maxClicks:
+          formValue?.maxClicks !== "" ? Number(formValue?.maxClicks) : null,
         expireAt: formValue.expirationDate
           ? format(safeDate(formValue.expirationDate)!, "yyyy-MM-dd HH:mm")
           : undefined,
         description: formValue.description || undefined,
-        password: formValue.password || undefined,
+        currentPassword: formValue.currentPassword || null,
+        newPassword: formValue.newPassword || null,
         referrerId: formValue.referrer?.id || undefined,
       };
 

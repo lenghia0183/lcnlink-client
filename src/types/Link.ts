@@ -36,7 +36,8 @@ export interface CreateLinkBody {
 export interface UpdateLinkBody {
   alias?: string;
   expireAt?: string;
-  password?: string;
+  newPassword?: string | null;
+  currentPassword?: string | null;
   description?: string;
   maxClicks?: number | null;
   referrerId?: string;

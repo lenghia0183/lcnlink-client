@@ -398,7 +398,17 @@
     "noLinksInThisCategory": "No links in this category",
     "referrer": "Referrer",
     "selectReferrer": "Select referrer...",
-    "loadingReferrers": "Loading referrers..."
+    "loadingReferrers": "Loading referrers...",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "passwordsNotMatch": "New password and confirm password do not match",
+    "general": "General",
+    "security": "Security"
   },
   "Analytics": {
     "title": "Link Analytics",

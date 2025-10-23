@@ -499,7 +499,17 @@
     "noLinksInThisCategory": "Không có liên kết trong danh mục này",
     "referrer": "Referrer",
     "selectReferrer": "Chọn referrer...",
-    "loadingReferrers": "Đang tải referrer..."
+    "loadingReferrers": "Đang tải referrer...",
+    "changePassword": "Đổi mật khẩu",
+    "currentPassword": "Mật khẩu hiện tại",
+    "currentPasswordPlaceholder": "Nhập mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu mới",
+    "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
+    "passwordsNotMatch": "Mật khẩu mới và xác nhận mật khẩu không khớp",
+    "general": "Chung",
+    "security": "Bảo mật"
   },
   "Analytics": {
     "title": "Phân tích liên kết",

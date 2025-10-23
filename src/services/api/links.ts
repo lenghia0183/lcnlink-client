@@ -4,17 +4,18 @@ import { api } from "@/services/axios";
 import {
   CreateLinkBody,
   GetLinkResponse,
-  GetLinkStatisticOverviewResponse,
   GetTotalLinkPerStatusResponse,
+  GetLinkStatisticOverviewResponse,
+  VerifyPasswordLinkBody,
+  VerifyPasswordLinkResponse,
   LinkAnalyticsBrowserBreakdownResponse,
   LinkAnalyticsCountryBreakdownResponse,
   LinkAnalyticsDeviceBreakdownResponse,
+  LinkAnalyticsConsolidatedResponse,
   LinkData,
   UpdateLinkBody,
-  VerifyPasswordLinkResponse,
 } from "@/types/Link";
 import useSWRMutation from "swr/mutation";
-import { VerifyPasswordLinkBody } from "./../../types/Link";
 
 interface GetLinksParams {
   page?: number;
@@ -123,38 +124,19 @@ export const useVerifyPasswordLink = () => {
   return useSWRMutation(url, fetcher);
 };
 
-export const useDeviceBreakdown = () => {
-  const url = "v1/links/analytics/devices";
+export const useGetLinkAnalytics = () => {
+  const url = "v1/links/analytics";
 
   const fetcher = async (url: string) => {
-    const response = await api.get<LinkAnalyticsDeviceBreakdownResponse[]>(url);
-    return response.data;
-  };
-
-  return useSWR(url, fetcher);
-};
-
-export const useGetBrowserBreakdown = () => {
-  const url = "v1/links/analytics/browsers";
-
-  const fetcher = async (url: string) => {
-    const response = await api.get<LinkAnalyticsBrowserBreakdownResponse[]>(
-      url
+    const response = await api.get<LinkAnalyticsConsolidatedResponse>(url);
+    return (
+      response.data || {
+        trend: {},
+        countries: [],
+        devices: [],
+        browsers: [],
+      }
     );
-    return response.data;
-  };
-
-  return useSWR(url, fetcher);
-};
-
-export const useGetCountryBreakdown = () => {
-  const url = "v1/links/analytics/countries";
-
-  const fetcher = async (url: string) => {
-    const response = await api.get<LinkAnalyticsCountryBreakdownResponse[]>(
-      url
-    );
-    return response.data;
   };
 
   return useSWR(url, fetcher);

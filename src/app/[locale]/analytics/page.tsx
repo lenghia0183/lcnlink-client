@@ -17,26 +17,35 @@ import {
 import { AppButton } from "@/components/AppButton";
 import { AppCard } from "@/components/AppCard";
 import {
-  useDeviceBreakdown,
-  useGetBrowserBreakdown,
-  useGetCountryBreakdown,
+  useGetLinkAnalytics, // Replace the three separate hooks with the new consolidated hook
   useGetLinkStatisticOverview,
 } from "@/services/api/links";
 import { SkeletonAnalyticsPage } from "@/components/skeleton/SkeletonAnalyticsPage";
+import {
+  LinkAnalyticsDeviceBreakdownResponse,
+  LinkAnalyticsBrowserBreakdownResponse,
+  LinkAnalyticsCountryBreakdownResponse,
+} from "@/types/Link";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
 
   // Hooks
-  const { data: devices, mutate: refreshDevices, isLoading: isLoadingDevices } = useDeviceBreakdown();
-  const { data: browsers, mutate: refreshBrowsers, isLoading: isLoadingBrowsers } = useGetBrowserBreakdown();
-  const { data: countries, mutate: refreshCountries, isLoading: isLoadingCountries } =
-    useGetCountryBreakdown();
+  const {
+    data: analyticsData,
+    mutate: refreshAnalytics,
+    isLoading: isLoadingAnalytics,
+  } = useGetLinkAnalytics();
+  const { data: linkStatisticOverview, isLoading: isLoadingOverview } =
+    useGetLinkStatisticOverview();
 
-  const { data: linkStatisticOverview, isLoading: isLoadingOverview } = useGetLinkStatisticOverview();
+  // Extract the data from the consolidated response
+  const devices = analyticsData?.devices || [];
+  const browsers = analyticsData?.browsers || [];
+  const countries = analyticsData?.countries || [];
 
   // Check if any data is loading
-  const isLoading = isLoadingDevices || isLoadingBrowsers || isLoadingCountries || isLoadingOverview;
+  const isLoading = isLoadingAnalytics || isLoadingOverview;
 
   // Stats
   const stats = [
@@ -63,9 +72,7 @@ export default function AnalyticsPage() {
   ];
 
   const handleRefresh = () => {
-    refreshDevices();
-    refreshBrowsers();
-    refreshCountries();
+    refreshAnalytics();
   };
 
   // Show skeleton while loading
@@ -151,20 +158,25 @@ export default function AnalyticsPage() {
             description={t("geographic.description")}
             contentClassName="space-y-3"
           >
-            {countries?.map((country, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded-sm"></div>
-                  <span className="font-medium">{country.country}</span>
+            {countries.map(
+              (
+                country: LinkAnalyticsCountryBreakdownResponse,
+                index: number
+              ) => (
+                <div key={index} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded-sm"></div>
+                    <span className="font-medium">{country.country}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {country.count.toLocaleString()}
+                    </span>
+                    <Badge variant="outline">{country.percentage}%</Badge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {country.count.toLocaleString()}
-                  </span>
-                  <Badge variant="outline">{country.percentage}%</Badge>
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </AppCard>
         </div>
 
@@ -182,36 +194,38 @@ export default function AnalyticsPage() {
             description={t("devices.description")}
             contentClassName="space-y-4"
           >
-            {devices?.map((device, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {device.device === "Desktop" && (
-                      <Monitor className="h-4 w-4" />
-                    )}
-                    {device.device === "Mobile" && (
-                      <Smartphone className="h-4 w-4" />
-                    )}
-                    {device.device === "Tablet" && (
-                      <Monitor className="h-4 w-4" />
-                    )}
-                    <span className="font-medium">{device.device}</span>
+            {devices.map(
+              (device: LinkAnalyticsDeviceBreakdownResponse, index: number) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {device.device === "Desktop" && (
+                        <Monitor className="h-4 w-4" />
+                      )}
+                      {device.device === "Mobile" && (
+                        <Smartphone className="h-4 w-4" />
+                      )}
+                      {device.device === "Tablet" && (
+                        <Monitor className="h-4 w-4" />
+                      )}
+                      <span className="font-medium">{device.device}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {device.count.toLocaleString()}
+                      </span>
+                      <Badge variant="outline">{device.percentage}%</Badge>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {device.count.toLocaleString()}
-                    </span>
-                    <Badge variant="outline">{device.percentage}%</Badge>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${device.percentage}%` }}
+                    ></div>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${device.percentage}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </AppCard>
 
           {/* Browsers */}
@@ -226,25 +240,30 @@ export default function AnalyticsPage() {
             description={t("browsers.description")}
             contentClassName="space-y-4"
           >
-            {browsers?.map((browser, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{browser.browser}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {browser.count.toLocaleString()}
-                    </span>
-                    <Badge variant="outline">{browser.percentage}%</Badge>
+            {browsers.map(
+              (
+                browser: LinkAnalyticsBrowserBreakdownResponse,
+                index: number
+              ) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{browser.browser}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {browser.count.toLocaleString()}
+                      </span>
+                      <Badge variant="outline">{browser.percentage}%</Badge>
+                    </div>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${browser.percentage}%` }}
+                    ></div>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${browser.percentage}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </AppCard>
         </div>
       </div>

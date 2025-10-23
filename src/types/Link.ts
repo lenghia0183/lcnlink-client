@@ -82,3 +82,10 @@ export interface LinkAnalyticsCountryBreakdownResponse {
   count: number;
   percentage: number;
 }
+
+export interface LinkAnalyticsConsolidatedResponse {
+  trend: Record<string, unknown>;
+  countries: LinkAnalyticsCountryBreakdownResponse[];
+  devices: LinkAnalyticsDeviceBreakdownResponse[];
+  browsers: LinkAnalyticsBrowserBreakdownResponse[];
+}

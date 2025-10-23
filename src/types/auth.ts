@@ -46,6 +46,7 @@ export interface UpdateMeBody {
 
 export interface ChangePasswordBody {
   newPassword: string;
+  currentPassword: string;
 }
 
 export interface Toggle2FABody {

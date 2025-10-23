@@ -82,7 +82,9 @@ export default function ProfilePage() {
       email: userData?.email || "",
       phone: userData?.phone || "",
       gender: userData?.gender || USER_GENDER_ENUM.MALE,
-      dateOfBirth: userData?.dateOfBirth ? new Date(userData.dateOfBirth) : null,
+      dateOfBirth: userData?.dateOfBirth
+        ? new Date(userData.dateOfBirth)
+        : null,
     },
   });
 
@@ -128,7 +130,9 @@ export default function ProfilePage() {
         email: formValue.email,
         phone: formValue.phone,
         gender: formValue.gender,
-        dateOfBirth: formValue.dateOfBirth ? formValue.dateOfBirth.toISOString() : undefined,
+        dateOfBirth: formValue.dateOfBirth
+          ? formValue.dateOfBirth.toISOString()
+          : undefined,
       },
       {
         onSuccess: (response) => {
@@ -150,6 +154,7 @@ export default function ProfilePage() {
     triggerChangePassword(
       {
         newPassword: formValue?.newPassword || "",
+        currentPassword: formValue?.currentPassword || "",
       },
       {
         onSuccess: (response) => {
@@ -318,7 +323,9 @@ export default function ProfilePage() {
                       <Eye className="h-4 w-4" />
                     )
                   }
-                  rightIconOnClick={() => setIsShowNewPassword(!isShowNewPassword)}
+                  rightIconOnClick={() =>
+                    setIsShowNewPassword(!isShowNewPassword)
+                  }
                   disabled={isEnableChangePassword}
                 />
                 <TextField

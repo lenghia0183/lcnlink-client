@@ -89,8 +89,10 @@ export const useGetTotalLinkPerStatus = () => {
   return useSWR(url, fetcher);
 };
 
-export const useGetLinkStatisticOverview = () => {
-  const url = "v1/links/statistic-overview";
+export const useGetLinkStatisticOverview = (id?: string) => {
+  const url = id
+    ? `v1/links/statistic-overview/${id}`
+    : "v1/links/statistic-overview";
 
   const fetcher = async (url: string) => {
     const response = await api.get<GetLinkStatisticOverviewResponse>(url);
@@ -124,8 +126,8 @@ export const useVerifyPasswordLink = () => {
   return useSWRMutation(url, fetcher);
 };
 
-export const useGetLinkAnalytics = () => {
-  const url = "v1/links/analytics";
+export const useGetLinkAnalytics = (id?: string) => {
+  const url = id ? `v1/links/analytics/${id}` : "v1/links/analytics";
 
   const fetcher = async (url: string) => {
     const response = await api.get<LinkAnalyticsConsolidatedResponse>(url);

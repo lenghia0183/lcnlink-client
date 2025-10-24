@@ -17,7 +17,7 @@ import {
 import { AppButton } from "@/components/AppButton";
 import { AppCard } from "@/components/AppCard";
 import {
-  useGetLinkAnalytics, // Replace the three separate hooks with the new consolidated hook
+  useGetLinkAnalytics,
   useGetLinkStatisticOverview,
 } from "@/services/api/links";
 import { SkeletonAnalyticsPage } from "@/components/skeleton/SkeletonAnalyticsPage";
@@ -26,6 +26,7 @@ import {
   LinkAnalyticsBrowserBreakdownResponse,
   LinkAnalyticsCountryBreakdownResponse,
 } from "@/types/Link";
+import { useSearchParams } from "next/navigation";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
@@ -35,16 +36,16 @@ export default function AnalyticsPage() {
     data: analyticsData,
     mutate: refreshAnalytics,
     isLoading: isLoadingAnalytics,
-  } = useGetLinkAnalytics();
+  } = useGetLinkAnalytics(id || "");
+
   const { data: linkStatisticOverview, isLoading: isLoadingOverview } =
-    useGetLinkStatisticOverview();
+    useGetLinkStatisticOverview(id || "");
 
   // Extract the data from the consolidated response
   const devices = analyticsData?.devices || [];
   const browsers = analyticsData?.browsers || [];
   const countries = analyticsData?.countries || [];
 
-  // Check if any data is loading
   const isLoading = isLoadingAnalytics || isLoadingOverview;
 
   // Stats

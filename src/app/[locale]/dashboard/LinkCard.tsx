@@ -16,6 +16,7 @@ import {
   Trash2,
   MoreHorizontal,
   AlertCircle,
+  BarChart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -31,6 +32,7 @@ import { AppDialog } from "@/components/AppDialog";
 import Image from "@/components/Image";
 import { shareOnFacebook, shareOnTwitter } from "@/utils/socialShare";
 import { safeFormat } from "@/utils/date";
+import { useRouter } from "next/navigation";
 
 interface LinkCardProps {
   link?: LinkData;
@@ -48,6 +50,7 @@ export const LinkCard = ({
   copiedId,
 }: LinkCardProps) => {
   const t = useTranslations("Dashboard");
+  const router = useRouter();
   const [isShowQrCode, setIsShowQrCode] = useState(false);
   if (!link) return null;
 
@@ -107,6 +110,12 @@ export const LinkCard = ({
     shareOnFacebook({
       url: link.shortedUrl,
     });
+  };
+
+  const handleViewAnalytics = () => {
+    if (link?.id) {
+      router.push(`/analytics?id=${link.id}`);
+    }
   };
 
   return (
@@ -193,6 +202,13 @@ export const LinkCard = ({
           </div>
         </div>
         <div className="flex mt-5 sm:mt-0 items-center sm:items-end gap-2 sm:gap-2 ml-0 sm:ml-4">
+          <AppButton
+            variant="outline"
+            size="icon"
+            className="h-8 w-8 sm:h-9 sm:w-9"
+            iconLeft={<BarChart />}
+            onClick={handleViewAnalytics}
+          />
           <AppButton
             variant="outline"
             size="icon"

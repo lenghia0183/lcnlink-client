@@ -30,6 +30,8 @@ import { useSearchParams } from "next/navigation";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   // Hooks
   const {

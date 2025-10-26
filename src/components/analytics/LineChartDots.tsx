@@ -65,7 +65,7 @@ export function LineChartDots({
     label,
   }: {
     active?: boolean;
-    payload?: { value: number; name: string }[];
+    payload?: { value: number; name: string; color: string }[];
     label?: string;
   }) => {
     if (active && payload && payload.length) {
@@ -80,7 +80,15 @@ export function LineChartDots({
                 })}`
               : "Date: Unknown"}
           </p>
-          <p className="text-sm text-blue-600 dark:text-blue-400">{`Clicks: ${payload[0].value}`}</p>
+          {payload.map((entry, index) => (
+            <p 
+              key={index} 
+              className="text-sm" 
+              style={{ color: entry.color }}
+            >
+              {`${entry.name}: ${entry.value}`}
+            </p>
+          ))}
         </div>
       );
     }
@@ -127,7 +135,8 @@ export function LineChartDots({
             />
             <Tooltip content={<CustomTooltip />} />
             <Line
-              dataKey="count"
+              dataKey="totalClick"
+              name="Total Clicks"
               type="natural"
               stroke="#3b82f6" // blue-500
               strokeWidth={2}
@@ -138,6 +147,21 @@ export function LineChartDots({
               activeDot={{
                 r: 6,
                 fill: "#3b82f6",
+              }}
+            />
+            <Line
+              dataKey="totalClickSuccess"
+              name="Successful Clicks"
+              type="natural"
+              stroke="#10b981" // green-500
+              strokeWidth={2}
+              dot={{
+                fill: "#10b981",
+                r: 4,
+              }}
+              activeDot={{
+                r: 6,
+                fill: "#10b981",
               }}
             />
           </LineChart>

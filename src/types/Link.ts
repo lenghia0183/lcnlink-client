@@ -59,6 +59,7 @@ export interface GetLinkStatisticOverviewResponse {
 
 export interface VerifyPasswordLinkBody {
   password: string;
+  clickId: string;
 }
 
 export interface VerifyPasswordLinkResponse {
@@ -85,7 +86,8 @@ export interface LinkAnalyticsCountryBreakdownResponse {
 
 export interface LinkAnalyticsTrendItem {
   period: string;
-  count: number;
+  totalClick: number;
+  totalClickSuccess: number;
 }
 
 export interface LinkAnalyticsConsolidatedResponse {

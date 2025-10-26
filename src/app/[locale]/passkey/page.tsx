@@ -24,6 +24,7 @@ export default function PasskeyPage() {
 
   const alias = searchParams.get("alias");
   const shortedUrl = searchParams.get("shortedUrl");
+  const clickId = searchParams.get("clickId");
 
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -43,7 +44,7 @@ export default function PasskeyPage() {
     verifyPasswordLinkTrigger(
       {
         alias: alias || "",
-        body: { password: formValues?.password || "" },
+        body: { password: formValues?.password || "", clickId: clickId || "" },
       },
       {
         onSuccess: (response) => {

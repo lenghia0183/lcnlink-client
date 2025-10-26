@@ -60,8 +60,8 @@ export default function ProfilePage() {
 
   const { userData, refreshGetMe, isLoading } = useUser();
 
-  const isEnableChangePassword =
-    userData?.oauthProvider && userData?.oauthProviderId ? false : true;
+  const isDisabledChangePassword =
+    userData?.oauthProvider && userData?.oauthProviderId ? true : false;
 
   const { trigger: triggerUpdateMe, isMutating: isUpdateMeMutating } =
     useUpdateMe();
@@ -161,6 +161,12 @@ export default function ProfilePage() {
           if (validateResponseCode(response.statusCode)) {
             refreshGetMe();
             toast.success(response.message);
+
+            passwordMethods.reset({
+              currentPassword: "",
+              newPassword: "",
+              confirmPassword: "",
+            });
           } else {
             toast.error(response.message);
           }
@@ -308,7 +314,7 @@ export default function ProfilePage() {
                   rightIconOnClick={() =>
                     setIsShowCurrentPassword(!isShowCurrentPassword)
                   }
-                  disabled={isEnableChangePassword}
+                  disabled={isDisabledChangePassword}
                 />
                 <TextField
                   name="newPassword"
@@ -326,7 +332,7 @@ export default function ProfilePage() {
                   rightIconOnClick={() =>
                     setIsShowNewPassword(!isShowNewPassword)
                   }
-                  disabled={isEnableChangePassword}
+                  disabled={isDisabledChangePassword}
                 />
                 <TextField
                   name="confirmPassword"
@@ -344,12 +350,14 @@ export default function ProfilePage() {
                   rightIconOnClick={() =>
                     setIsShowConfirmPassword(!isShowConfirmPassword)
                   }
-                  disabled={isEnableChangePassword}
+                  disabled={isDisabledChangePassword}
                 />
                 <AppButton
                   type="submit"
                   iconLeft={<Save className="h-4 w-4" />}
-                  disabled={isChangePasswordMutating || isEnableChangePassword}
+                  disabled={
+                    isChangePasswordMutating || isDisabledChangePassword
+                  }
                   className="w-full"
                 >
                   {isChangePasswordMutating

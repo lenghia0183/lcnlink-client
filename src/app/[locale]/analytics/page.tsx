@@ -27,6 +27,7 @@ import {
   LinkAnalyticsCountryBreakdownResponse,
 } from "@/types/Link";
 import { useSearchParams } from "next/navigation";
+import { LineChartDots } from "@/components/analytics/LineChartDots";
 
 export default function AnalyticsPage() {
   const t = useTranslations("Analytics");
@@ -47,6 +48,7 @@ export default function AnalyticsPage() {
   const devices = analyticsData?.devices || [];
   const browsers = analyticsData?.browsers || [];
   const countries = analyticsData?.countries || [];
+  const trendData = analyticsData?.trend || [];
 
   const isLoading = isLoadingAnalytics || isLoadingOverview;
 
@@ -134,22 +136,13 @@ export default function AnalyticsPage() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Click Trends */}
-          <AppCard
-            className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
-            title={
-              <div className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                {t("clickTrends.title")}
-              </div>
-            }
+          <LineChartDots
+            data={trendData}
+            isLoading={isLoadingAnalytics}
+            title={t("clickTrends.title")}
             description={t("clickTrends.description")}
-          >
-            <div className="h-64 flex items-end justify-center bg-gray-100 dark:bg-gray-700/50 rounded-lg">
-              <p className="text-gray-500">{t("chartPlaceholder")}</p>
-            </div>
-          </AppCard>
+          />
 
-          {/* Geographic Distribution */}
           <AppCard
             className="border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
             title={

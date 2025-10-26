@@ -8,9 +8,6 @@ import {
   GetLinkStatisticOverviewResponse,
   VerifyPasswordLinkBody,
   VerifyPasswordLinkResponse,
-  LinkAnalyticsBrowserBreakdownResponse,
-  LinkAnalyticsCountryBreakdownResponse,
-  LinkAnalyticsDeviceBreakdownResponse,
   LinkAnalyticsConsolidatedResponse,
   LinkData,
   UpdateLinkBody,
@@ -133,7 +130,7 @@ export const useGetLinkAnalytics = (id?: string) => {
     const response = await api.get<LinkAnalyticsConsolidatedResponse>(url);
     return (
       response.data || {
-        trend: {},
+        trend: [],
         countries: [],
         devices: [],
         browsers: [],
